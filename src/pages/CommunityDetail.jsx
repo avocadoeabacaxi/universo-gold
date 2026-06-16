@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useParams, Link } from 'react-router-dom';
-import { Users, Lock, Globe, FileText, Video, ArrowLeft, Loader2 } from 'lucide-react';
+import { Users, Lock, Globe, FileText, Video, ArrowLeft, Loader2, Camera, Upload, Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import PostCard from '@/components/feed/PostCard';
 import CreatePostCard from '@/components/feed/CreatePostCard';
 
@@ -43,7 +44,47 @@ export default function CommunityDetail() {
   if (!community) return <div className="text-center py-12 text-muted-foreground">Comunidade não encontrada.</div>;
 
   const isMember = community.members?.includes(currentUser?.id);
+  const isAdmin = currentUser?.role === 'admin' || userProfile?.role === 'admin';
+  const isLeader = community.leader_id === currentUser?.id || isAdmin;
   const enrichedUser = currentUser ? { ...currentUser, job_title: userProfile?.job_title } : null;
+
+  const ICON_COLORS = [
+    { bg: 'from-blue-600 to-blue-800', label: 'Azul' },
+    { bg: 'from-purple-600 to-purple-800', label: 'Roxo' },
+    { bg: 'from-green-600 to-green-800', label: 'Verde' },
+    { bg: 'from-red-600 to-red-800', label: 'Vermelho' },
+    { bg: 'from-orange-500 to-orange-700', label: 'Laranja' },
+    { bg: 'from-pink-500 to-pink-700', label: 'Rosa' },
+    { bg: 'from-teal-500 to-teal-700', label: 'Teal' },
+    { bg: 'from-yellow-500 to-yellow-700', label: 'Amarelo' },
+  ];
+
+  const handleCoverUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadingCover(true);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    await base44.entities.Community.update(community.id, { cover_url: file_url });
+    setCommunity(prev => ({ ...prev, cover_url: file_url }));
+    setUploadingCover(false);
+  };
+
+  const handleIconUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadingIcon(true);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    await base44.entities.Community.update(community.id, { avatar_url: file_url });
+    setCommunity(prev => ({ ...prev, avatar_url: file_url }));
+    setUploadingIcon(false);
+  };
+
+  const handleIconColor = async (colorBg) => {
+    await base44.entities.Community.update(community.id, { icon_color: colorBg });
+    setCommunity(prev => ({ ...prev, icon_color: colorBg }));
+  };
+
+  const iconGradient = community.icon_color || 'from-blue-700 to-blue-900';
 
   return (
     <div className="max-w-screen-lg mx-auto px-4 py-4">
@@ -53,13 +94,64 @@ export default function CommunityDetail() {
 
       {/* Header */}
       <div className="bg-card rounded-xl border border-border/60 overflow-hidden mb-4">
-        <div className="h-32 gold-gradient" />
+        {/* Cover */}
+        <div className="relative h-40 group">
+          {community.cover_url
+            ? <img src={community.cover_url} alt="capa" className="w-full h-full object-cover" />
+            : <div className="w-full h-full gold-gradient" />
+          }
+          {isLeader && (
+            <>
+              <input ref={coverInputRef} type="file" accept="image/*" className="hidden" onChange={handleCoverUpload} />
+              <button
+                onClick={() => coverInputRef.current?.click()}
+                className="absolute bottom-2 right-2 flex items-center gap-1.5 px-3 py-1.5 bg-black/50 hover:bg-black/70 text-white text-xs rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+              >
+                {uploadingCover ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Camera className="w-3.5 h-3.5" />}
+                Alterar capa
+              </button>
+            </>
+          )}
+        </div>
+
         <div className="px-6 pb-4">
           <div className="flex items-end gap-4 -mt-8 mb-3">
-            <div className="w-16 h-16 rounded-xl gold-gradient flex items-center justify-center border-4 border-white shadow-md">
-              <span className="text-white font-bold text-lg">{community.name?.slice(0, 2).toUpperCase()}</span>
+            {/* Community Icon */}
+            <div className="relative group/icon shrink-0">
+              <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${iconGradient} flex items-center justify-center border-4 border-white shadow-md overflow-hidden`}>
+                {community.avatar_url
+                  ? <img src={community.avatar_url} alt="icon" className="w-full h-full object-cover" />
+                  : <span className="text-white font-bold text-lg">{community.name?.slice(0, 2).toUpperCase()}</span>
+                }
+              </div>
+              {isLeader && (
+                <div className="absolute -bottom-1 -right-1 flex gap-0.5 opacity-0 group-hover/icon:opacity-100 transition-opacity">
+                  <input ref={iconInputRef} type="file" accept="image/*" className="hidden" onChange={handleIconUpload} />
+                  <button onClick={() => iconInputRef.current?.click()} title="Trocar imagem"
+                    className="w-6 h-6 bg-primary rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+                    {uploadingIcon ? <Loader2 className="w-3 h-3 text-white animate-spin" /> : <Upload className="w-3 h-3 text-white" />}
+                  </button>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button title="Cor do ícone"
+                        className="w-6 h-6 bg-white rounded-full flex items-center justify-center border-2 border-primary shadow-sm">
+                        <Palette className="w-3 h-3 text-primary" />
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-48 p-2" side="right">
+                      <p className="text-xs font-semibold mb-2 text-muted-foreground">Cor do ícone</p>
+                      <div className="grid grid-cols-4 gap-1.5">
+                        {ICON_COLORS.map(({ bg, label }) => (
+                          <button key={bg} title={label} onClick={() => handleIconColor(bg)}
+                            className={`w-9 h-9 rounded-lg bg-gradient-to-br ${bg} border-2 ${iconGradient === bg ? 'border-primary' : 'border-transparent'} hover:scale-110 transition-transform`} />
+                        ))}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              )}
             </div>
-            <div className="flex-1 min-w-0 pb-1">
+            <div className="flex-1 min-w-0 pb-2">
               <div className="flex items-center gap-2 flex-wrap">
                 <h1 className="text-xl font-bold font-heading">{community.name}</h1>
                 {community.visibility === 'closed'

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Camera, Loader2, Save, Users, FileText, Radio } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -17,6 +17,8 @@ export default function Profile() {
   const [saving, setSaving] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [form, setForm] = useState({});
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const avatarInputRef = useRef(null);
 
   useEffect(() => {
     const init = async () => {
@@ -36,6 +38,22 @@ export default function Profile() {
     };
     init().catch(() => setLoading(false));
   }, []);
+
+  const handleAvatarUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadingAvatar(true);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    const data = { avatar_url: file_url };
+    if (profile) {
+      await base44.entities.UserProfile.update(profile.id, data);
+      setProfile(p => ({ ...p, avatar_url: file_url }));
+    } else {
+      const p = await base44.entities.UserProfile.create({ ...form, user_id: currentUser?.id, email: currentUser?.email, status: 'active', avatar_url: file_url });
+      setProfile(p);
+    }
+    setUploadingAvatar(false);
+  };
 
   const handleSave = async () => {
     setSaving(true);
@@ -68,13 +86,17 @@ export default function Profile() {
         <div className="h-28 gold-gradient" />
         <CardContent className="px-6 pb-5">
           <div className="flex items-end gap-4 -mt-10 mb-4">
-            <div className="relative">
+            <div className="relative group/avatar">
               <Avatar className="w-20 h-20 border-4 border-white shadow-md">
                 <AvatarImage src={profile?.avatar_url} />
                 <AvatarFallback className="bg-primary text-white text-2xl font-bold">{initials}</AvatarFallback>
               </Avatar>
-              <button className="absolute bottom-0 right-0 w-7 h-7 bg-primary rounded-full flex items-center justify-center border-2 border-white shadow-sm">
-                <Camera className="w-3.5 h-3.5 text-white" />
+              <input ref={avatarInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
+              <button
+                onClick={() => avatarInputRef.current?.click()}
+                className="absolute inset-0 rounded-full flex items-center justify-center bg-black/40 opacity-0 group-hover/avatar:opacity-100 transition-opacity border-4 border-white"
+              >
+                {uploadingAvatar ? <Loader2 className="w-5 h-5 text-white animate-spin" /> : <Camera className="w-5 h-5 text-white" />}
               </button>
             </div>
             <div className="flex-1 pb-1">
