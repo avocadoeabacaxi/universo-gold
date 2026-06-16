@@ -1,7 +1,7 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Home, Users, FileText, Video, Radio, Bell, Search, Menu, X, Settings, LogOut, ChevronDown, Star } from 'lucide-react';
+import { Home, Users, FileText, Video, Radio, Bell, Search, Menu, X, Settings, LogOut, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -44,11 +44,12 @@ export default function Layout() {
       <header className="fixed top-0 left-0 right-0 z-50 gold-gradient shadow-lg">
         <div className="max-w-screen-xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 shrink-0">
-            <div className="flex items-center gap-1.5">
-              <Star className="w-5 h-5 text-yellow-300 fill-yellow-300" />
-              <span className="text-white font-bold text-lg tracking-tight font-heading">Universo Gold</span>
-            </div>
+          <Link to="/" className="flex items-center shrink-0">
+            <img
+              src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/afa5ad0b8_barras.png"
+              alt="Universo Gold Pão"
+              className="h-10 w-auto"
+            />
           </Link>
 
           {/* Search */}
