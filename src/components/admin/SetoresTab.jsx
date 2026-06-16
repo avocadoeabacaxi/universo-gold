@@ -1,20 +1,23 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Plus, Trash2, Building2, Loader2 } from 'lucide-react';
+import { Plus, Trash2, Building2, Loader2, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
+
+const EMPTY = { name: '', description: '', unidade: '', responsavel: '' };
 
 export default function SetoresTab() {
   const [setores, setSetores] = useState([]);
   const [unidades, setUnidades] = useState([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({ name: '', description: '', unidade: '', responsavel: '' });
+  const [editing, setEditing] = useState(null); // null = novo, object = editar
+  const [form, setForm] = useState(EMPTY);
 
   useEffect(() => {
     Promise.all([
@@ -23,13 +26,21 @@ export default function SetoresTab() {
     ]).then(([s, u]) => { setSetores(s); setUnidades(u); setLoading(false); });
   }, []);
 
+  const openNew = () => { setEditing(null); setForm(EMPTY); setOpen(true); };
+  const openEdit = (s) => { setEditing(s); setForm({ name: s.name, description: s.description || '', unidade: s.unidade || '', responsavel: s.responsavel || '' }); setOpen(true); };
+
   const handleSave = async (e) => {
     e.preventDefault();
-    const s = await base44.entities.Setor.create({ ...form, status: 'active' });
-    setSetores(prev => [...prev, s]);
-    setForm({ name: '', description: '', unidade: '', responsavel: '' });
+    if (editing) {
+      const updated = await base44.entities.Setor.update(editing.id, form);
+      setSetores(prev => prev.map(s => s.id === editing.id ? { ...s, ...form } : s));
+      toast.success('Setor atualizado!');
+    } else {
+      const s = await base44.entities.Setor.create({ ...form, status: 'active' });
+      setSetores(prev => [...prev, s]);
+      toast.success('Setor criado!');
+    }
     setOpen(false);
-    toast.success('Setor criado!');
   };
 
   const handleDelete = async (id) => {
@@ -44,27 +55,29 @@ export default function SetoresTab() {
     <div>
       <div className="flex justify-between items-center mb-4">
         <p className="text-sm text-muted-foreground">{setores.length} setores cadastrados</p>
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button size="sm" className="gold-gradient text-white gap-1.5 rounded-xl"><Plus className="w-3.5 h-3.5" /> Novo Setor</Button>
-          </DialogTrigger>
-          <DialogContent className="rounded-2xl">
-            <DialogHeader><DialogTitle>Criar Setor</DialogTitle></DialogHeader>
-            <form onSubmit={handleSave} className="space-y-3">
-              <div className="space-y-1"><Label>Nome *</Label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Ex: Produção, RH..." required className="rounded-xl" /></div>
-              <div className="space-y-1"><Label>Unidade</Label>
-                <select value={form.unidade} onChange={e => setForm(f => ({ ...f, unidade: e.target.value }))} className="w-full h-9 rounded-xl border border-input bg-background px-3 text-sm">
-                  <option value="">Selecionar unidade</option>
-                  {unidades.map(u => <option key={u.id} value={u.name}>{u.name}</option>)}
-                </select>
-              </div>
-              <div className="space-y-1"><Label>Responsável</Label><Input value={form.responsavel} onChange={e => setForm(f => ({ ...f, responsavel: e.target.value }))} placeholder="Nome do responsável" className="rounded-xl" /></div>
-              <div className="space-y-1"><Label>Descrição</Label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Breve descrição" className="rounded-xl" /></div>
-              <Button type="submit" className="w-full gold-gradient text-white rounded-xl">Salvar</Button>
-            </form>
-          </DialogContent>
-        </Dialog>
+        <Button size="sm" onClick={openNew} className="gold-gradient text-white gap-1.5 rounded-xl">
+          <Plus className="w-3.5 h-3.5" /> Novo Setor
+        </Button>
       </div>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="rounded-2xl">
+          <DialogHeader><DialogTitle>{editing ? 'Editar Setor' : 'Criar Setor'}</DialogTitle></DialogHeader>
+          <form onSubmit={handleSave} className="space-y-3">
+            <div className="space-y-1"><Label>Nome *</Label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Ex: Produção, RH..." required className="rounded-xl" /></div>
+            <div className="space-y-1"><Label>Unidade</Label>
+              <select value={form.unidade} onChange={e => setForm(f => ({ ...f, unidade: e.target.value }))} className="w-full h-9 rounded-xl border border-input bg-background px-3 text-sm">
+                <option value="">Selecionar unidade</option>
+                {unidades.map(u => <option key={u.id} value={u.name}>{u.name}</option>)}
+              </select>
+            </div>
+            <div className="space-y-1"><Label>Responsável</Label><Input value={form.responsavel} onChange={e => setForm(f => ({ ...f, responsavel: e.target.value }))} placeholder="Nome do responsável" className="rounded-xl" /></div>
+            <div className="space-y-1"><Label>Descrição</Label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Breve descrição" className="rounded-xl" /></div>
+            <Button type="submit" className="w-full gold-gradient text-white rounded-xl">{editing ? 'Salvar alterações' : 'Criar Setor'}</Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+
       <div className="space-y-2">
         {setores.map(s => (
           <Card key={s.id} className="rounded-xl border-border/60">
@@ -75,8 +88,12 @@ export default function SetoresTab() {
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-sm">{s.name}</p>
                 <p className="text-xs text-muted-foreground">{[s.unidade, s.responsavel].filter(Boolean).join(' · ')}</p>
+                {s.description && <p className="text-xs text-muted-foreground">{s.description}</p>}
               </div>
               {s.unidade && <Badge variant="secondary" className="text-xs">{s.unidade}</Badge>}
+              <Button variant="ghost" size="icon" onClick={() => openEdit(s)} className="w-8 h-8 text-primary hover:bg-primary/10 shrink-0">
+                <Pencil className="w-4 h-4" />
+              </Button>
               <Button variant="ghost" size="icon" onClick={() => handleDelete(s.id)} className="w-8 h-8 text-red-500 hover:bg-red-50 shrink-0">
                 <Trash2 className="w-4 h-4" />
               </Button>

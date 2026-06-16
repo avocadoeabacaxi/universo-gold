@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Users, FileText, Globe, Shield, Trash2, Loader2, UserPlus, Building2, MapPin, Briefcase, UserCircle, Lock } from 'lucide-react';
+import { Users, FileText, Globe, Shield, Trash2, Loader2, UserPlus, Building2, MapPin, Briefcase, UserCircle, Lock, Pencil } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -26,6 +26,9 @@ export default function Admin() {
   const [inviteRole, setInviteRole] = useState('user');
   const [inviting, setInviting] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingProfile, setEditingProfile] = useState(null);
+  const [editProfileForm, setEditProfileForm] = useState({});
+  const [editProfileOpen, setEditProfileOpen] = useState(false);
 
   useEffect(() => {
     const init = async () => {
@@ -71,6 +74,20 @@ export default function Admin() {
     await base44.entities.Community.update(id, { status: 'inactive' });
     setCommunities(prev => prev.filter(c => c.id !== id));
     toast.success('Comunidade arquivada.');
+  };
+
+  const openEditProfile = (profile) => {
+    setEditingProfile(profile);
+    setEditProfileForm({ full_name: profile.full_name || '', department: profile.department || '', job_title: profile.job_title || '', gestor: profile.gestor || '', phone: profile.phone || '', bio: profile.bio || '' });
+    setEditProfileOpen(true);
+  };
+
+  const handleSaveProfile = async (e) => {
+    e.preventDefault();
+    await base44.entities.UserProfile.update(editingProfile.id, editProfileForm);
+    setProfiles(prev => prev.map(p => p.id === editingProfile.id ? { ...p, ...editProfileForm } : p));
+    setEditProfileOpen(false);
+    toast.success('Perfil atualizado!');
   };
 
   const deleteDocument = async (id) => {
@@ -167,6 +184,22 @@ export default function Admin() {
 
         {/* Usuários */}
         <TabsContent value="users">
+          {/* Edit Profile Dialog */}
+          <Dialog open={editProfileOpen} onOpenChange={setEditProfileOpen}>
+            <DialogContent className="rounded-2xl">
+              <DialogHeader><DialogTitle>Editar Perfil</DialogTitle></DialogHeader>
+              <form onSubmit={handleSaveProfile} className="space-y-3">
+                <div className="space-y-1"><Label>Nome completo</Label><Input value={editProfileForm.full_name || ''} onChange={e => setEditProfileForm(f => ({ ...f, full_name: e.target.value }))} className="rounded-xl" /></div>
+                <div className="space-y-1"><Label>Departamento</Label><Input value={editProfileForm.department || ''} onChange={e => setEditProfileForm(f => ({ ...f, department: e.target.value }))} className="rounded-xl" /></div>
+                <div className="space-y-1"><Label>Cargo</Label><Input value={editProfileForm.job_title || ''} onChange={e => setEditProfileForm(f => ({ ...f, job_title: e.target.value }))} className="rounded-xl" /></div>
+                <div className="space-y-1"><Label>Gestor</Label><Input value={editProfileForm.gestor || ''} onChange={e => setEditProfileForm(f => ({ ...f, gestor: e.target.value }))} className="rounded-xl" /></div>
+                <div className="space-y-1"><Label>Telefone</Label><Input value={editProfileForm.phone || ''} onChange={e => setEditProfileForm(f => ({ ...f, phone: e.target.value }))} className="rounded-xl" /></div>
+                <div className="space-y-1"><Label>Bio</Label><textarea value={editProfileForm.bio || ''} onChange={e => setEditProfileForm(f => ({ ...f, bio: e.target.value }))} rows={2} className="w-full rounded-xl border border-input bg-background px-3 py-2 text-sm" /></div>
+                <Button type="submit" className="w-full gold-gradient text-white rounded-xl">Salvar alterações</Button>
+              </form>
+            </DialogContent>
+          </Dialog>
+
           <div className="space-y-2">
             {profiles.map(profile => (
               <Card key={profile.id} className="rounded-xl border-border/60">
@@ -184,6 +217,9 @@ export default function Admin() {
                   <Badge className={`text-[10px] border-0 ${roleBadgeColor[profile.role] || roleBadgeColor.user}`}>
                     {roleLabels[profile.role] || 'Colaborador'}
                   </Badge>
+                  <Button variant="ghost" size="icon" onClick={() => openEditProfile(profile)} className="w-8 h-8 text-primary hover:bg-primary/10 shrink-0">
+                    <Pencil className="w-4 h-4" />
+                  </Button>
                   {profile.status === 'active' && (
                     <Button variant="ghost" size="icon" onClick={() => deactivateProfile(profile.id)} className="w-8 h-8 text-red-500 hover:bg-red-50 shrink-0">
                       <Trash2 className="w-4 h-4" />

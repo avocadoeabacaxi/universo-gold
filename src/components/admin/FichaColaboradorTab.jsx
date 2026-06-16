@@ -1,18 +1,74 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Plus, Trash2, UserCircle, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, Trash2, UserCircle, Loader2, ChevronDown, ChevronUp, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 
 const STATUS_COLOR = { ativo: 'bg-green-100 text-green-700', inativo: 'bg-gray-100 text-gray-600', ferias: 'bg-blue-100 text-blue-700', afastado: 'bg-red-100 text-red-700' };
 const REGIME_LABEL = { clt: 'CLT', pj: 'PJ', estagio: 'Estágio', temporario: 'Temporário' };
-
 const EMPTY_FORM = { full_name: '', cpf: '', rg: '', data_nascimento: '', matricula: '', data_admissao: '', funcao_name: '', setor_name: '', unidade_name: '', regime_contratacao: 'clt', cep: '', endereco: '', bairro: '', cidade: '', estado: '', telefone: '', status: 'ativo' };
+
+function FichaForm({ form, setForm, setores, funcoes, unidades, onSubmit, editing }) {
+  return (
+    <form onSubmit={onSubmit} className="space-y-4">
+      <p className="text-xs font-semibold text-primary uppercase tracking-wide">Dados Pessoais</p>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="col-span-2 space-y-1"><Label>Nome completo *</Label><Input value={form.full_name} onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))} required className="rounded-xl" /></div>
+        <div className="space-y-1"><Label>CPF *</Label><Input value={form.cpf} onChange={e => setForm(f => ({ ...f, cpf: e.target.value }))} placeholder="000.000.000-00" required className="rounded-xl" /></div>
+        <div className="space-y-1"><Label>RG</Label><Input value={form.rg} onChange={e => setForm(f => ({ ...f, rg: e.target.value }))} className="rounded-xl" /></div>
+        <div className="space-y-1"><Label>Data de nascimento</Label><Input type="date" value={form.data_nascimento} onChange={e => setForm(f => ({ ...f, data_nascimento: e.target.value }))} className="rounded-xl" /></div>
+        <div className="space-y-1"><Label>Telefone</Label><Input value={form.telefone} onChange={e => setForm(f => ({ ...f, telefone: e.target.value }))} placeholder="(11) 99999-9999" className="rounded-xl" /></div>
+      </div>
+
+      <p className="text-xs font-semibold text-primary uppercase tracking-wide pt-2">Registro de Trabalho</p>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-1"><Label>Matrícula</Label><Input value={form.matricula} onChange={e => setForm(f => ({ ...f, matricula: e.target.value }))} className="rounded-xl" /></div>
+        <div className="space-y-1"><Label>Data de admissão</Label><Input type="date" value={form.data_admissao} onChange={e => setForm(f => ({ ...f, data_admissao: e.target.value }))} className="rounded-xl" /></div>
+        <div className="space-y-1"><Label>Regime</Label>
+          <select value={form.regime_contratacao} onChange={e => setForm(f => ({ ...f, regime_contratacao: e.target.value }))} className="w-full h-9 rounded-xl border border-input bg-background px-3 text-sm">
+            <option value="clt">CLT</option><option value="pj">PJ</option><option value="estagio">Estágio</option><option value="temporario">Temporário</option>
+          </select>
+        </div>
+        <div className="space-y-1"><Label>Status</Label>
+          <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))} className="w-full h-9 rounded-xl border border-input bg-background px-3 text-sm">
+            <option value="ativo">Ativo</option><option value="inativo">Inativo</option><option value="ferias">Férias</option><option value="afastado">Afastado</option>
+          </select>
+        </div>
+        <div className="space-y-1"><Label>Função</Label>
+          <select value={form.funcao_name} onChange={e => setForm(f => ({ ...f, funcao_name: e.target.value }))} className="w-full h-9 rounded-xl border border-input bg-background px-3 text-sm">
+            <option value="">Selecionar</option>{funcoes.map(f => <option key={f.id} value={f.name}>{f.name}</option>)}
+          </select>
+        </div>
+        <div className="space-y-1"><Label>Setor</Label>
+          <select value={form.setor_name} onChange={e => setForm(f => ({ ...f, setor_name: e.target.value }))} className="w-full h-9 rounded-xl border border-input bg-background px-3 text-sm">
+            <option value="">Selecionar</option>{setores.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
+          </select>
+        </div>
+        <div className="col-span-2 space-y-1"><Label>Unidade</Label>
+          <select value={form.unidade_name} onChange={e => setForm(f => ({ ...f, unidade_name: e.target.value }))} className="w-full h-9 rounded-xl border border-input bg-background px-3 text-sm">
+            <option value="">Selecionar</option>{unidades.map(u => <option key={u.id} value={u.name}>{u.name}</option>)}
+          </select>
+        </div>
+      </div>
+
+      <p className="text-xs font-semibold text-primary uppercase tracking-wide pt-2">Endereço Residencial</p>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-1"><Label>CEP</Label><Input value={form.cep} onChange={e => setForm(f => ({ ...f, cep: e.target.value }))} placeholder="00000-000" className="rounded-xl" /></div>
+        <div className="col-span-2 space-y-1"><Label>Endereço</Label><Input value={form.endereco} onChange={e => setForm(f => ({ ...f, endereco: e.target.value }))} placeholder="Rua, número" className="rounded-xl" /></div>
+        <div className="space-y-1"><Label>Bairro</Label><Input value={form.bairro} onChange={e => setForm(f => ({ ...f, bairro: e.target.value }))} className="rounded-xl" /></div>
+        <div className="space-y-1"><Label>Cidade</Label><Input value={form.cidade} onChange={e => setForm(f => ({ ...f, cidade: e.target.value }))} className="rounded-xl" /></div>
+        <div className="space-y-1"><Label>Estado (UF)</Label><Input value={form.estado} onChange={e => setForm(f => ({ ...f, estado: e.target.value }))} maxLength={2} className="rounded-xl" /></div>
+      </div>
+
+      <Button type="submit" className="w-full gold-gradient text-white rounded-xl">{editing ? 'Salvar alterações' : 'Criar Ficha'}</Button>
+    </form>
+  );
+}
 
 export default function FichaColaboradorTab() {
   const [fichas, setFichas] = useState([]);
@@ -21,6 +77,7 @@ export default function FichaColaboradorTab() {
   const [unidades, setUnidades] = useState([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState(null);
   const [expanded, setExpanded] = useState(null);
   const [form, setForm] = useState(EMPTY_FORM);
 
@@ -33,13 +90,33 @@ export default function FichaColaboradorTab() {
     ]).then(([fc, s, f, u]) => { setFichas(fc); setSetores(s); setFuncoes(f); setUnidades(u); setLoading(false); });
   }, []);
 
+  const openNew = () => { setEditing(null); setForm(EMPTY_FORM); setOpen(true); };
+  const openEdit = (fc) => {
+    setEditing(fc);
+    setForm({
+      full_name: fc.full_name || '', cpf: fc.cpf || '', rg: fc.rg || '',
+      data_nascimento: fc.data_nascimento || '', matricula: fc.matricula || '',
+      data_admissao: fc.data_admissao || '', funcao_name: fc.funcao_name || '',
+      setor_name: fc.setor_name || '', unidade_name: fc.unidade_name || '',
+      regime_contratacao: fc.regime_contratacao || 'clt', cep: fc.cep || '',
+      endereco: fc.endereco || '', bairro: fc.bairro || '', cidade: fc.cidade || '',
+      estado: fc.estado || '', telefone: fc.telefone || '', status: fc.status || 'ativo',
+    });
+    setOpen(true);
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
-    const fc = await base44.entities.FichaColaborador.create(form);
-    setFichas(prev => [fc, ...prev]);
-    setForm(EMPTY_FORM);
+    if (editing) {
+      await base44.entities.FichaColaborador.update(editing.id, form);
+      setFichas(prev => prev.map(fc => fc.id === editing.id ? { ...fc, ...form } : fc));
+      toast.success('Ficha atualizada!');
+    } else {
+      const fc = await base44.entities.FichaColaborador.create(form);
+      setFichas(prev => [fc, ...prev]);
+      toast.success('Ficha criada!');
+    }
     setOpen(false);
-    toast.success('Ficha criada!');
   };
 
   const handleDelete = async (id) => {
@@ -54,67 +131,17 @@ export default function FichaColaboradorTab() {
     <div>
       <div className="flex justify-between items-center mb-4">
         <p className="text-sm text-muted-foreground">{fichas.length} fichas cadastradas</p>
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button size="sm" className="gold-gradient text-white gap-1.5 rounded-xl"><Plus className="w-3.5 h-3.5" /> Nova Ficha</Button>
-          </DialogTrigger>
-          <DialogContent className="rounded-2xl max-w-2xl max-h-[85vh] overflow-y-auto">
-            <DialogHeader><DialogTitle>Ficha do Colaborador</DialogTitle></DialogHeader>
-            <form onSubmit={handleSave} className="space-y-4">
-              <p className="text-xs font-semibold text-primary uppercase tracking-wide">Dados Pessoais</p>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="col-span-2 space-y-1"><Label>Nome completo *</Label><Input value={form.full_name} onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))} required className="rounded-xl" /></div>
-                <div className="space-y-1"><Label>CPF *</Label><Input value={form.cpf} onChange={e => setForm(f => ({ ...f, cpf: e.target.value }))} placeholder="000.000.000-00" required className="rounded-xl" /></div>
-                <div className="space-y-1"><Label>RG</Label><Input value={form.rg} onChange={e => setForm(f => ({ ...f, rg: e.target.value }))} className="rounded-xl" /></div>
-                <div className="space-y-1"><Label>Data de nascimento</Label><Input type="date" value={form.data_nascimento} onChange={e => setForm(f => ({ ...f, data_nascimento: e.target.value }))} className="rounded-xl" /></div>
-                <div className="space-y-1"><Label>Telefone</Label><Input value={form.telefone} onChange={e => setForm(f => ({ ...f, telefone: e.target.value }))} placeholder="(11) 99999-9999" className="rounded-xl" /></div>
-              </div>
-
-              <p className="text-xs font-semibold text-primary uppercase tracking-wide pt-2">Registro de Trabalho</p>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1"><Label>Matrícula</Label><Input value={form.matricula} onChange={e => setForm(f => ({ ...f, matricula: e.target.value }))} className="rounded-xl" /></div>
-                <div className="space-y-1"><Label>Data de admissão</Label><Input type="date" value={form.data_admissao} onChange={e => setForm(f => ({ ...f, data_admissao: e.target.value }))} className="rounded-xl" /></div>
-                <div className="space-y-1"><Label>Regime</Label>
-                  <select value={form.regime_contratacao} onChange={e => setForm(f => ({ ...f, regime_contratacao: e.target.value }))} className="w-full h-9 rounded-xl border border-input bg-background px-3 text-sm">
-                    <option value="clt">CLT</option><option value="pj">PJ</option><option value="estagio">Estágio</option><option value="temporario">Temporário</option>
-                  </select>
-                </div>
-                <div className="space-y-1"><Label>Status</Label>
-                  <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))} className="w-full h-9 rounded-xl border border-input bg-background px-3 text-sm">
-                    <option value="ativo">Ativo</option><option value="inativo">Inativo</option><option value="ferias">Férias</option><option value="afastado">Afastado</option>
-                  </select>
-                </div>
-                <div className="space-y-1"><Label>Função</Label>
-                  <select value={form.funcao_name} onChange={e => setForm(f => ({ ...f, funcao_name: e.target.value }))} className="w-full h-9 rounded-xl border border-input bg-background px-3 text-sm">
-                    <option value="">Selecionar</option>{funcoes.map(f => <option key={f.id} value={f.name}>{f.name}</option>)}
-                  </select>
-                </div>
-                <div className="space-y-1"><Label>Setor</Label>
-                  <select value={form.setor_name} onChange={e => setForm(f => ({ ...f, setor_name: e.target.value }))} className="w-full h-9 rounded-xl border border-input bg-background px-3 text-sm">
-                    <option value="">Selecionar</option>{setores.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
-                  </select>
-                </div>
-                <div className="col-span-2 space-y-1"><Label>Unidade</Label>
-                  <select value={form.unidade_name} onChange={e => setForm(f => ({ ...f, unidade_name: e.target.value }))} className="w-full h-9 rounded-xl border border-input bg-background px-3 text-sm">
-                    <option value="">Selecionar</option>{unidades.map(u => <option key={u.id} value={u.name}>{u.name}</option>)}
-                  </select>
-                </div>
-              </div>
-
-              <p className="text-xs font-semibold text-primary uppercase tracking-wide pt-2">Endereço Residencial</p>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1"><Label>CEP</Label><Input value={form.cep} onChange={e => setForm(f => ({ ...f, cep: e.target.value }))} placeholder="00000-000" className="rounded-xl" /></div>
-                <div className="col-span-2 space-y-1"><Label>Endereço</Label><Input value={form.endereco} onChange={e => setForm(f => ({ ...f, endereco: e.target.value }))} placeholder="Rua, número" className="rounded-xl" /></div>
-                <div className="space-y-1"><Label>Bairro</Label><Input value={form.bairro} onChange={e => setForm(f => ({ ...f, bairro: e.target.value }))} className="rounded-xl" /></div>
-                <div className="space-y-1"><Label>Cidade</Label><Input value={form.cidade} onChange={e => setForm(f => ({ ...f, cidade: e.target.value }))} className="rounded-xl" /></div>
-                <div className="space-y-1"><Label>Estado (UF)</Label><Input value={form.estado} onChange={e => setForm(f => ({ ...f, estado: e.target.value }))} maxLength={2} className="rounded-xl" /></div>
-              </div>
-
-              <Button type="submit" className="w-full gold-gradient text-white rounded-xl">Salvar Ficha</Button>
-            </form>
-          </DialogContent>
-        </Dialog>
+        <Button size="sm" onClick={openNew} className="gold-gradient text-white gap-1.5 rounded-xl">
+          <Plus className="w-3.5 h-3.5" /> Nova Ficha
+        </Button>
       </div>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="rounded-2xl max-w-2xl max-h-[85vh] overflow-y-auto">
+          <DialogHeader><DialogTitle>{editing ? 'Editar Ficha' : 'Nova Ficha do Colaborador'}</DialogTitle></DialogHeader>
+          <FichaForm form={form} setForm={setForm} setores={setores} funcoes={funcoes} unidades={unidades} onSubmit={handleSave} editing={editing} />
+        </DialogContent>
+      </Dialog>
 
       <div className="space-y-2">
         {fichas.map(fc => (
@@ -134,6 +161,9 @@ export default function FichaColaboradorTab() {
                 <button onClick={() => setExpanded(expanded === fc.id ? null : fc.id)} className="text-muted-foreground hover:text-foreground">
                   {expanded === fc.id ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                 </button>
+                <Button variant="ghost" size="icon" onClick={() => openEdit(fc)} className="w-8 h-8 text-primary hover:bg-primary/10 shrink-0">
+                  <Pencil className="w-4 h-4" />
+                </Button>
                 <Button variant="ghost" size="icon" onClick={() => handleDelete(fc.id)} className="w-8 h-8 text-red-500 hover:bg-red-50 shrink-0">
                   <Trash2 className="w-4 h-4" />
                 </Button>
