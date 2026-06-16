@@ -15,6 +15,8 @@ import SetoresTab from '@/components/admin/SetoresTab';
 import UnidadesTab from '@/components/admin/UnidadesTab';
 import FuncoesTab from '@/components/admin/FuncoesTab';
 import FichaColaboradorTab from '@/components/admin/FichaColaboradorTab';
+import AdminComunidadesTab from '@/components/admin/AdminComunidadesTab';
+import AdminDocumentosTab from '@/components/admin/AdminDocumentosTab';
 
 export default function Admin() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -275,54 +277,10 @@ export default function Admin() {
         <TabsContent value="fichas"><FichaColaboradorTab /></TabsContent>
 
         {/* Comunidades */}
-        <TabsContent value="communities">
-          <div className="space-y-2">
-            {communities.map(community => (
-              <Card key={community.id} className="rounded-xl border-border/60">
-                <CardContent className="p-4 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl gold-gradient flex items-center justify-center shrink-0">
-                    <span className="text-white text-xs font-bold">{community.name?.slice(0, 2).toUpperCase()}</span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-sm">{community.name}</p>
-                    <p className="text-xs text-muted-foreground">{community.members_count || 0} membros · {community.type === 'department' ? 'Departamento' : 'Grupo livre'}</p>
-                  </div>
-                  <Badge variant={community.visibility === 'open' ? 'secondary' : 'outline'} className="text-xs">
-                    {community.visibility === 'open' ? 'Aberta' : 'Fechada'}
-                  </Badge>
-                  <Button variant="ghost" size="icon" onClick={() => deleteCommunity(community.id)} className="w-8 h-8 text-red-500 hover:bg-red-50 shrink-0">
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
+        <TabsContent value="communities"><AdminComunidadesTab /></TabsContent>
 
         {/* Documentos */}
-        <TabsContent value="documents">
-          <div className="space-y-2">
-            {documents.filter(d => d.status === 'active').map(doc => (
-              <Card key={doc.id} className="rounded-xl border-border/60">
-                <CardContent className="p-4 flex items-center gap-3">
-                  <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center shrink-0">
-                    <FileText className="w-5 h-5 text-red-500" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-sm truncate">{doc.title}</p>
-                    <p className="text-xs text-muted-foreground">{doc.category} · {doc.uploader_name}</p>
-                  </div>
-                  <a href={doc.file_url} target="_blank" rel="noopener noreferrer">
-                    <Button variant="outline" size="sm" className="text-xs rounded-lg">Ver</Button>
-                  </a>
-                  <Button variant="ghost" size="icon" onClick={() => deleteDocument(doc.id)} className="w-8 h-8 text-red-500 hover:bg-red-50 shrink-0">
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
+        <TabsContent value="documents"><AdminDocumentosTab /></TabsContent>
       </Tabs>
     </div>
   );
