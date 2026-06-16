@@ -1,0 +1,79 @@
+{
+  "name": "Post",
+  "type": "object",
+  "properties": {
+    "author_id": {
+      "type": "string",
+      "description": "ID do autor"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Nome do autor"
+    },
+    "author_avatar": {
+      "type": "string",
+      "description": "URL do avatar do autor"
+    },
+    "author_role": {
+      "type": "string",
+      "description": "Cargo do autor"
+    },
+    "content": {
+      "type": "string",
+      "description": "Conte\u00fado do post"
+    },
+    "post_type": {
+      "type": "string",
+      "enum": [
+        "text",
+        "image",
+        "video",
+        "document"
+      ],
+      "default": "text"
+    },
+    "media_url": {
+      "type": "string",
+      "description": "URL de m\u00eddia anexada"
+    },
+    "community_id": {
+      "type": "string",
+      "description": "ID da comunidade (null = feed geral)"
+    },
+    "community_name": {
+      "type": "string",
+      "description": "Nome da comunidade"
+    },
+    "likes_count": {
+      "type": "number",
+      "default": 0
+    },
+    "comments_count": {
+      "type": "number",
+      "default": 0
+    },
+    "liked_by": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Lista de user IDs que curtiram"
+    },
+    "pinned": {
+      "type": "boolean",
+      "default": false
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "deleted"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "author_id",
+    "content"
+  ]
+}

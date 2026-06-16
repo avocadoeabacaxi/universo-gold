@@ -1,0 +1,58 @@
+{
+  "name": "Video",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "T\u00edtulo do v\u00eddeo"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descri\u00e7\u00e3o"
+    },
+    "embed_url": {
+      "type": "string",
+      "description": "URL embed do v\u00eddeo"
+    },
+    "thumbnail_url": {
+      "type": "string",
+      "description": "URL da thumbnail"
+    },
+    "community_id": {
+      "type": "string",
+      "description": "ID da comunidade"
+    },
+    "community_name": {
+      "type": "string",
+      "description": "Nome da comunidade"
+    },
+    "uploader_id": {
+      "type": "string",
+      "description": "ID de quem publicou"
+    },
+    "uploader_name": {
+      "type": "string",
+      "description": "Nome de quem publicou"
+    },
+    "views_count": {
+      "type": "number",
+      "default": 0
+    },
+    "duration": {
+      "type": "string",
+      "description": "Dura\u00e7\u00e3o do v\u00eddeo"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "archived"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "title",
+    "embed_url"
+  ]
+}

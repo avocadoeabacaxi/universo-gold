@@ -1,0 +1,66 @@
+{
+  "name": "Live",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "T\u00edtulo da live"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descri\u00e7\u00e3o"
+    },
+    "stream_url": {
+      "type": "string",
+      "description": "URL do stream/embed"
+    },
+    "thumbnail_url": {
+      "type": "string",
+      "description": "Thumbnail da live"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "live",
+        "ended"
+      ],
+      "default": "scheduled"
+    },
+    "scheduled_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data agendada"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "In\u00edcio da transmiss\u00e3o"
+    },
+    "ended_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Fim da transmiss\u00e3o"
+    },
+    "host_id": {
+      "type": "string",
+      "description": "ID do apresentador"
+    },
+    "host_name": {
+      "type": "string",
+      "description": "Nome do apresentador"
+    },
+    "community_id": {
+      "type": "string",
+      "description": "ID da comunidade"
+    },
+    "viewers_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "title",
+    "stream_url"
+  ]
+}

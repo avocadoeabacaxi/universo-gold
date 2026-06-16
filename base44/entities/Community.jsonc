@@ -1,0 +1,79 @@
+{
+  "name": "Community",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nome da comunidade"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descri\u00e7\u00e3o"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "department",
+        "free_group"
+      ],
+      "default": "free_group"
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "open",
+        "closed"
+      ],
+      "default": "open"
+    },
+    "avatar_url": {
+      "type": "string",
+      "description": "Imagem da comunidade"
+    },
+    "cover_url": {
+      "type": "string",
+      "description": "Imagem de capa"
+    },
+    "department": {
+      "type": "string",
+      "description": "Departamento (se tipo departamento)"
+    },
+    "leader_id": {
+      "type": "string",
+      "description": "ID do l\u00edder/moderador"
+    },
+    "leader_name": {
+      "type": "string",
+      "description": "Nome do l\u00edder"
+    },
+    "members": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Lista de member IDs"
+    },
+    "members_count": {
+      "type": "number",
+      "default": 0
+    },
+    "pending_members": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Membros aguardando aprova\u00e7\u00e3o"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

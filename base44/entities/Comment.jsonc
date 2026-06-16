@@ -1,0 +1,39 @@
+{
+  "name": "Comment",
+  "type": "object",
+  "properties": {
+    "post_id": {
+      "type": "string",
+      "description": "ID do post"
+    },
+    "author_id": {
+      "type": "string",
+      "description": "ID do autor"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Nome do autor"
+    },
+    "author_avatar": {
+      "type": "string",
+      "description": "Avatar do autor"
+    },
+    "content": {
+      "type": "string",
+      "description": "Conte\u00fado do coment\u00e1rio"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "deleted"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "post_id",
+    "author_id",
+    "content"
+  ]
+}

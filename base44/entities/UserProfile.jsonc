@@ -1,0 +1,68 @@
+{
+  "name": "UserProfile",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "ID do usu\u00e1rio (refer\u00eancia ao User)"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Nome completo"
+    },
+    "email": {
+      "type": "string",
+      "description": "Email corporativo"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "department_leader",
+        "moderator",
+        "user"
+      ],
+      "default": "user"
+    },
+    "department": {
+      "type": "string",
+      "description": "Departamento"
+    },
+    "job_title": {
+      "type": "string",
+      "description": "Cargo"
+    },
+    "avatar_url": {
+      "type": "string",
+      "description": "URL da foto de perfil"
+    },
+    "bio": {
+      "type": "string",
+      "description": "Breve bio"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Telefone"
+    },
+    "communities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs das comunidades"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "user_id",
+    "full_name",
+    "email"
+  ]
+}
