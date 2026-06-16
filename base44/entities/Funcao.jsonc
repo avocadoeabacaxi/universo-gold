@@ -1,0 +1,45 @@
+{
+  "name": "Funcao",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nome da fun\u00e7\u00e3o/cargo"
+    },
+    "setor_id": {
+      "type": "string",
+      "description": "ID do setor"
+    },
+    "setor_name": {
+      "type": "string",
+      "description": "Nome do setor"
+    },
+    "nivel": {
+      "type": "string",
+      "enum": [
+        "operacional",
+        "tecnico",
+        "supervisao",
+        "gerencia",
+        "diretoria"
+      ],
+      "default": "operacional",
+      "description": "N\u00edvel hier\u00e1rquico"
+    },
+    "descricao": {
+      "type": "string",
+      "description": "Descri\u00e7\u00e3o das atribui\u00e7\u00f5es"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

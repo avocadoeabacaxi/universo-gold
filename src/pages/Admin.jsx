@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Users, FileText, Video, Radio, Globe, Shield, Trash2, Loader2, UserPlus } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Users, FileText, Globe, Shield, Trash2, Loader2, UserPlus, Building2, MapPin, Briefcase, UserCircle, Lock } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { toast } from 'sonner';
+import SetoresTab from '@/components/admin/SetoresTab';
+import UnidadesTab from '@/components/admin/UnidadesTab';
+import FuncoesTab from '@/components/admin/FuncoesTab';
+import FichaColaboradorTab from '@/components/admin/FichaColaboradorTab';
 
 export default function Admin() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -93,13 +97,13 @@ export default function Admin() {
   const roleBadgeColor = { admin: 'bg-red-100 text-red-700', department_leader: 'bg-orange-100 text-orange-700', moderator: 'bg-blue-100 text-blue-700', user: 'bg-gray-100 text-gray-600' };
 
   return (
-    <div className="max-w-screen-lg mx-auto px-4 py-6">
+    <div className="max-w-screen-xl mx-auto px-4 py-6">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold font-heading flex items-center gap-2">
             <Shield className="w-6 h-6 text-primary" /> Painel Admin
           </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Gerencie usuários, conteúdos e permissões</p>
+          <p className="text-sm text-muted-foreground mt-0.5">Gerencie usuários, setores, unidades e permissões</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
@@ -150,12 +154,18 @@ export default function Admin() {
       </div>
 
       <Tabs defaultValue="users">
-        <TabsList className="mb-4">
+        <TabsList className="mb-4 flex flex-wrap gap-1 h-auto">
           <TabsTrigger value="users"><Users className="w-3.5 h-3.5 mr-1.5" /> Usuários</TabsTrigger>
+          <TabsTrigger value="permissions"><Lock className="w-3.5 h-3.5 mr-1.5" /> Permissões</TabsTrigger>
+          <TabsTrigger value="setores"><Building2 className="w-3.5 h-3.5 mr-1.5" /> Setores</TabsTrigger>
+          <TabsTrigger value="funcoes"><Briefcase className="w-3.5 h-3.5 mr-1.5" /> Funções</TabsTrigger>
+          <TabsTrigger value="unidades"><MapPin className="w-3.5 h-3.5 mr-1.5" /> Unidades</TabsTrigger>
+          <TabsTrigger value="fichas"><UserCircle className="w-3.5 h-3.5 mr-1.5" /> Fichas</TabsTrigger>
           <TabsTrigger value="communities"><Globe className="w-3.5 h-3.5 mr-1.5" /> Comunidades</TabsTrigger>
           <TabsTrigger value="documents"><FileText className="w-3.5 h-3.5 mr-1.5" /> Documentos</TabsTrigger>
         </TabsList>
 
+        {/* Usuários */}
         <TabsContent value="users">
           <div className="space-y-2">
             {profiles.map(profile => (
@@ -173,15 +183,6 @@ export default function Admin() {
                   <Badge className={`text-[10px] border-0 ${roleBadgeColor[profile.role] || roleBadgeColor.user}`}>
                     {roleLabels[profile.role] || 'Colaborador'}
                   </Badge>
-                  <Select value={profile.role || 'user'} onValueChange={v => updateProfileRole(profile.id, v)}>
-                    <SelectTrigger className="w-32 h-8 text-xs rounded-lg"><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="user">Colaborador</SelectItem>
-                      <SelectItem value="moderator">Moderador</SelectItem>
-                      <SelectItem value="department_leader">Líder</SelectItem>
-                      <SelectItem value="admin">Admin</SelectItem>
-                    </SelectContent>
-                  </Select>
                   {profile.status === 'active' && (
                     <Button variant="ghost" size="icon" onClick={() => deactivateProfile(profile.id)} className="w-8 h-8 text-red-500 hover:bg-red-50 shrink-0">
                       <Trash2 className="w-4 h-4" />
@@ -194,6 +195,49 @@ export default function Admin() {
           </div>
         </TabsContent>
 
+        {/* Permissões */}
+        <TabsContent value="permissions">
+          <div className="space-y-2">
+            {profiles.map(profile => (
+              <Card key={profile.id} className="rounded-xl border-border/60">
+                <CardContent className="p-4 flex items-center gap-3">
+                  <Avatar className="w-9 h-9 shrink-0">
+                    <AvatarFallback className="bg-primary/20 text-primary text-xs font-bold">
+                      {profile.full_name?.slice(0, 2).toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-sm truncate">{profile.full_name}</p>
+                    <p className="text-xs text-muted-foreground">{profile.email}</p>
+                  </div>
+                  <Select value={profile.role || 'user'} onValueChange={v => updateProfileRole(profile.id, v)}>
+                    <SelectTrigger className="w-36 h-8 text-xs rounded-lg"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="user">Colaborador</SelectItem>
+                      <SelectItem value="moderator">Moderador</SelectItem>
+                      <SelectItem value="department_leader">Líder de Dep.</SelectItem>
+                      <SelectItem value="admin">Administrador</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+
+        {/* Setores */}
+        <TabsContent value="setores"><SetoresTab /></TabsContent>
+
+        {/* Funções */}
+        <TabsContent value="funcoes"><FuncoesTab /></TabsContent>
+
+        {/* Unidades */}
+        <TabsContent value="unidades"><UnidadesTab /></TabsContent>
+
+        {/* Fichas de Colaborador */}
+        <TabsContent value="fichas"><FichaColaboradorTab /></TabsContent>
+
+        {/* Comunidades */}
         <TabsContent value="communities">
           <div className="space-y-2">
             {communities.map(community => (
@@ -218,6 +262,7 @@ export default function Admin() {
           </div>
         </TabsContent>
 
+        {/* Documentos */}
         <TabsContent value="documents">
           <div className="space-y-2">
             {documents.filter(d => d.status === 'active').map(doc => (
