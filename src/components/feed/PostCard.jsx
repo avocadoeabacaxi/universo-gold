@@ -154,32 +154,26 @@ export default function PostCard({ post, currentUser, onDelete }) {
 
         {/* Actions */}
         <div className="px-2 py-1 flex border-t border-border/50">
-          <Button
-            variant="ghost"
-            size="sm"
+          <button
             onClick={handleLike}
-            className={`flex-1 gap-2 text-sm font-medium rounded-lg ${liked ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`}
+            className={`flex-1 flex items-center justify-center gap-2 text-sm font-medium rounded-lg py-1.5 transition-colors hover:bg-primary/10 ${liked ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`}
           >
             <Heart className={`w-4 h-4 ${liked ? 'fill-primary' : ''}`} />
             Curtir
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
+          </button>
+          <button
             onClick={() => { setShowComments(!showComments); setCommenting(true); }}
-            className="flex-1 gap-2 text-sm font-medium text-muted-foreground hover:text-primary rounded-lg"
+            className="flex-1 flex items-center justify-center gap-2 text-sm font-medium text-muted-foreground rounded-lg py-1.5 transition-colors hover:bg-primary/10 hover:text-primary"
           >
             <MessageCircle className="w-4 h-4" />
             Comentar
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex-1 gap-2 text-sm font-medium text-muted-foreground hover:text-primary rounded-lg"
+          </button>
+          <button
+            className="flex-1 flex items-center justify-center gap-2 text-sm font-medium text-muted-foreground rounded-lg py-1.5 transition-colors hover:bg-primary/10 hover:text-primary"
           >
             <Share2 className="w-4 h-4" />
             Compartilhar
-          </Button>
+          </button>
         </div>
 
         {/* Comment input */}

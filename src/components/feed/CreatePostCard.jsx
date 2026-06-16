@@ -93,24 +93,22 @@ export default function CreatePostCard({ currentUser, communityId, communityName
               <div className="flex gap-1">
                 <label className="cursor-pointer">
                   <input type="file" accept="image/*" className="hidden" onChange={e => { setMediaFile(e.target.files[0]); setPostType('image'); }} />
-                  <Button variant="ghost" size="sm" className="text-green-600 hover:bg-green-50 gap-1.5 rounded-lg" asChild>
-                    <span><Image className="w-4 h-4" /> Foto</span>
-                  </Button>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-green-600 hover:bg-green-50 transition-colors cursor-pointer">
+                    <Image className="w-4 h-4" /> Foto
+                  </span>
                 </label>
                 <label className="cursor-pointer">
                   <input type="file" accept=".pdf,.docx,.xlsx,.pptx" className="hidden" onChange={e => { setMediaFile(e.target.files[0]); setPostType('document'); }} />
-                  <Button variant="ghost" size="sm" className="text-red-500 hover:bg-red-50 gap-1.5 rounded-lg" asChild>
-                    <span><FileText className="w-4 h-4" /> Arquivo</span>
-                  </Button>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-red-500 hover:bg-red-50 transition-colors cursor-pointer">
+                    <FileText className="w-4 h-4" /> Arquivo
+                  </span>
                 </label>
-                <Button
-                  variant="ghost"
-                  size="sm"
+                <button
                   onClick={() => { setPostType('video'); setExpanded(true); }}
-                  className="text-blue-500 hover:bg-blue-50 gap-1.5 rounded-lg"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-blue-500 hover:bg-blue-50 transition-colors"
                 >
                   <Video className="w-4 h-4" /> Vídeo
-                </Button>
+                </button>
               </div>
               <div className="flex gap-2">
                 <Button variant="ghost" size="sm" onClick={() => { setExpanded(false); setContent(''); setMediaFile(null); }}>
@@ -131,15 +129,15 @@ export default function CreatePostCard({ currentUser, communityId, communityName
 
         {!expanded && (
           <div className="mt-3 flex gap-1">
-            <Button variant="ghost" size="sm" onClick={() => setExpanded(true)} className="flex-1 gap-1.5 text-green-600 hover:bg-green-50 rounded-lg">
+            <button onClick={() => setExpanded(true)} className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-green-600 hover:bg-green-50 transition-colors">
               <Image className="w-4 h-4" /> Foto/Vídeo
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => setExpanded(true)} className="flex-1 gap-1.5 text-red-500 hover:bg-red-50 rounded-lg">
+            </button>
+            <button onClick={() => setExpanded(true)} className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-red-500 hover:bg-red-50 transition-colors">
               <FileText className="w-4 h-4" /> Arquivo
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => setExpanded(true)} className="flex-1 gap-1.5 text-orange-500 hover:bg-orange-50 rounded-lg">
+            </button>
+            <button onClick={() => setExpanded(true)} className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-orange-500 hover:bg-orange-50 transition-colors">
               <Video className="w-4 h-4" /> Vídeo
-            </Button>
+            </button>
           </div>
         )}
       </CardContent>
