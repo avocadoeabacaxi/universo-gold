@@ -179,6 +179,7 @@ export default function Admin() {
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-sm truncate">{profile.full_name}</p>
                     <p className="text-xs text-muted-foreground">{profile.email} · {profile.department}</p>
+                    {profile.gestor && <p className="text-xs text-muted-foreground">Gestor: {profile.gestor}</p>}
                   </div>
                   <Badge className={`text-[10px] border-0 ${roleBadgeColor[profile.role] || roleBadgeColor.user}`}>
                     {roleLabels[profile.role] || 'Colaborador'}
