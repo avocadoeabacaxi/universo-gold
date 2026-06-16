@@ -18,6 +18,10 @@ export default function CommunityDetail() {
   const [currentUser, setCurrentUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [uploadingCover, setUploadingCover] = useState(false);
+  const [uploadingIcon, setUploadingIcon] = useState(false);
+  const coverInputRef = useRef(null);
+  const iconInputRef = useRef(null);
 
   useEffect(() => {
     const init = async () => {
