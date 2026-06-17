@@ -1,7 +1,7 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Home, Users, FileText, Video, Radio, Bell, Search, Menu, X, Settings, LogOut, ChevronDown } from 'lucide-react';
+import { Home, Users, FileText, Video, Radio, Bell, Search, Menu, X, Settings, LogOut, ChevronDown, Megaphone, UserCog, Building2, Briefcase, MapPin, ClipboardList, UsersRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -10,6 +10,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
+  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
@@ -110,12 +111,48 @@ export default function Layout() {
                     <Users className="w-4 h-4 mr-2" /> Meu Perfil
                   </Link>
                 </DropdownMenuItem>
-                {user?.role === 'admin' && (
-                  <DropdownMenuItem asChild>
-                    <Link to="/admin" className="cursor-pointer">
-                      <Settings className="w-4 h-4 mr-2" /> Painel Admin
-                    </Link>
-                  </DropdownMenuItem>
+                {(user?.role === 'admin' || user?.role === 'department_leader') && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                      <Building2 className="w-3 h-3" /> RH &amp; Administração
+                    </DropdownMenuLabel>
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin?tab=comunicados" className="cursor-pointer">
+                        <Megaphone className="w-4 h-4 mr-2 text-orange-500" /> Comunicados
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin?tab=users" className="cursor-pointer">
+                        <UserCog className="w-4 h-4 mr-2 text-blue-500" /> Usuários &amp; Permissões
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin?tab=setores" className="cursor-pointer">
+                        <Briefcase className="w-4 h-4 mr-2 text-purple-500" /> Setores
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin?tab=funcoes" className="cursor-pointer">
+                        <ClipboardList className="w-4 h-4 mr-2 text-green-500" /> Funções
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin?tab=unidades" className="cursor-pointer">
+                        <MapPin className="w-4 h-4 mr-2 text-red-500" /> Unidades
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin?tab=fichas" className="cursor-pointer">
+                        <ClipboardList className="w-4 h-4 mr-2 text-yellow-600" /> Fichas de Colaborador
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin?tab=comunidades" className="cursor-pointer">
+                        <UsersRound className="w-4 h-4 mr-2 text-teal-500" /> Comunidades
+                      </Link>
+                    </DropdownMenuItem>
+                  </>
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => base44.auth.logout()} className="text-red-600 cursor-pointer">

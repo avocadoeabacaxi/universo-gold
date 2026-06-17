@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Users, FileText, Globe, Shield, Trash2, Loader2, UserPlus, Building2, MapPin, Briefcase, UserCircle, Lock, Pencil } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -17,8 +18,22 @@ import FuncoesTab from '@/components/admin/FuncoesTab';
 import FichaColaboradorTab from '@/components/admin/FichaColaboradorTab';
 import AdminComunidadesTab from '@/components/admin/AdminComunidadesTab';
 import AdminDocumentosTab from '@/components/admin/AdminDocumentosTab';
+import AdminComunicadosTab from '@/components/admin/AdminComunicadosTab';
+
+// Tab aliases: map URL params to internal tab values
+const TAB_ALIAS = {
+  comunicados: 'comunicados',
+  users: 'users',
+  permissions: 'permissions',
+  setores: 'setores',
+  funcoes: 'funcoes',
+  unidades: 'unidades',
+  fichas: 'fichas',
+  comunidades: 'communities',
+};
 
 export default function Admin() {
+  const location = useLocation();
   const [currentUser, setCurrentUser] = useState(null);
   const [profiles, setProfiles] = useState([]);
   const [communities, setCommunities] = useState([]);
@@ -31,6 +46,9 @@ export default function Admin() {
   const [editingProfile, setEditingProfile] = useState(null);
   const [editProfileForm, setEditProfileForm] = useState({});
   const [editProfileOpen, setEditProfileOpen] = useState(false);
+
+  const urlTab = new URLSearchParams(location.search).get('tab');
+  const defaultTab = TAB_ALIAS[urlTab] || 'users';
 
   useEffect(() => {
     const init = async () => {
@@ -172,8 +190,9 @@ export default function Admin() {
         ))}
       </div>
 
-      <Tabs defaultValue="users">
+      <Tabs defaultValue={defaultTab} key={defaultTab}>
         <TabsList className="mb-4 flex flex-wrap gap-1 h-auto">
+          <TabsTrigger value="comunicados"><Globe className="w-3.5 h-3.5 mr-1.5 text-orange-500" /> Comunicados</TabsTrigger>
           <TabsTrigger value="users"><Users className="w-3.5 h-3.5 mr-1.5" /> Usuários</TabsTrigger>
           <TabsTrigger value="permissions"><Lock className="w-3.5 h-3.5 mr-1.5" /> Permissões</TabsTrigger>
           <TabsTrigger value="setores"><Building2 className="w-3.5 h-3.5 mr-1.5" /> Setores</TabsTrigger>
@@ -183,6 +202,9 @@ export default function Admin() {
           <TabsTrigger value="communities"><Globe className="w-3.5 h-3.5 mr-1.5" /> Comunidades</TabsTrigger>
           <TabsTrigger value="documents"><FileText className="w-3.5 h-3.5 mr-1.5" /> Documentos</TabsTrigger>
         </TabsList>
+
+        {/* Comunicados */}
+        <TabsContent value="comunicados"><AdminComunicadosTab /></TabsContent>
 
         {/* Usuários */}
         <TabsContent value="users">
