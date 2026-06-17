@@ -23,7 +23,7 @@ import ResetPassword from './pages/ResetPassword';
 import Layout from './components/Layout';
 
 const AuthenticatedApp = () => {
-  const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+  const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin, isAuthenticated } = useAuth();
 
   if (isLoadingPublicSettings || isLoadingAuth) {
     return (
@@ -43,6 +43,14 @@ const AuthenticatedApp = () => {
       navigateToLogin();
       return null;
     }
+  }
+
+  // Se não está autenticado e não está nas rotas públicas, redireciona para login
+  const publicPaths = ['/login', '/forgot-password', '/reset-password'];
+  const isPublicPath = publicPaths.some(p => window.location.pathname.startsWith(p));
+  if (!isAuthenticated && !isPublicPath) {
+    navigateToLogin();
+    return null;
   }
 
   return (
