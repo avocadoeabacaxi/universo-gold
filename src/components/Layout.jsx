@@ -101,7 +101,7 @@ export default function Layout() {
                   <ChevronDown className="w-3 h-3 text-white/70 hidden md:block" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-52 mt-1">
+              <DropdownMenuContent align="end" className="w-52 mt-1 z-[200]">
                 <div className="px-3 py-2 border-b">
                   <p className="font-semibold text-sm">{user?.full_name || 'Usuário'}</p>
                   <p className="text-xs text-muted-foreground">{user?.email || ''}</p>
