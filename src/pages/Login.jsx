@@ -58,7 +58,7 @@ export default function Login() {
         <div className="absolute -bottom-20 left-1/4 w-64 h-64 rounded-full bg-white/5 pointer-events-none" />
 
         {/* Logo com movimento suave */}
-        <div className="relative z-10 mx-5" style={{ animation: "floatLogo 6s ease-in-out infinite" }}>
+        <div className="relative z-10" style={{ animation: "floatLogo 6s ease-in-out infinite" }}>
           <img
             src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/b87b7fd13_logo.png"
             alt="Universo Gold Pão"
