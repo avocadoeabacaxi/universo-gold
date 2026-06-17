@@ -175,18 +175,17 @@ export default function Layout() {
 
         {/* Mobile Nav */}
         {mobileMenuOpen && (
-          <div className="md:hidden bg-blue-900 border-t border-white/20 px-4 py-2 flex flex-wrap gap-2">
-            {navItems.map(({ icon: Icon, label, path }) => (
-              <Link key={path} to={path} onClick={() => setMobileMenuOpen(false)}>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={`text-white/80 hover:text-white hover:bg-white/20 ${isActive(path) ? 'bg-white/25 text-white' : ''}`}
-                >
-                  <Icon className="w-4 h-4 mr-1.5" /> {label}
-                </Button>
-              </Link>
-            ))}
+          <div className="md:hidden bg-[#1a3a7a] border-t border-white/20 px-3 py-3">
+            <div className="grid grid-cols-3 gap-1">
+              {navItems.map(({ icon: Icon, label, path }) => (
+                <Link key={path} to={path} onClick={() => setMobileMenuOpen(false)}>
+                  <div className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/20 hover:text-white transition-colors ${isActive(path) ? 'bg-white/25 text-white' : ''}`}>
+                    <Icon className="w-4 h-4 shrink-0" />
+                    <span className="text-sm font-medium">{label}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         )}
       </header>
