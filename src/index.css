@@ -12,35 +12,35 @@
     --card-foreground: 220 25% 10%;
     --popover: 0 0% 100%;
     --popover-foreground: 220 25% 10%;
-    --primary: 221 65% 40%;
+    --primary: 217 83% 34%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 221 50% 92%;
-    --secondary-foreground: 221 65% 30%;
+    --secondary: 217 50% 92%;
+    --secondary-foreground: 217 83% 24%;
     --muted: 220 15% 93%;
     --muted-foreground: 220 10% 50%;
-    --accent: 221 65% 40%;
+    --accent: 217 83% 34%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 220 15% 88%;
     --input: 220 15% 88%;
-    --ring: 221 65% 40%;
+    --ring: 217 83% 34%;
     --radius: 0.75rem;
     --font-heading: 'Nunito', ui-sans-serif, system-ui, sans-serif;
     --font-body: 'Nunito', ui-sans-serif, system-ui, sans-serif;
     --font-display: 'Nunito', ui-sans-serif, system-ui, sans-serif;
-    --gold-blue: #2B4FA0;
-    --gold-blue-light: #4169C8;
-    --gold-blue-dark: #1a3478;
+    --gold-blue: #0E4AA1;
+    --gold-blue-light: #2B6FCC;
+    --gold-blue-dark: #093478;
     --gold-accent: #D4A017;
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 220 25% 20%;
-    --sidebar-primary: 221 65% 40%;
+    --sidebar-primary: 217 83% 34%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 221 50% 92%;
-    --sidebar-accent-foreground: 221 65% 30%;
+    --sidebar-accent: 217 50% 92%;
+    --sidebar-accent-foreground: 217 83% 24%;
     --sidebar-border: 220 15% 88%;
-    --sidebar-ring: 221 65% 40%;
+    --sidebar-ring: 217 83% 34%;
   }
 
   .dark {
