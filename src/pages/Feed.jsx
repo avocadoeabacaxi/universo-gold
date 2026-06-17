@@ -4,7 +4,6 @@ import { Loader2 } from 'lucide-react';
 import PostCard from '@/components/feed/PostCard';
 import CreatePostCard from '@/components/feed/CreatePostCard';
 import ComunicadosSection from '@/components/feed/ComunicadosSection';
-import AniversariantesSection from '@/components/feed/AniversariantesSection';
 import LeftSidebar from '@/components/sidebar/LeftSidebar';
 import RightSidebar from '@/components/sidebar/RightSidebar';
 
@@ -62,7 +61,6 @@ export default function Feed() {
         {/* Feed */}
         <div className="flex-1 min-w-0 space-y-3 max-w-2xl mx-auto lg:mx-0">
           <ComunicadosSection currentUser={enrichedUser} />
-          <AniversariantesSection currentUser={enrichedUser} />
           <CreatePostCard
             currentUser={enrichedUser}
             onPostCreated={handlePostCreated}
@@ -86,7 +84,7 @@ export default function Feed() {
 
         {/* Right Sidebar */}
         <div className="hidden xl:block">
-          <RightSidebar />
+          <RightSidebar currentUser={enrichedUser} />
         </div>
       </div>
     </div>

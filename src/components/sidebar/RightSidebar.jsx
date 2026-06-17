@@ -4,8 +4,9 @@ import { Link } from 'react-router-dom';
 import { Radio, Users, Video, ChevronRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import AniversariantesSection from '@/components/feed/AniversariantesSection';
 
-export default function RightSidebar() {
+export default function RightSidebar({ currentUser }) {
   const [lives, setLives] = useState([]);
   const [suggestedCommunities, setSuggestedCommunities] = useState([]);
 
@@ -16,6 +17,9 @@ export default function RightSidebar() {
 
   return (
     <aside className="w-64 shrink-0 space-y-3 sticky top-[72px] max-h-[calc(100vh-80px)] overflow-y-auto scrollbar-thin pb-4">
+      {/* Aniversariantes */}
+      <AniversariantesSection currentUser={currentUser} />
+
       {/* Lives ao vivo */}
       {lives.length > 0 && (
         <div className="bg-card rounded-xl border border-border/60 p-3">
