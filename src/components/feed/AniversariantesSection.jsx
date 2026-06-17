@@ -218,17 +218,9 @@ export default function AniversariantesSection({ currentUser }) {
 
       <div className="bg-white rounded-xl border border-yellow-200 shadow-sm overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-3 py-2.5 bg-gradient-to-r from-yellow-50 to-orange-50 border-b border-yellow-100">
-          <div className="flex items-center gap-1.5 min-w-0">
-            <span className="text-sm shrink-0">🎂</span>
-            <span className="font-bold text-xs text-gray-800 truncate">Aniversariantes da Semana</span>
-          </div>
-          <button
-            onClick={() => setShowAll(true)}
-            className="flex items-center gap-0.5 text-xs text-primary font-semibold hover:underline shrink-0 ml-2"
-          >
-            Ver todos <ChevronRight className="w-3 h-3" />
-          </button>
+        <div className="flex items-center gap-1.5 px-3 py-2.5 bg-gradient-to-r from-yellow-50 to-orange-50 border-b border-yellow-100">
+          <span className="text-sm shrink-0">🎂</span>
+          <span className="font-bold text-xs text-gray-800">Aniversariantes da Semana</span>
         </div>
 
         {/* Avatares */}
@@ -258,6 +250,16 @@ export default function AniversariantesSection({ currentUser }) {
               </button>
             );
           })}
+        </div>
+
+        {/* Ver todos - rodapé */}
+        <div className="border-t border-yellow-100">
+          <button
+            onClick={() => setShowAll(true)}
+            className="w-full flex items-center justify-center gap-1 py-2 text-xs text-primary font-semibold hover:bg-yellow-50 transition"
+          >
+            Ver todos <ChevronRight className="w-3 h-3" />
+          </button>
         </div>
       </div>
     </>
