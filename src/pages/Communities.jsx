@@ -129,7 +129,7 @@ export default function Communities() {
                   </div>
                   <CardContent className="p-4">
                     <div className="flex items-start gap-3">
-                      <div className="w-12 h-12 rounded-xl shrink-0 -mt-8 border-4 border-white shadow-sm overflow-hidden">
+                      <div className="w-12 h-12 rounded-xl shrink-0 -mt-8 border-4 border-white shadow-sm overflow-hidden relative z-10">
                         {community.avatar_url ? (
                           <img src={community.avatar_url} alt={community.name} className="w-full h-full object-cover" />
                         ) : (
