@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Megaphone, Plus, Archive, Loader2, Pin } from 'lucide-react';
+import { Megaphone, Plus, Archive, Loader2, Pin, ImagePlus, X } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function AdminComunicadosTab() {
@@ -16,11 +16,15 @@ export default function AdminComunicadosTab() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [departments, setDepartments] = useState([]);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [form, setForm] = useState({
     title: '',
     content: '',
     type: 'message',
     target_audience: 'all',
+    target_department: '',
+    image_url: '',
     pinned: true,
   });
 
@@ -28,12 +32,27 @@ export default function AdminComunicadosTab() {
     const init = async () => {
       const u = await base44.auth.me();
       setCurrentUser(u);
-      const data = await base44.entities.Comunicado.list('-created_date', 50);
+      const [data, setores] = await Promise.all([
+        base44.entities.Comunicado.list('-created_date', 50),
+        base44.entities.Setor.filter({ status: 'active' }),
+      ]);
       setComunicados(data);
+      // Extrair departamentos únicos dos setores
+      const deps = [...new Set(setores.map(s => s.name).filter(Boolean))];
+      setDepartments(deps);
       setLoading(false);
     };
     init().catch(() => setLoading(false));
   }, []);
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadingImage(true);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    setForm(f => ({ ...f, image_url: file_url }));
+    setUploadingImage(false);
+  };
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -45,7 +64,7 @@ export default function AdminComunicadosTab() {
       status: 'active',
     });
     setComunicados(prev => [novo, ...prev]);
-    setForm({ title: '', content: '', type: 'message', target_audience: 'all', pinned: true });
+    setForm({ title: '', content: '', type: 'message', target_audience: 'all', target_department: '', image_url: '', pinned: true });
     setDialogOpen(false);
     setSaving(false);
     toast.success('Comunicado publicado!');
@@ -104,7 +123,7 @@ export default function AdminComunicadosTab() {
                 </div>
                 <div className="space-y-1">
                   <Label>Público alvo</Label>
-                  <Select value={form.target_audience} onValueChange={v => setForm(f => ({ ...f, target_audience: v }))}>
+                  <Select value={form.target_audience} onValueChange={v => setForm(f => ({ ...f, target_audience: v, target_department: '' }))}>
                     <SelectTrigger className="rounded-xl"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Todos</SelectItem>
@@ -114,6 +133,55 @@ export default function AdminComunicadosTab() {
                   </Select>
                 </div>
               </div>
+
+              {/* Departamento (visível só quando target = department) */}
+              {form.target_audience === 'department' && (
+                <div className="space-y-1">
+                  <Label>Departamento / Setor *</Label>
+                  <Select value={form.target_department} onValueChange={v => setForm(f => ({ ...f, target_department: v }))}>
+                    <SelectTrigger className="rounded-xl"><SelectValue placeholder="Selecione um setor" /></SelectTrigger>
+                    <SelectContent>
+                      {departments.length === 0 && (
+                        <SelectItem value="_none" disabled>Nenhum setor cadastrado</SelectItem>
+                      )}
+                      {departments.map(dep => (
+                        <SelectItem key={dep} value={dep}>{dep}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              {/* Upload de imagem (visível para banners ou opcional) */}
+              {form.type === 'banner' && (
+                <div className="space-y-1">
+                  <Label>Imagem do banner</Label>
+                  {form.image_url ? (
+                    <div className="relative rounded-xl overflow-hidden border border-border">
+                      <img src={form.image_url} alt="Banner" className="w-full h-32 object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => setForm(f => ({ ...f, image_url: '' }))}
+                        className="absolute top-2 right-2 w-6 h-6 bg-black/60 rounded-full flex items-center justify-center text-white hover:bg-black/80"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ) : (
+                    <label className="flex flex-col items-center justify-center h-24 rounded-xl border-2 border-dashed border-border cursor-pointer hover:bg-muted/40 transition-colors">
+                      {uploadingImage ? (
+                        <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+                      ) : (
+                        <>
+                          <ImagePlus className="w-5 h-5 text-muted-foreground mb-1" />
+                          <span className="text-xs text-muted-foreground">Clique para fazer upload</span>
+                        </>
+                      )}
+                      <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={uploadingImage} />
+                    </label>
+                  )}
+                </div>
+              )}
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
