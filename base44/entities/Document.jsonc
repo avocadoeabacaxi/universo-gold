@@ -20,7 +20,7 @@
     },
     "file_type": {
       "type": "string",
-      "description": "Tipo do arquivo (pdf, docx, etc)"
+      "description": "Extens\u00e3o do arquivo (pdf, docx, etc)"
     },
     "category": {
       "type": "string",
@@ -41,7 +41,29 @@
         "department",
         "admin"
       ],
-      "default": "all"
+      "default": "all",
+      "description": "Quem pode visualizar"
+    },
+    "edit_access": {
+      "type": "string",
+      "enum": [
+        "only_me",
+        "editors",
+        "admin"
+      ],
+      "default": "only_me",
+      "description": "Quem pode editar/substituir"
+    },
+    "allowed_departments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Departamentos com acesso (se access_level=department)"
+    },
+    "password": {
+      "type": "string",
+      "description": "Senha de acesso ao documento (opcional)"
     },
     "uploader_id": {
       "type": "string",
@@ -54,6 +76,18 @@
     "downloads_count": {
       "type": "number",
       "default": 0
+    },
+    "version": {
+      "type": "number",
+      "default": 1,
+      "description": "Vers\u00e3o do documento"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tags para busca"
     },
     "status": {
       "type": "string",

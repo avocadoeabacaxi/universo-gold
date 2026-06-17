@@ -1,16 +1,30 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { FileText, Upload, Search, Download, Folder, Loader2, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { FileText, Upload, Search, Download, Folder, Loader2, Lock, Pencil, Archive, Tag, MoreVertical, Eye } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 import LeftSidebar from '@/components/sidebar/LeftSidebar';
+import DocumentUploadModal from '@/components/repository/DocumentUploadModal';
+import DocumentPasswordModal from '@/components/repository/DocumentPasswordModal';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
-const CATEGORIES = ['Geral', 'RH', 'Financeiro', 'Operacional', 'Treinamentos', 'Comunicados', 'Políticas', 'Procedimentos'];
+const CATEGORIES = ['Geral', 'RH', 'Financeiro', 'Operacional', 'Treinamentos', 'Comunicados', 'Políticas', 'Procedimentos', 'Jurídico', 'TI', 'Marketing', 'Comercial'];
+
+const EXT_COLOR = {
+  pdf: 'bg-red-100 text-red-600',
+  docx: 'bg-blue-100 text-blue-600',
+  doc: 'bg-blue-100 text-blue-600',
+  xlsx: 'bg-green-100 text-green-600',
+  xls: 'bg-green-100 text-green-600',
+  pptx: 'bg-orange-100 text-orange-600',
+  ppt: 'bg-orange-100 text-orange-600',
+  png: 'bg-purple-100 text-purple-600',
+  jpg: 'bg-purple-100 text-purple-600',
+  jpeg: 'bg-purple-100 text-purple-600',
+  zip: 'bg-yellow-100 text-yellow-700',
+  rar: 'bg-yellow-100 text-yellow-700',
+};
 
 export default function Repository() {
   const [documents, setDocuments] = useState([]);
@@ -19,9 +33,12 @@ export default function Repository() {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [loading, setLoading] = useState(true);
-  const [uploading, setUploading] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [form, setForm] = useState({ title: '', description: '', category: 'Geral', file: null });
+
+  // Modals
+  const [uploadOpen, setUploadOpen] = useState(false);
+  const [editDoc, setEditDoc] = useState(null);
+  const [passwordDoc, setPasswordDoc] = useState(null); // doc aguardando senha
+  const [unlockedDocs, setUnlockedDocs] = useState(new Set()); // ids desbloqueados nessa sessão
 
   useEffect(() => {
     const init = async () => {
@@ -29,109 +46,101 @@ export default function Repository() {
       setCurrentUser(user);
       const profiles = await base44.entities.UserProfile.filter({ user_id: user.id });
       setUserProfile(profiles[0] || null);
-      const docs = await base44.entities.Document.filter({ status: 'active' }, '-created_date', 50);
+      const docs = await base44.entities.Document.filter({ status: 'active' }, '-created_date', 100);
       setDocuments(docs);
       setLoading(false);
     };
     init().catch(() => setLoading(false));
   }, []);
 
-  const handleUpload = async (e) => {
-    e.preventDefault();
-    if (!form.file) return;
-    setUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file: form.file });
-    const doc = await base44.entities.Document.create({
-      title: form.title,
-      description: form.description,
-      category: form.category,
-      file_url,
-      file_name: form.file.name,
-      file_type: form.file.name.split('.').pop(),
-      uploader_id: currentUser?.id,
-      uploader_name: currentUser?.full_name,
-      status: 'active',
-    });
-    setDocuments(prev => [doc, ...prev]);
-    setForm({ title: '', description: '', category: 'Geral', file: null });
-    setDialogOpen(false);
-    setUploading(false);
+  const isGlobalAdmin = currentUser?.role === 'admin' || userProfile?.role === 'admin';
+  const isLeader = userProfile?.role === 'department_leader';
+  const canUpload = isGlobalAdmin || isLeader;
+
+  const canEditDoc = (doc) => {
+    if (isGlobalAdmin) return true;
+    if (doc.uploader_id === currentUser?.id) return true;
+    if (doc.edit_access === 'editors' && (isLeader || isGlobalAdmin)) return true;
+    return false;
   };
 
-  const filtered = documents.filter(d => {
-    const matchSearch = d.title.toLowerCase().includes(search.toLowerCase());
-    const matchCat = selectedCategory === 'all' || d.category === selectedCategory;
-    return matchSearch && matchCat;
-  });
+  const canViewDoc = (doc) => {
+    if (isGlobalAdmin) return true;
+    if (doc.access_level === 'admin') return isGlobalAdmin;
+    if (doc.access_level === 'department') {
+      return doc.allowed_departments?.includes(userProfile?.department) || doc.uploader_id === currentUser?.id;
+    }
+    return true;
+  };
 
-  const canUpload = userProfile?.role === 'admin' || userProfile?.role === 'department_leader';
-  const enrichedUser = currentUser ? { ...currentUser, job_title: userProfile?.job_title, department: userProfile?.department } : null;
+  const handleDocClick = (doc) => {
+    if (doc.password && !unlockedDocs.has(doc.id) && !isGlobalAdmin) {
+      setPasswordDoc(doc);
+    } else {
+      openDoc(doc);
+    }
+  };
+
+  const openDoc = (doc) => {
+    window.open(doc.file_url, '_blank');
+    // Incrementa downloads
+    base44.entities.Document.update(doc.id, { downloads_count: (doc.downloads_count || 0) + 1 });
+  };
+
+  const handleUnlock = (doc) => {
+    setUnlockedDocs(prev => new Set([...prev, doc.id]));
+    openDoc(doc);
+  };
+
+  const handleArchive = async (doc) => {
+    if (!confirm('Arquivar este documento?')) return;
+    await base44.entities.Document.update(doc.id, { status: 'archived' });
+    setDocuments(prev => prev.filter(d => d.id !== doc.id));
+  };
+
+  const handleSaved = (saved, isEdit) => {
+    if (isEdit) {
+      setDocuments(prev => prev.map(d => d.id === saved.id ? saved : d));
+    } else {
+      setDocuments(prev => [saved, ...prev]);
+    }
+  };
+
+  const enrichedUser = currentUser ? { ...currentUser, avatar_url: userProfile?.avatar_url, job_title: userProfile?.job_title, department: userProfile?.department } : null;
+
+  const filtered = documents
+    .filter(canViewDoc)
+    .filter(d => {
+      const matchSearch = d.title.toLowerCase().includes(search.toLowerCase()) ||
+        d.description?.toLowerCase().includes(search.toLowerCase()) ||
+        d.tags?.some(t => t.toLowerCase().includes(search.toLowerCase()));
+      const matchCat = selectedCategory === 'all' || d.category === selectedCategory;
+      return matchSearch && matchCat;
+    });
 
   if (loading) return <div className="flex items-center justify-center min-h-[60vh]"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
 
   return (
     <div className="max-w-screen-xl mx-auto px-4 py-4">
       <div className="flex gap-4">
-        {/* Left Sidebar */}
         <div className="hidden lg:block">
           <LeftSidebar currentUser={enrichedUser} />
         </div>
 
-        {/* Main Content */}
         <div className="flex-1 min-w-0 py-2">
           {/* Header */}
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
             <div>
               <h1 className="text-2xl font-bold font-heading">Repositório de Documentos</h1>
               <p className="text-muted-foreground text-sm mt-0.5">Acesse todos os documentos da empresa</p>
             </div>
             {canUpload && (
-              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button className="gold-gradient text-white gap-2 rounded-xl shadow-md">
-                    <Upload className="w-4 h-4" /> Enviar Documento
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="rounded-2xl">
-                  <DialogHeader>
-                    <DialogTitle>Enviar novo documento</DialogTitle>
-                  </DialogHeader>
-                  <form onSubmit={handleUpload} className="space-y-4">
-                    <div className="space-y-1.5">
-                      <Label>Título *</Label>
-                      <Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="Nome do documento" required className="rounded-xl" />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label>Categoria</Label>
-                      <Select value={form.category} onValueChange={v => setForm(f => ({ ...f, category: v }))}>
-                        <SelectTrigger className="rounded-xl"><SelectValue /></SelectTrigger>
-                        <SelectContent>{CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label>Arquivo *</Label>
-                      <div className="border-2 border-dashed border-border rounded-xl p-4 text-center">
-                        {form.file ? (
-                          <div className="flex items-center gap-2 justify-center">
-                            <FileText className="w-5 h-5 text-primary" />
-                            <span className="text-sm font-medium">{form.file.name}</span>
-                            <button type="button" onClick={() => setForm(f => ({ ...f, file: null }))}><X className="w-4 h-4 text-muted-foreground" /></button>
-                          </div>
-                        ) : (
-                          <label className="cursor-pointer">
-                            <input type="file" className="hidden" onChange={e => setForm(f => ({ ...f, file: e.target.files[0] }))} />
-                            <Upload className="w-8 h-8 mx-auto text-muted-foreground mb-2" />
-                            <p className="text-sm text-muted-foreground">Clique para selecionar o arquivo</p>
-                          </label>
-                        )}
-                      </div>
-                    </div>
-                    <Button type="submit" disabled={uploading || !form.title || !form.file} className="w-full gold-gradient text-white rounded-xl">
-                      {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Enviar'}
-                    </Button>
-                  </form>
-                </DialogContent>
-              </Dialog>
+              <button
+                onClick={() => { setEditDoc(null); setUploadOpen(true); }}
+                className="flex items-center gap-2 px-4 py-2 bg-primary text-white font-semibold text-sm rounded-xl hover:bg-primary/90 transition shadow-md"
+              >
+                <Upload className="w-4 h-4" /> Enviar Documento
+              </button>
             )}
           </div>
 
@@ -139,69 +148,135 @@ export default function Repository() {
           <div className="flex flex-col sm:flex-row gap-3 mb-6">
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input placeholder="Pesquisar documentos..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9 rounded-xl" />
+              <Input placeholder="Pesquisar por título, descrição ou tag..." value={search}
+                onChange={e => setSearch(e.target.value)} className="pl-9 rounded-xl" />
             </div>
             <div className="flex flex-wrap gap-2">
-              <Button
-                variant={selectedCategory === 'all' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setSelectedCategory('all')}
-                className="rounded-full text-xs"
-              >
+              <button onClick={() => setSelectedCategory('all')}
+                className={`text-xs px-3 py-1.5 rounded-full font-semibold border transition ${selectedCategory === 'all' ? 'bg-primary text-white border-primary' : 'border-border text-muted-foreground hover:border-primary'}`}>
                 Todos
-              </Button>
+              </button>
               {CATEGORIES.map(cat => (
-                <Button
-                  key={cat}
-                  variant={selectedCategory === cat ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setSelectedCategory(cat)}
-                  className="rounded-full text-xs"
-                >
+                <button key={cat} onClick={() => setSelectedCategory(cat)}
+                  className={`text-xs px-3 py-1.5 rounded-full font-semibold border transition ${selectedCategory === cat ? 'bg-primary text-white border-primary' : 'border-border text-muted-foreground hover:border-primary'}`}>
                   {cat}
-                </Button>
+                </button>
               ))}
             </div>
           </div>
 
-          {/* Documents */}
+          {/* Stats */}
+          <p className="text-xs text-muted-foreground mb-3">{filtered.length} documento{filtered.length !== 1 ? 's' : ''} encontrado{filtered.length !== 1 ? 's' : ''}</p>
+
+          {/* Documents List */}
           <div className="space-y-2">
             {filtered.map(doc => {
-              const ext = doc.file_type?.toUpperCase() || 'FILE';
-              const extColor = { PDF: 'bg-red-100 text-red-600', DOCX: 'bg-blue-100 text-blue-600', XLSX: 'bg-green-100 text-green-600', PPTX: 'bg-orange-100 text-orange-600' }[ext] || 'bg-gray-100 text-gray-600';
+              const ext = doc.file_type?.toLowerCase();
+              const extColor = EXT_COLOR[ext] || 'bg-gray-100 text-gray-600';
+              const hasPassword = !!doc.password;
+              const isLocked = hasPassword && !unlockedDocs.has(doc.id) && !isGlobalAdmin;
 
               return (
                 <Card key={doc.id} className="rounded-xl border-border/60 hover:shadow-md transition-shadow">
                   <CardContent className="p-4 flex items-center gap-4">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${extColor}`}>
+                    {/* Icon */}
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 relative ${extColor}`}>
                       <FileText className="w-5 h-5" />
+                      {hasPassword && (
+                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-amber-500 rounded-full flex items-center justify-center">
+                          <Lock className="w-2.5 h-2.5 text-white" />
+                        </div>
+                      )}
                     </div>
+
+                    {/* Info */}
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-sm truncate">{doc.title}</p>
-                      <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                        <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{doc.category}</Badge>
-                        <span className="text-xs text-muted-foreground">{doc.uploader_name}</span>
-                        {ext && <Badge className={`text-[10px] px-1.5 py-0 border-0 ${extColor}`}>{ext}</Badge>}
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="font-semibold text-sm truncate">{doc.title}</p>
+                        {doc.version > 1 && (
+                          <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-full font-semibold">v{doc.version}</span>
+                        )}
+                        {isLocked && <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-semibold flex items-center gap-0.5"><Lock className="w-2.5 h-2.5" /> Protegido</span>}
                       </div>
+                      {doc.description && <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">{doc.description}</p>}
+                      <div className="flex items-center gap-2 mt-1 flex-wrap">
+                        <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{doc.category}</Badge>
+                        {ext && <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${extColor}`}>{ext.toUpperCase()}</span>}
+                        <span className="text-xs text-muted-foreground">{doc.uploader_name}</span>
+                        {doc.access_level === 'admin' && <span className="text-[10px] text-purple-700 bg-purple-100 px-1.5 py-0.5 rounded-full font-semibold">Restrito</span>}
+                        {doc.access_level === 'department' && <span className="text-[10px] text-blue-700 bg-blue-100 px-1.5 py-0.5 rounded-full font-semibold">Departamento</span>}
+                        {doc.downloads_count > 0 && <span className="text-[10px] text-muted-foreground">{doc.downloads_count} download{doc.downloads_count !== 1 ? 's' : ''}</span>}
+                      </div>
+                      {doc.tags?.length > 0 && (
+                        <div className="flex items-center gap-1 mt-1 flex-wrap">
+                          <Tag className="w-3 h-3 text-muted-foreground" />
+                          {doc.tags.map(tag => (
+                            <span key={tag} className="text-[10px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded">{tag}</span>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                    <a href={doc.file_url} target="_blank" rel="noopener noreferrer">
-                      <Button size="sm" variant="outline" className="gap-1.5 rounded-lg text-xs shrink-0">
-                        <Download className="w-3.5 h-3.5" /> Baixar
-                      </Button>
-                    </a>
+
+                    {/* Actions */}
+                    <div className="flex items-center gap-2 shrink-0">
+                      <button
+                        onClick={() => handleDocClick(doc)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold border border-primary/30 text-primary rounded-xl hover:bg-primary/10 transition"
+                      >
+                        {isLocked ? <Lock className="w-3.5 h-3.5" /> : <Download className="w-3.5 h-3.5" />}
+                        {isLocked ? 'Acessar' : 'Baixar'}
+                      </button>
+
+                      {canEditDoc(doc) && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <button className="p-1.5 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition">
+                              <MoreVertical className="w-4 h-4" />
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => { setEditDoc(doc); setUploadOpen(true); }}>
+                              <Pencil className="w-4 h-4 mr-2" /> Editar
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleArchive(doc)} className="text-destructive">
+                              <Archive className="w-4 h-4 mr-2" /> Arquivar
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               );
             })}
+
             {filtered.length === 0 && (
               <div className="text-center py-16 text-muted-foreground">
                 <Folder className="w-12 h-12 mx-auto mb-3 opacity-30" />
                 <p className="font-medium">Nenhum documento encontrado</p>
+                <p className="text-sm mt-1">Tente mudar os filtros ou envie um novo documento.</p>
               </div>
             )}
           </div>
         </div>
       </div>
+
+      {/* Modals */}
+      <DocumentUploadModal
+        open={uploadOpen}
+        onClose={() => { setUploadOpen(false); setEditDoc(null); }}
+        onSaved={handleSaved}
+        editDoc={editDoc}
+        currentUser={currentUser}
+        userProfile={userProfile}
+      />
+
+      <DocumentPasswordModal
+        open={!!passwordDoc}
+        onClose={() => setPasswordDoc(null)}
+        doc={passwordDoc}
+        onUnlock={handleUnlock}
+      />
     </div>
   );
 }
