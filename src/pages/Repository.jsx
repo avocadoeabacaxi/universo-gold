@@ -145,20 +145,37 @@ export default function Repository() {
           </div>
 
           {/* Filters */}
-          <div className="flex flex-col sm:flex-row gap-3 mb-6">
-            <div className="relative flex-1 max-w-sm">
+          <div className="bg-card border border-border/60 rounded-2xl p-4 mb-6 space-y-3 shadow-sm">
+            <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input placeholder="Pesquisar por título, descrição ou tag..." value={search}
-                onChange={e => setSearch(e.target.value)} className="pl-9 rounded-xl" />
+              <Input
+                placeholder="Pesquisar por título, descrição ou tag..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="pl-9 rounded-xl bg-muted/40 border-border/60 focus:bg-white"
+              />
             </div>
-            <div className="flex flex-wrap gap-2">
-              <button onClick={() => setSelectedCategory('all')}
-                className={`text-xs px-3 py-1.5 rounded-full font-semibold border transition ${selectedCategory === 'all' ? 'bg-primary text-white border-primary' : 'border-border text-muted-foreground hover:border-primary'}`}>
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
+              <button
+                onClick={() => setSelectedCategory('all')}
+                className={`shrink-0 text-xs px-4 py-1.5 rounded-full font-semibold border transition-all ${
+                  selectedCategory === 'all'
+                    ? 'bg-primary text-white border-primary shadow-sm'
+                    : 'border-border/70 text-muted-foreground bg-background hover:border-primary/50 hover:text-primary'
+                }`}
+              >
                 Todos
               </button>
               {CATEGORIES.map(cat => (
-                <button key={cat} onClick={() => setSelectedCategory(cat)}
-                  className={`text-xs px-3 py-1.5 rounded-full font-semibold border transition ${selectedCategory === cat ? 'bg-primary text-white border-primary' : 'border-border text-muted-foreground hover:border-primary'}`}>
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`shrink-0 text-xs px-4 py-1.5 rounded-full font-semibold border transition-all ${
+                    selectedCategory === cat
+                      ? 'bg-primary text-white border-primary shadow-sm'
+                      : 'border-border/70 text-muted-foreground bg-background hover:border-primary/50 hover:text-primary'
+                  }`}
+                >
                   {cat}
                 </button>
               ))}
