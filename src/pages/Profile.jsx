@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Camera, Loader2, Save, Users, FileText, Radio } from 'lucide-react';
+import { Camera, Loader2, Save, Users, FileText, Radio, ImagePlus } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,7 +19,9 @@ export default function Profile() {
   const [editMode, setEditMode] = useState(false);
   const [form, setForm] = useState({});
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [uploadingCover, setUploadingCover] = useState(false);
   const avatarInputRef = useRef(null);
+  const coverInputRef = useRef(null);
 
   useEffect(() => {
     const init = async () => {
@@ -39,6 +41,22 @@ export default function Profile() {
     };
     init().catch(() => setLoading(false));
   }, []);
+
+  const handleCoverUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadingCover(true);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    if (profile) {
+      await base44.entities.UserProfile.update(profile.id, { cover_url: file_url });
+      setProfile(p => ({ ...p, cover_url: file_url }));
+    } else {
+      const p = await base44.entities.UserProfile.create({ ...form, user_id: currentUser?.id, email: currentUser?.email, status: 'active', cover_url: file_url });
+      setProfile(p);
+    }
+    setUploadingCover(false);
+    toast.success('Moldura atualizada!');
+  };
 
   const handleAvatarUpload = async (e) => {
     const file = e.target.files[0];
@@ -93,9 +111,24 @@ export default function Profile() {
         <div className="flex-1 min-w-0 py-2 max-w-2xl">
           {/* Profile Header */}
           <Card className="rounded-xl border-border/60 overflow-hidden mb-4">
-            <div className="h-28 gold-gradient" />
+            {/* Cover */}
+            <div className="h-28 gold-gradient relative group/cover">
+              {profile?.cover_url && (
+                <img src={profile.cover_url} alt="Capa" className="w-full h-full object-cover" />
+              )}
+              <input ref={coverInputRef} type="file" accept="image/*" className="hidden" onChange={handleCoverUpload} />
+              <button
+                onClick={() => coverInputRef.current?.click()}
+                className="absolute bottom-2 right-2 flex items-center gap-1.5 text-xs bg-black/50 hover:bg-black/70 text-white px-2.5 py-1.5 rounded-lg transition-colors"
+              >
+                {uploadingCover ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ImagePlus className="w-3.5 h-3.5" />}
+                Alterar capa
+              </button>
+            </div>
+
             <CardContent className="px-6 pb-5">
-              <div className="flex items-end gap-4 -mt-10 mb-4">
+              {/* Avatar row */}
+              <div className="flex items-end justify-between -mt-10 mb-3">
                 <div className="relative group/avatar">
                   <Avatar className="w-20 h-20 border-4 border-white shadow-md">
                     <AvatarImage src={profile?.avatar_url} />
@@ -109,28 +142,31 @@ export default function Profile() {
                     {uploadingAvatar ? <Loader2 className="w-5 h-5 text-white animate-spin" /> : <Camera className="w-5 h-5 text-white" />}
                   </button>
                 </div>
-                <div className="flex-1 pb-1">
-                  <h1 className="text-xl font-bold font-heading">{form.full_name || currentUser?.full_name}</h1>
-                  <div className="flex items-center gap-2 flex-wrap mt-0.5">
-                    {profile?.role && (
-                      <Badge className="bg-primary/10 text-primary border-0 text-xs">{roleLabels[profile.role] || 'Colaborador'}</Badge>
-                    )}
-                    {form.department && (
-                      <span className="text-sm text-muted-foreground">{form.department}</span>
-                    )}
-                  </div>
-                </div>
                 <Button
                   variant={editMode ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => editMode ? handleSave() : setEditMode(true)}
                   disabled={saving}
-                  className="rounded-xl"
+                  className="rounded-xl mb-1"
                 >
                   {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : editMode ? <><Save className="w-3.5 h-3.5 mr-1.5" />Salvar</> : 'Editar perfil'}
                 </Button>
               </div>
 
+              {/* Name & role — agora ABAIXO do avatar */}
+              <div className="mb-3">
+                <h1 className="text-xl font-bold font-heading">{form.full_name || currentUser?.full_name}</h1>
+                <div className="flex items-center gap-2 flex-wrap mt-0.5">
+                  {profile?.role && (
+                    <Badge className="bg-primary/10 text-primary border-0 text-xs">{roleLabels[profile.role] || 'Colaborador'}</Badge>
+                  )}
+                  {form.department && (
+                    <span className="text-sm text-muted-foreground">{form.department}</span>
+                  )}
+                </div>
+              </div>
+
+              {/* Info / Edit form */}
               {!editMode ? (
                 <div className="space-y-2">
                   {form.bio && <p className="text-sm text-muted-foreground">{form.bio}</p>}
