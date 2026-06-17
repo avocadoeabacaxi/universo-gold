@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useParams, Link } from 'react-router-dom';
 import { Users, Lock, Globe, FileText, Video, ArrowLeft, Loader2, Camera, Upload, Palette, HelpCircle, ShoppingBag, Radio, UserCog, Plus } from 'lucide-react';
+import CommunityDocumentsTab from '@/components/community/CommunityDocumentsTab';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -17,7 +18,6 @@ export default function CommunityDetail() {
   const { id } = useParams();
   const [community, setCommunity] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [documents, setDocuments] = useState([]);
   const [videos, setVideos] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
@@ -25,11 +25,8 @@ export default function CommunityDetail() {
   const [loading, setLoading] = useState(true);
   const [uploadingCover, setUploadingCover] = useState(false);
   const [uploadingIcon, setUploadingIcon] = useState(false);
-  const [showUploadDoc, setShowUploadDoc] = useState(false);
-  const [uploadingDoc, setUploadingDoc] = useState(false);
   const coverInputRef = useRef(null);
   const iconInputRef = useRef(null);
-  const docInputRef = useRef(null);
 
   useEffect(() => {
     const init = async () => {
@@ -39,16 +36,14 @@ export default function CommunityDetail() {
       const profile = profiles[0] || null;
       setUserProfile(profile);
 
-      const [c, p, d, v] = await Promise.all([
+      const [c, p, v] = await Promise.all([
         base44.entities.Community.filter({ id }),
         base44.entities.Post.filter({ community_id: id, status: 'active' }, '-created_date', 20),
-        base44.entities.Document.filter({ community_id: id, status: 'active' }),
         base44.entities.Video.filter({ community_id: id, status: 'active' }),
       ]);
       const comm = c[0] || null;
       setCommunity(comm);
       setPosts(p);
-      setDocuments(d);
       setVideos(v);
 
       // Busca papel do membro na comunidade
@@ -106,27 +101,6 @@ export default function CommunityDetail() {
   const handleIconColor = async (colorBg) => {
     await base44.entities.Community.update(community.id, { icon_color: colorBg });
     setCommunity(prev => ({ ...prev, icon_color: colorBg }));
-  };
-
-  const handleDocUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setUploadingDoc(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    const ext = file.name.split('.').pop()?.toLowerCase();
-    const created = await base44.entities.Document.create({
-      title: file.name.replace(/\.[^/.]+$/, ''),
-      file_url,
-      file_name: file.name,
-      file_type: ext,
-      community_id: id,
-      community_name: community.name,
-      uploader_id: currentUser?.id,
-      uploader_name: currentUser?.full_name,
-    });
-    setDocuments(prev => [created, ...prev]);
-    setUploadingDoc(false);
-    setShowUploadDoc(false);
   };
 
   const iconGradient = community.icon_color || 'from-blue-700 to-blue-900';
@@ -270,35 +244,14 @@ export default function CommunityDetail() {
 
           {/* DOCUMENTOS */}
           <TabsContent value="documents">
-            <div className="space-y-2">
-              {canEdit && (
-                <div className="flex justify-end mb-3">
-                  <input ref={docInputRef} type="file" className="hidden" onChange={handleDocUpload} />
-                  <button
-                    onClick={() => docInputRef.current?.click()}
-                    disabled={uploadingDoc}
-                    className="flex items-center gap-1.5 px-4 py-2 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary/90 disabled:opacity-50 transition"
-                  >
-                    {uploadingDoc ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
-                    Upload de documento
-                  </button>
-                </div>
-              )}
-              {documents.map(doc => (
-                <a key={doc.id} href={doc.file_url} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-3 p-4 bg-card rounded-xl border border-border/60 hover:bg-muted/50 transition-colors">
-                  <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center shrink-0">
-                    <FileText className="w-5 h-5 text-red-500" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-sm truncate">{doc.title}</p>
-                    <p className="text-xs text-muted-foreground">{doc.uploader_name} · {doc.file_type?.toUpperCase()}</p>
-                  </div>
-                  <Button size="sm" variant="outline" className="text-xs shrink-0">Baixar</Button>
-                </a>
-              ))}
-              {documents.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">Nenhum documento nesta comunidade.</div>}
-            </div>
+            <CommunityDocumentsTab
+              communityId={id}
+              communityName={community.name}
+              canEdit={canEdit}
+              currentUser={enrichedUser}
+              userProfile={userProfile}
+              isGlobalAdmin={isGlobalAdmin}
+            />
           </TabsContent>
 
           {/* VÍDEOS */}

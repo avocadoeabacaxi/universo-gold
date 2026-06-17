@@ -20,7 +20,7 @@ const EDIT_LABELS = {
   admin: 'Somente administradores',
 };
 
-export default function DocumentUploadModal({ open, onClose, onSaved, editDoc = null, currentUser, userProfile }) {
+export default function DocumentUploadModal({ open, onClose, onSaved, editDoc = null, currentUser, userProfile, communityId = null, communityName = null }) {
   const isEdit = !!editDoc;
   const [form, setForm] = useState({
     title: editDoc?.title || '',
@@ -66,6 +66,10 @@ export default function DocumentUploadModal({ open, onClose, onSaved, editDoc = 
       payload.uploader_id = currentUser?.id;
       payload.uploader_name = currentUser?.full_name;
       payload.status = 'active';
+      if (communityId) {
+        payload.community_id = communityId;
+        payload.community_name = communityName;
+      }
       saved = await base44.entities.Document.create(payload);
     }
 
