@@ -1,0 +1,40 @@
+{
+  "name": "CommunityMember",
+  "type": "object",
+  "properties": {
+    "community_id": {
+      "type": "string",
+      "description": "ID da comunidade"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "ID do usu\u00e1rio"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Nome do usu\u00e1rio"
+    },
+    "user_avatar": {
+      "type": "string",
+      "description": "Avatar do usu\u00e1rio"
+    },
+    "user_role_title": {
+      "type": "string",
+      "description": "Cargo do usu\u00e1rio"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "editor",
+        "member"
+      ],
+      "default": "member",
+      "description": "Papel na comunidade"
+    }
+  },
+  "required": [
+    "community_id",
+    "user_id"
+  ]
+}

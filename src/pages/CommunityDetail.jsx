@@ -1,13 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useParams, Link } from 'react-router-dom';
-import { Users, Lock, Globe, FileText, Video, ArrowLeft, Loader2, Camera, Upload, Palette } from 'lucide-react';
+import { Users, Lock, Globe, FileText, Video, ArrowLeft, Loader2, Camera, Upload, Palette, HelpCircle, ShoppingBag, Radio, UserCog, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import PostCard from '@/components/feed/PostCard';
 import CreatePostCard from '@/components/feed/CreatePostCard';
+import CommunityMembersTab from '@/components/community/CommunityMembersTab';
+import CommunityFAQTab from '@/components/community/CommunityFAQTab';
+import CommunityClassifiedsTab from '@/components/community/CommunityClassifiedsTab';
+import CommunityLiveTab from '@/components/community/CommunityLiveTab';
 
 export default function CommunityDetail() {
   const { id } = useParams();
@@ -17,28 +21,40 @@ export default function CommunityDetail() {
   const [videos, setVideos] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
+  const [memberRecord, setMemberRecord] = useState(null); // papel na comunidade
   const [loading, setLoading] = useState(true);
   const [uploadingCover, setUploadingCover] = useState(false);
   const [uploadingIcon, setUploadingIcon] = useState(false);
+  const [showUploadDoc, setShowUploadDoc] = useState(false);
+  const [uploadingDoc, setUploadingDoc] = useState(false);
   const coverInputRef = useRef(null);
   const iconInputRef = useRef(null);
+  const docInputRef = useRef(null);
 
   useEffect(() => {
     const init = async () => {
       const user = await base44.auth.me();
       setCurrentUser(user);
       const profiles = await base44.entities.UserProfile.filter({ user_id: user.id });
-      setUserProfile(profiles[0] || null);
+      const profile = profiles[0] || null;
+      setUserProfile(profile);
+
       const [c, p, d, v] = await Promise.all([
         base44.entities.Community.filter({ id }),
         base44.entities.Post.filter({ community_id: id, status: 'active' }, '-created_date', 20),
         base44.entities.Document.filter({ community_id: id, status: 'active' }),
         base44.entities.Video.filter({ community_id: id, status: 'active' }),
       ]);
-      setCommunity(c[0] || null);
+      const comm = c[0] || null;
+      setCommunity(comm);
       setPosts(p);
       setDocuments(d);
       setVideos(v);
+
+      // Busca papel do membro na comunidade
+      const memberRecords = await base44.entities.CommunityMember.filter({ community_id: id, user_id: user.id });
+      setMemberRecord(memberRecords[0] || null);
+
       setLoading(false);
     };
     init().catch(() => setLoading(false));
@@ -48,9 +64,13 @@ export default function CommunityDetail() {
   if (!community) return <div className="text-center py-12 text-muted-foreground">Comunidade não encontrada.</div>;
 
   const isMember = community.members?.includes(currentUser?.id);
-  const isAdmin = currentUser?.role === 'admin' || userProfile?.role === 'admin';
-  const isLeader = community.leader_id === currentUser?.id || isAdmin;
-  const enrichedUser = currentUser ? { ...currentUser, job_title: userProfile?.job_title } : null;
+  const isGlobalAdmin = currentUser?.role === 'admin' || userProfile?.role === 'admin';
+  const isLeader = community.leader_id === currentUser?.id || isGlobalAdmin;
+  // Papel na comunidade: admin da comunidade ou editor
+  const communityRole = memberRecord?.role || 'member';
+  const isCommunityAdmin = isLeader || communityRole === 'admin';
+  const canEdit = isCommunityAdmin || communityRole === 'editor';
+  const enrichedUser = currentUser ? { ...currentUser, avatar_url: userProfile?.avatar_url || currentUser?.avatar_url, job_title: userProfile?.job_title } : null;
 
   const ICON_COLORS = [
     { bg: 'from-blue-600 to-blue-800', label: 'Azul' },
@@ -88,6 +108,27 @@ export default function CommunityDetail() {
     setCommunity(prev => ({ ...prev, icon_color: colorBg }));
   };
 
+  const handleDocUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadingDoc(true);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    const ext = file.name.split('.').pop()?.toLowerCase();
+    const created = await base44.entities.Document.create({
+      title: file.name.replace(/\.[^/.]+$/, ''),
+      file_url,
+      file_name: file.name,
+      file_type: ext,
+      community_id: id,
+      community_name: community.name,
+      uploader_id: currentUser?.id,
+      uploader_name: currentUser?.full_name,
+    });
+    setDocuments(prev => [created, ...prev]);
+    setUploadingDoc(false);
+    setShowUploadDoc(false);
+  };
+
   const iconGradient = community.icon_color || 'from-blue-700 to-blue-900';
 
   return (
@@ -98,7 +139,6 @@ export default function CommunityDetail() {
 
       {/* Header */}
       <div className="bg-card rounded-xl border border-border/60 overflow-hidden mb-4">
-        {/* Cover */}
         <div className="relative h-40 group">
           {community.cover_url
             ? <img src={community.cover_url} alt="capa" className="w-full h-full object-cover" />
@@ -120,7 +160,6 @@ export default function CommunityDetail() {
 
         <div className="px-6 pb-4">
           <div className="flex items-end gap-4 -mt-8 mb-3">
-            {/* Community Icon */}
             <div className="relative group/icon shrink-0">
               <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${iconGradient} flex items-center justify-center border-4 border-white shadow-md overflow-hidden`}>
                 {community.avatar_url
@@ -165,6 +204,8 @@ export default function CommunityDetail() {
                 {community.type === 'department' && (
                   <Badge className="bg-amber-100 text-amber-800 border-0 text-xs">Departamento</Badge>
                 )}
+                {isCommunityAdmin && <Badge className="bg-blue-100 text-blue-800 border-0 text-xs gap-1"><UserCog className="w-3 h-3" /> Admin</Badge>}
+                {!isCommunityAdmin && communityRole === 'editor' && <Badge className="bg-purple-100 text-purple-800 border-0 text-xs">Editor</Badge>}
               </div>
               <p className="text-sm text-muted-foreground flex items-center gap-1 mt-0.5">
                 <Users className="w-3.5 h-3.5" /> {community.members_count || 0} membros
@@ -184,16 +225,31 @@ export default function CommunityDetail() {
         </div>
       ) : (
         <Tabs defaultValue="feed">
-          <TabsList className="mb-4">
+          <TabsList className="mb-4 flex-wrap h-auto gap-1">
             <TabsTrigger value="feed">Feed</TabsTrigger>
             <TabsTrigger value="documents">
-              <FileText className="w-3.5 h-3.5 mr-1.5" /> Documentos ({documents.length})
+              <FileText className="w-3.5 h-3.5 mr-1" /> Documentos
             </TabsTrigger>
             <TabsTrigger value="videos">
-              <Video className="w-3.5 h-3.5 mr-1.5" /> Vídeos ({videos.length})
+              <Video className="w-3.5 h-3.5 mr-1" /> Vídeos
             </TabsTrigger>
+            <TabsTrigger value="lives">
+              <Radio className="w-3.5 h-3.5 mr-1" /> Lives
+            </TabsTrigger>
+            <TabsTrigger value="faq">
+              <HelpCircle className="w-3.5 h-3.5 mr-1" /> FAQ
+            </TabsTrigger>
+            <TabsTrigger value="classifieds">
+              <ShoppingBag className="w-3.5 h-3.5 mr-1" /> Mural de Vendas
+            </TabsTrigger>
+            {isCommunityAdmin && (
+              <TabsTrigger value="members">
+                <Users className="w-3.5 h-3.5 mr-1" /> Membros
+              </TabsTrigger>
+            )}
           </TabsList>
 
+          {/* FEED */}
           <TabsContent value="feed" className="space-y-3">
             {isMember && (
               <CreatePostCard
@@ -212,8 +268,22 @@ export default function CommunityDetail() {
             {posts.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">Nenhuma publicação nesta comunidade ainda.</div>}
           </TabsContent>
 
+          {/* DOCUMENTOS */}
           <TabsContent value="documents">
             <div className="space-y-2">
+              {canEdit && (
+                <div className="flex justify-end mb-3">
+                  <input ref={docInputRef} type="file" className="hidden" onChange={handleDocUpload} />
+                  <button
+                    onClick={() => docInputRef.current?.click()}
+                    disabled={uploadingDoc}
+                    className="flex items-center gap-1.5 px-4 py-2 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary/90 disabled:opacity-50 transition"
+                  >
+                    {uploadingDoc ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                    Upload de documento
+                  </button>
+                </div>
+              )}
               {documents.map(doc => (
                 <a key={doc.id} href={doc.file_url} target="_blank" rel="noopener noreferrer"
                   className="flex items-center gap-3 p-4 bg-card rounded-xl border border-border/60 hover:bg-muted/50 transition-colors">
@@ -231,8 +301,29 @@ export default function CommunityDetail() {
             </div>
           </TabsContent>
 
+          {/* VÍDEOS */}
           <TabsContent value="videos">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {canEdit && (
+                <div className="col-span-full flex justify-end mb-1">
+                  <button
+                    onClick={() => {
+                      const url = prompt('Cole o link embed do vídeo (YouTube, Vimeo...):');
+                      const title = url ? prompt('Título do vídeo:') : null;
+                      if (url && title) {
+                        base44.entities.Video.create({
+                          title, embed_url: url,
+                          community_id: id, community_name: community.name,
+                          uploader_id: currentUser?.id, uploader_name: currentUser?.full_name,
+                        }).then(v => setVideos(prev => [v, ...prev]));
+                      }
+                    }}
+                    className="flex items-center gap-1.5 px-4 py-2 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary/90 transition"
+                  >
+                    <Plus className="w-4 h-4" /> Adicionar vídeo
+                  </button>
+                </div>
+              )}
               {videos.map(video => (
                 <div key={video.id} className="bg-card rounded-xl border border-border/60 overflow-hidden">
                   <div className="aspect-video bg-black">
@@ -247,6 +338,28 @@ export default function CommunityDetail() {
               {videos.length === 0 && <div className="col-span-2 text-center py-8 text-muted-foreground text-sm">Nenhum vídeo nesta comunidade.</div>}
             </div>
           </TabsContent>
+
+          {/* LIVES */}
+          <TabsContent value="lives">
+            <CommunityLiveTab communityId={id} canEdit={canEdit} currentUser={enrichedUser} />
+          </TabsContent>
+
+          {/* FAQ */}
+          <TabsContent value="faq">
+            <CommunityFAQTab communityId={id} canEdit={canEdit} currentUser={enrichedUser} />
+          </TabsContent>
+
+          {/* MURAL DE VENDAS */}
+          <TabsContent value="classifieds">
+            <CommunityClassifiedsTab communityId={id} currentUser={enrichedUser} isMember={isMember} />
+          </TabsContent>
+
+          {/* MEMBROS (somente admin) */}
+          {isCommunityAdmin && (
+            <TabsContent value="members">
+              <CommunityMembersTab communityId={id} isLeader={isCommunityAdmin} currentUserId={currentUser?.id} />
+            </TabsContent>
+          )}
         </Tabs>
       )}
     </div>

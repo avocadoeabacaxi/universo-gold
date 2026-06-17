@@ -1,0 +1,67 @@
+{
+  "name": "CommunityClassified",
+  "type": "object",
+  "properties": {
+    "community_id": {
+      "type": "string",
+      "description": "ID da comunidade"
+    },
+    "title": {
+      "type": "string",
+      "description": "T\u00edtulo do an\u00fancio"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descri\u00e7\u00e3o"
+    },
+    "price": {
+      "type": "number",
+      "description": "Pre\u00e7o (0 = gr\u00e1tis/troca)"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "venda",
+        "troca",
+        "doacao",
+        "procuro"
+      ],
+      "default": "venda",
+      "description": "Tipo do an\u00fancio"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Foto do item"
+    },
+    "contact": {
+      "type": "string",
+      "description": "Contato (whatsapp, email)"
+    },
+    "author_id": {
+      "type": "string",
+      "description": "ID do autor"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Nome do autor"
+    },
+    "author_avatar": {
+      "type": "string",
+      "description": "Avatar do autor"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "sold",
+        "archived"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "community_id",
+    "title",
+    "author_id"
+  ]
+}

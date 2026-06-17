@@ -1,0 +1,43 @@
+{
+  "name": "CommunityFAQ",
+  "type": "object",
+  "properties": {
+    "community_id": {
+      "type": "string",
+      "description": "ID da comunidade"
+    },
+    "question": {
+      "type": "string",
+      "description": "Pergunta"
+    },
+    "answer": {
+      "type": "string",
+      "description": "Resposta"
+    },
+    "author_id": {
+      "type": "string",
+      "description": "ID do autor"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Nome do autor"
+    },
+    "order": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "archived"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "community_id",
+    "question",
+    "answer"
+  ]
+}
