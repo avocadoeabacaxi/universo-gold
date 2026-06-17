@@ -57,8 +57,8 @@ export default function Login() {
         <div className="absolute top-1/3 -right-32 w-80 h-80 rounded-full bg-white/5 pointer-events-none" />
         <div className="absolute -bottom-20 left-1/4 w-64 h-64 rounded-full bg-white/5 pointer-events-none" />
 
-        {/* Logo */}
-        <div className="relative z-10">
+        {/* Logo com movimento suave */}
+        <div className="relative z-10" style={{ animation: "floatLogo 6s ease-in-out infinite" }}>
           <img
             src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/b87b7fd13_logo.png"
             alt="Universo Gold Pão"
@@ -73,17 +73,21 @@ export default function Login() {
           className="absolute -bottom-4 -right-40 h-72 xl:h-80 w-auto drop-shadow-2xl z-20 pointer-events-none"
         />
 
-        {/* Tony astronauta flutuando no espaço azul */}
+        {/* Tony astronauta flutuando próximo à logo */}
         <img
           src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/98b6e064c_9a6d1adc-c292-48f7-aa99-42ce3a29cdc7-removebg-preview.png"
           alt="Tony Astronauta"
-          className="absolute top-16 right-10 h-24 xl:h-28 w-auto drop-shadow-xl z-20 pointer-events-none"
+          className="absolute top-6 right-16 h-20 xl:h-24 w-auto drop-shadow-xl z-20 pointer-events-none"
           style={{ animation: "floatAstro 5s ease-in-out infinite" }}
         />
         <style>{`
           @keyframes floatAstro {
             0%, 100% { transform: translateY(0px) rotate(-4deg); }
             50% { transform: translateY(-12px) rotate(4deg); }
+          }
+          @keyframes floatLogo {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
           }
         `}</style>
 
