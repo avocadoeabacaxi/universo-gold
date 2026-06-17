@@ -1,0 +1,50 @@
+{
+  "name": "MicrosoftConfig",
+  "type": "object",
+  "properties": {
+    "teams_client_id": {
+      "type": "string",
+      "description": "Client ID do App Azure para Teams"
+    },
+    "teams_client_secret": {
+      "type": "string",
+      "description": "Client Secret do App Azure para Teams"
+    },
+    "teams_tenant_id": {
+      "type": "string",
+      "description": "Tenant ID (diret\u00f3rio) do Azure AD"
+    },
+    "outlook_client_id": {
+      "type": "string",
+      "description": "Client ID do App Azure para Outlook"
+    },
+    "outlook_client_secret": {
+      "type": "string",
+      "description": "Client Secret do App Azure para Outlook"
+    },
+    "onedrive_client_id": {
+      "type": "string",
+      "description": "Client ID do App Azure para OneDrive"
+    },
+    "onedrive_client_secret": {
+      "type": "string",
+      "description": "Client Secret do App Azure para OneDrive"
+    },
+    "teams_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "outlook_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "onedrive_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "redirect_uri": {
+      "type": "string",
+      "description": "URI de redirecionamento OAuth configurada no Azure"
+    }
+  }
+}

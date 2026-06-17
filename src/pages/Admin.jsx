@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { Users, FileText, Globe, Shield, Trash2, Loader2, UserPlus, Building2, MapPin, Briefcase, UserCircle, Lock, Pencil } from 'lucide-react';
+import { Users, FileText, Globe, Shield, Trash2, Loader2, UserPlus, Building2, MapPin, Briefcase, UserCircle, Lock, Pencil, Plug } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -19,6 +19,7 @@ import FichaColaboradorTab from '@/components/admin/FichaColaboradorTab';
 import AdminComunidadesTab from '@/components/admin/AdminComunidadesTab';
 import AdminDocumentosTab from '@/components/admin/AdminDocumentosTab';
 import AdminComunicadosTab from '@/components/admin/AdminComunicadosTab';
+import AdminIntegracoesTab from '@/components/admin/AdminIntegracoesTab';
 
 // Tab aliases: map URL params to internal tab values
 const TAB_ALIAS = {
@@ -201,6 +202,7 @@ export default function Admin() {
           <TabsTrigger value="fichas"><UserCircle className="w-3.5 h-3.5 mr-1.5" /> Fichas</TabsTrigger>
           <TabsTrigger value="communities"><Globe className="w-3.5 h-3.5 mr-1.5" /> Comunidades</TabsTrigger>
           <TabsTrigger value="documents"><FileText className="w-3.5 h-3.5 mr-1.5" /> Documentos</TabsTrigger>
+          <TabsTrigger value="integracoes"><Plug className="w-3.5 h-3.5 mr-1.5 text-blue-500" /> Integrações</TabsTrigger>
         </TabsList>
 
         {/* Comunicados */}
@@ -303,6 +305,9 @@ export default function Admin() {
 
         {/* Documentos */}
         <TabsContent value="documents"><AdminDocumentosTab /></TabsContent>
+
+        {/* Integrações Microsoft */}
+        <TabsContent value="integracoes"><AdminIntegracoesTab /></TabsContent>
       </Tabs>
     </div>
   );
