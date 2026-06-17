@@ -1,0 +1,77 @@
+{
+  "name": "Comunicado",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "T\u00edtulo do comunicado"
+    },
+    "content": {
+      "type": "string",
+      "description": "Texto do comunicado"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "banner",
+        "message"
+      ],
+      "default": "message",
+      "description": "Tipo: banner ou mensagem"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "URL da imagem (para banners)"
+    },
+    "author_id": {
+      "type": "string",
+      "description": "ID do autor"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Nome do autor"
+    },
+    "target_audience": {
+      "type": "string",
+      "enum": [
+        "all",
+        "department",
+        "level"
+      ],
+      "default": "all",
+      "description": "P\u00fablico alvo"
+    },
+    "target_department": {
+      "type": "string",
+      "description": "Departamento alvo (se target=department)"
+    },
+    "target_level": {
+      "type": "string",
+      "enum": [
+        "operacional",
+        "tecnico",
+        "supervisao",
+        "gerencia",
+        "diretoria"
+      ],
+      "description": "N\u00edvel alvo (se target=level)"
+    },
+    "pinned": {
+      "type": "boolean",
+      "default": true,
+      "description": "Fixado no topo"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "archived"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "title",
+    "content"
+  ]
+}
