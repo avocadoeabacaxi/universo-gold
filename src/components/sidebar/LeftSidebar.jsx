@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Home, Users, FileText, Video, Radio, ChevronRight, Plus } from 'lucide-react';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 
@@ -34,6 +34,7 @@ export default function LeftSidebar({ currentUser }) {
           <div className="bg-card rounded-xl p-3 border border-border/60 hover:bg-muted/50 transition-colors">
             <div className="flex items-center gap-3">
               <Avatar className="w-10 h-10 border-2 border-primary/30">
+                <AvatarImage src={currentUser.avatar_url} />
                 <AvatarFallback className="bg-primary text-white font-bold text-sm">
                   {currentUser.full_name?.slice(0, 2).toUpperCase() || 'U'}
                 </AvatarFallback>
