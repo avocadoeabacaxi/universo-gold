@@ -129,8 +129,14 @@ export default function Communities() {
                   </div>
                   <CardContent className="p-4">
                     <div className="flex items-start gap-3">
-                      <div className="w-12 h-12 rounded-xl gold-gradient flex items-center justify-center shrink-0 -mt-8 border-4 border-white shadow-sm">
-                        <span className="text-white font-bold text-sm">{community.name?.slice(0, 2).toUpperCase()}</span>
+                      <div className="w-12 h-12 rounded-xl shrink-0 -mt-8 border-4 border-white shadow-sm overflow-hidden">
+                        {community.avatar_url ? (
+                          <img src={community.avatar_url} alt={community.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full gold-gradient flex items-center justify-center">
+                            <span className="text-white font-bold text-sm">{community.name?.slice(0, 2).toUpperCase()}</span>
+                          </div>
+                        )}
                       </div>
                       <div className="flex-1 min-w-0 mt-1">
                         <div className="flex items-center gap-1.5">
