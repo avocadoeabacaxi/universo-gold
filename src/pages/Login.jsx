@@ -73,11 +73,11 @@ export default function Login() {
           className="absolute -bottom-4 -right-40 h-72 xl:h-80 w-auto drop-shadow-2xl z-20 pointer-events-none"
         />
 
-        {/* Tony astronauta flutuando ao lado esquerdo da logo */}
+        {/* Tony astronauta flutuando ao lado do O de Universo */}
         <img
           src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/98b6e064c_9a6d1adc-c292-48f7-aa99-42ce3a29cdc7-removebg-preview.png"
           alt="Tony Astronauta"
-          className="absolute top-20 -left-8 h-20 xl:h-24 w-auto drop-shadow-xl z-20 pointer-events-none"
+          className="absolute top-10 left-24 h-20 xl:h-24 w-auto drop-shadow-xl z-20 pointer-events-none"
           style={{ animation: "floatAstro 5s ease-in-out infinite" }}
         />
         <style>{`
