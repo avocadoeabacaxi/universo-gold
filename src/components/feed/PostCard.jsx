@@ -202,7 +202,7 @@ export default function PostCard({ post, currentUser, onDelete }) {
                 )}
               </div>
             </div>
-            {showComments && <CommentsList postId={post.id} />}
+            {showComments && <CommentsList postId={post.id} currentUserId={currentUser?.id} />}
           </div>
         )}
       </CardContent>
