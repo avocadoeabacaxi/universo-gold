@@ -66,17 +66,24 @@ export default function Login() {
           />
         </div>
 
-        {/* Tony mascote astronauta flutuando */}
+        {/* Tony mascote original (pão) */}
+        <img
+          src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/18b98ea2a_Pao.png"
+          alt="Tony Gold Pão"
+          className="absolute -bottom-4 -right-40 h-72 xl:h-80 w-auto drop-shadow-2xl z-20 pointer-events-none"
+        />
+
+        {/* Tony astronauta flutuando no espaço azul */}
         <img
           src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/98b6e064c_9a6d1adc-c292-48f7-aa99-42ce3a29cdc7-removebg-preview.png"
-          alt="Tony Gold Pão Astronauta"
-          className="absolute bottom-16 right-8 h-40 xl:h-48 w-auto drop-shadow-2xl z-20 pointer-events-none"
-          style={{ animation: "float 4s ease-in-out infinite" }}
+          alt="Tony Astronauta"
+          className="absolute top-16 right-10 h-24 xl:h-28 w-auto drop-shadow-xl z-20 pointer-events-none"
+          style={{ animation: "floatAstro 5s ease-in-out infinite" }}
         />
         <style>{`
-          @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(-3deg); }
-            50% { transform: translateY(-14px) rotate(3deg); }
+          @keyframes floatAstro {
+            0%, 100% { transform: translateY(0px) rotate(-4deg); }
+            50% { transform: translateY(-12px) rotate(4deg); }
           }
         `}</style>
 
