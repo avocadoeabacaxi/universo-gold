@@ -220,15 +220,13 @@ export default function AniversariantesSection({ currentUser }) {
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-yellow-50 to-orange-50 border-b border-yellow-100">
           <div className="flex items-center gap-2">
-            <span className="text-xl">🎂</span>
-            <div>
-              <p className="font-bold text-sm text-gray-800">Aniversariantes da Semana</p>
-              <p className="text-xs text-muted-foreground">{weekBirthdays.length} aniversariante{weekBirthdays.length > 1 ? 's' : ''} essa semana</p>
-            </div>
+            <span className="text-base">🎂</span>
+            <p className="font-bold text-sm text-gray-800">Aniversariantes da Semana</p>
+            <span className="text-xs text-muted-foreground">· {weekBirthdays.length} essa semana</span>
           </div>
           <button
             onClick={() => setShowAll(true)}
-            className="flex items-center gap-1 text-xs text-primary font-semibold hover:underline"
+            className="flex items-center gap-1 text-xs text-primary font-semibold hover:underline shrink-0"
           >
             Ver todos <ChevronRight className="w-3 h-3" />
           </button>
