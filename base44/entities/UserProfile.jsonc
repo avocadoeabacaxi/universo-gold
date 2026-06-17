@@ -40,6 +40,10 @@
       "type": "string",
       "description": "URL da foto de perfil"
     },
+    "cover_url": {
+      "type": "string",
+      "description": "URL da imagem de capa do perfil"
+    },
     "bio": {
       "type": "string",
       "description": "Breve bio"
@@ -47,6 +51,11 @@
     "phone": {
       "type": "string",
       "description": "Telefone"
+    },
+    "data_nascimento": {
+      "type": "string",
+      "format": "date",
+      "description": "Data de nascimento"
     },
     "communities": {
       "type": "array",

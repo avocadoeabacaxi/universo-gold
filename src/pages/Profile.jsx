@@ -36,6 +36,7 @@ export default function Profile() {
         department: p?.department || '',
         bio: p?.bio || '',
         phone: p?.phone || '',
+        data_nascimento: p?.data_nascimento || '',
       });
       setLoading(false);
     };
@@ -192,10 +193,14 @@ export default function Profile() {
                       <Input value={form.department} onChange={e => setForm(f => ({ ...f, department: e.target.value }))} placeholder="Seu departamento" className="rounded-xl h-9 text-sm" />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-xs">Telefone</Label>
-                      <Input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="(11) 99999-9999" className="rounded-xl h-9 text-sm" />
+                     <Label className="text-xs">Telefone</Label>
+                     <Input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="(11) 99999-9999" className="rounded-xl h-9 text-sm" />
                     </div>
-                  </div>
+                    <div className="space-y-1">
+                     <Label className="text-xs">Data de Nascimento 🎂</Label>
+                     <Input type="date" value={form.data_nascimento} onChange={e => setForm(f => ({ ...f, data_nascimento: e.target.value }))} className="rounded-xl h-9 text-sm" />
+                    </div>
+                    </div>
                   <div className="space-y-1">
                     <Label className="text-xs">Bio</Label>
                     <Textarea value={form.bio} onChange={e => setForm(f => ({ ...f, bio: e.target.value }))} placeholder="Conte um pouco sobre você..." className="rounded-xl resize-none text-sm" rows={2} />
