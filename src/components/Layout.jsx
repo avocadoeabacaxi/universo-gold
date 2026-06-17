@@ -53,9 +53,9 @@ export default function Layout() {
           {/* Logo */}
           <Link to="/" className="flex items-center shrink-0">
             <img
-              src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/db0116ce6_barraazul.png"
+              src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/b87b7fd13_logo.png"
               alt="Universo Gold Pão"
-              className="h-10 w-auto"
+              className="h-10 w-auto brightness-0 invert"
             />
           </Link>
 

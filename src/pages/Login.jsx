@@ -59,15 +59,11 @@ export default function Login() {
 
         {/* Logo */}
         <div className="relative z-10">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center backdrop-blur-sm">
-              <span className="text-2xl font-black text-white">G</span>
-            </div>
-            <div>
-              <p className="text-white font-black text-xl leading-none">Universo Gold</p>
-              <p className="text-white/60 text-xs font-medium mt-0.5">Gold Pão — Intranet Corporativa</p>
-            </div>
-          </div>
+          <img
+            src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/b87b7fd13_logo.png"
+            alt="Universo Gold Pão"
+            className="h-20 w-auto brightness-0 invert"
+          />
         </div>
 
         {/* Headline */}
@@ -106,12 +102,12 @@ export default function Login() {
       {/* ── Lado direito – Formulário ── */}
       <div className="flex-1 flex flex-col items-center justify-center bg-background px-6 py-12 relative">
         {/* Logo mobile */}
-        <div className="lg:hidden mb-8 flex flex-col items-center gap-2">
-          <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, #0E4AA1, #2B6FCC)" }}>
-            <span className="text-3xl font-black text-white">G</span>
-          </div>
-          <p className="font-black text-xl text-foreground">Universo Gold</p>
-          <p className="text-muted-foreground text-sm">Gold Pão — Intranet Corporativa</p>
+        <div className="lg:hidden mb-8 flex justify-center">
+          <img
+            src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/b87b7fd13_logo.png"
+            alt="Universo Gold Pão"
+            className="h-16 w-auto"
+          />
         </div>
 
         <div className="w-full max-w-md">
