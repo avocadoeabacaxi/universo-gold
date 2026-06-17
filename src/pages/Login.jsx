@@ -66,17 +66,27 @@ export default function Login() {
           />
         </div>
 
-        {/* Headline */}
+        {/* Headline + Tony */}
         <div className="relative z-10 space-y-6">
-          <div>
-            <h1 className="text-4xl xl:text-5xl font-black text-white leading-tight">
-              Conectando<br />
-              <span className="text-yellow-300">pessoas</span> que<br />
-              fazem a Gold Pão
-            </h1>
-            <p className="mt-4 text-white/70 text-lg leading-relaxed max-w-sm">
-              A plataforma oficial para colaboradores se comunicarem, aprenderem e crescerem juntos.
-            </p>
+          <div className="flex items-center gap-6">
+            <div className="flex-1">
+              <h1 className="text-4xl xl:text-5xl font-black text-white leading-tight">
+                Conectando<br />
+                <span className="text-yellow-300">pessoas</span> que<br />
+                fazem a Gold Pão
+              </h1>
+              <p className="mt-4 text-white/70 text-lg leading-relaxed max-w-sm">
+                A plataforma oficial para colaboradores se comunicarem, aprenderem e crescerem juntos.
+              </p>
+            </div>
+            {/* Tony mascote */}
+            <div className="shrink-0">
+              <img
+                src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/18b98ea2a_Pao.png"
+                alt="Tony Gold Pão"
+                className="h-52 xl:h-64 w-auto drop-shadow-2xl"
+              />
+            </div>
           </div>
 
           {/* Feature cards */}
