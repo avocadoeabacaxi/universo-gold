@@ -218,15 +218,14 @@ export default function AniversariantesSection({ currentUser }) {
 
       <div className="bg-white rounded-xl border border-yellow-200 shadow-sm overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-yellow-50 to-orange-50 border-b border-yellow-100">
-          <div className="flex items-center gap-2">
-            <span className="text-base">🎂</span>
-            <p className="font-bold text-sm text-gray-800">Aniversariantes da Semana</p>
-            <span className="text-xs text-muted-foreground">· {weekBirthdays.length} essa semana</span>
+        <div className="flex items-center justify-between px-3 py-2.5 bg-gradient-to-r from-yellow-50 to-orange-50 border-b border-yellow-100">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span className="text-sm shrink-0">🎂</span>
+            <span className="font-bold text-xs text-gray-800 truncate">Aniversariantes da Semana</span>
           </div>
           <button
             onClick={() => setShowAll(true)}
-            className="flex items-center gap-1 text-xs text-primary font-semibold hover:underline shrink-0"
+            className="flex items-center gap-0.5 text-xs text-primary font-semibold hover:underline shrink-0 ml-2"
           >
             Ver todos <ChevronRight className="w-3 h-3" />
           </button>
