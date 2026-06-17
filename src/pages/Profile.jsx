@@ -79,7 +79,7 @@ export default function Profile() {
 
   const initials = (form.full_name || currentUser?.full_name || 'U').split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
   const roleLabels = { admin: 'Administrador', department_leader: 'Líder de Departamento', moderator: 'Moderador', user: 'Colaborador' };
-  const enrichedUser = currentUser ? { ...currentUser, job_title: profile?.job_title, department: profile?.department } : null;
+  const enrichedUser = currentUser ? { ...currentUser, job_title: profile?.job_title, department: profile?.department, avatar_url: profile?.avatar_url || currentUser?.avatar_url } : null;
 
   return (
     <div className="max-w-screen-xl mx-auto px-4 py-4">

@@ -20,7 +20,13 @@ export default function Layout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    base44.auth.me().then(setUser).catch(() => {});
+    const init = async () => {
+      const u = await base44.auth.me();
+      const profiles = await base44.entities.UserProfile.filter({ user_id: u.id });
+      const profile = profiles[0];
+      setUser({ ...u, avatar_url: profile?.avatar_url || u.avatar_url });
+    };
+    init().catch(() => {});
   }, []);
 
   const navItems = [

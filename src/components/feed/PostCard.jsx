@@ -181,6 +181,7 @@ export default function PostCard({ post, currentUser, onDelete }) {
           <div className="px-4 pb-3 pt-2 border-t border-border/50 space-y-3">
             <div className="flex gap-2">
               <Avatar className="w-8 h-8 shrink-0">
+                <AvatarImage src={currentUser?.avatar_url} />
                 <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
                   {currentUser?.full_name?.slice(0, 2).toUpperCase() || 'EU'}
                 </AvatarFallback>

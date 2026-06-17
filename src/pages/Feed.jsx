@@ -29,6 +29,7 @@ export default function Feed() {
     ...currentUser,
     job_title: userProfile?.job_title,
     department: userProfile?.department,
+    avatar_url: userProfile?.avatar_url || currentUser?.avatar_url,
   } : null;
 
   const handlePostCreated = (newPost) => {
