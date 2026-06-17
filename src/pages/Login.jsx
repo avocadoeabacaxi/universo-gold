@@ -7,11 +7,11 @@ import { LogIn, Mail, Lock, Loader2, ShieldCheck, Users, Newspaper, Video } from
 const ALLOWED_DOMAIN = "goldpao.com";
 
 const features = [
-  { icon: Newspaper, label: "Feed de notícias", desc: "Fique por dentro de tudo que acontece na empresa" },
-  { icon: Users, label: "Comunidades", desc: "Conecte-se com colegas de outros setores e unidades" },
-  { icon: Video, label: "Vídeos & Lives", desc: "Assista conteúdos e transmissões ao vivo" },
-  { icon: ShieldCheck, label: "Acesso seguro", desc: "Plataforma exclusiva para colaboradores Gold Pão" },
-];
+{ icon: Newspaper, label: "Feed de notícias", desc: "Fique por dentro de tudo que acontece na empresa" },
+{ icon: Users, label: "Comunidades", desc: "Conecte-se com colegas de outros setores e unidades" },
+{ icon: Video, label: "Vídeos & Lives", desc: "Assista conteúdos e transmissões ao vivo" },
+{ icon: ShieldCheck, label: "Acesso seguro", desc: "Plataforma exclusiva para colaboradores Gold Pão" }];
+
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -50,36 +50,36 @@ export default function Login() {
       {/* ── Lado esquerdo – Branding ── */}
       <div
         className="hidden lg:flex lg:w-1/2 xl:w-3/5 relative flex-col justify-between p-12 overflow-hidden"
-        style={{ background: "linear-gradient(145deg, #093478 0%, #0E4AA1 50%, #2B6FCC 100%)" }}
-      >
+        style={{ background: "linear-gradient(145deg, #093478 0%, #0E4AA1 50%, #2B6FCC 100%)" }}>
+        
         {/* Circles decorativos */}
         <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-white/5 pointer-events-none" />
         <div className="absolute top-1/3 -right-32 w-80 h-80 rounded-full bg-white/5 pointer-events-none" />
         <div className="absolute -bottom-20 left-1/4 w-64 h-64 rounded-full bg-white/5 pointer-events-none" />
 
         {/* Logo com movimento suave */}
-        <div className="relative z-10" style={{ animation: "floatLogo 6s ease-in-out infinite" }}>
+        <div className="relative z-10 mx-1" style={{ animation: "floatLogo 6s ease-in-out infinite" }}>
           <img
             src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/b87b7fd13_logo.png"
             alt="Universo Gold Pão"
-            className="h-20 w-auto brightness-0 invert"
-          />
+            className="h-20 w-auto brightness-0 invert" />
+          
         </div>
 
         {/* Tony mascote original (pão) */}
         <img
           src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/18b98ea2a_Pao.png"
           alt="Tony Gold Pão"
-          className="absolute -bottom-4 -right-40 h-72 xl:h-80 w-auto drop-shadow-2xl z-20 pointer-events-none"
-        />
+          className="absolute -bottom-4 -right-40 h-72 xl:h-80 w-auto drop-shadow-2xl z-20 pointer-events-none" />
+        
 
         {/* Tony astronauta flutuando perto da seta da logo */}
         <img
           src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/98b6e064c_9a6d1adc-c292-48f7-aa99-42ce3a29cdc7-removebg-preview.png"
           alt="Tony Astronauta"
           className="absolute top-12 right-16 h-20 xl:h-24 w-auto drop-shadow-xl z-20 pointer-events-none"
-          style={{ animation: "floatAstro 5s ease-in-out infinite" }}
-        />
+          style={{ animation: "floatAstro 5s ease-in-out infinite" }} />
+        
         <style>{`
           @keyframes floatAstro {
             0%, 100% { transform: translateY(0px) rotate(-4deg); }
@@ -106,15 +106,15 @@ export default function Login() {
 
           {/* Feature cards */}
           <div className="grid grid-cols-2 gap-3">
-            {features.map(({ icon: Icon, label, desc }) => (
-              <div key={label} className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:bg-white/15 transition-colors">
+            {features.map(({ icon: Icon, label, desc }) =>
+            <div key={label} className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:bg-white/15 transition-colors">
                 <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center mb-2">
                   <Icon className="w-4 h-4 text-white" />
                 </div>
                 <p className="text-white font-semibold text-sm leading-tight">{label}</p>
                 <p className="text-white/55 text-xs mt-0.5 leading-snug">{desc}</p>
               </div>
-            ))}
+            )}
           </div>
         </div>
 
@@ -131,8 +131,8 @@ export default function Login() {
           <img
             src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/b87b7fd13_logo.png"
             alt="Universo Gold Pão"
-            className="h-16 w-auto"
-          />
+            className="h-16 w-auto" />
+          
         </div>
 
         <div className="w-full max-w-md">
@@ -149,18 +149,18 @@ export default function Login() {
             type="button"
             onClick={handleMicrosoft}
             disabled={msLoading}
-            className="w-full h-12 flex items-center justify-center gap-3 rounded-xl border border-border bg-card hover:bg-muted/50 text-sm font-semibold text-foreground transition-all shadow-sm hover:shadow-md disabled:opacity-60 mb-6"
-          >
-            {msLoading ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <svg width="20" height="20" viewBox="0 0 21 21" fill="none">
-                <rect x="1" y="1" width="9" height="9" fill="#F25022"/>
-                <rect x="11" y="1" width="9" height="9" fill="#7FBA00"/>
-                <rect x="1" y="11" width="9" height="9" fill="#00A4EF"/>
-                <rect x="11" y="11" width="9" height="9" fill="#FFB900"/>
+            className="w-full h-12 flex items-center justify-center gap-3 rounded-xl border border-border bg-card hover:bg-muted/50 text-sm font-semibold text-foreground transition-all shadow-sm hover:shadow-md disabled:opacity-60 mb-6">
+            
+            {msLoading ?
+            <Loader2 className="w-4 h-4 animate-spin" /> :
+
+            <svg width="20" height="20" viewBox="0 0 21 21" fill="none">
+                <rect x="1" y="1" width="9" height="9" fill="#F25022" />
+                <rect x="11" y="1" width="9" height="9" fill="#7FBA00" />
+                <rect x="1" y="11" width="9" height="9" fill="#00A4EF" />
+                <rect x="11" y="11" width="9" height="9" fill="#FFB900" />
               </svg>
-            )}
+            }
             Entrar com Microsoft 365
           </button>
 
@@ -175,12 +175,12 @@ export default function Login() {
           </div>
 
           {/* Erro */}
-          {error && (
-            <div className="mb-5 p-3.5 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-sm flex items-start gap-2">
+          {error &&
+          <div className="mb-5 p-3.5 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-sm flex items-start gap-2">
               <span className="mt-0.5">⚠</span>
               {error}
             </div>
-          )}
+          }
 
           {/* Formulário */}
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -197,8 +197,8 @@ export default function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10 h-12 rounded-xl text-sm"
-                  required
-                />
+                  required />
+                
               </div>
             </div>
 
@@ -219,8 +219,8 @@ export default function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="pl-10 h-12 rounded-xl text-sm"
-                  required
-                />
+                  required />
+                
               </div>
             </div>
 
@@ -228,19 +228,19 @@ export default function Login() {
               type="submit"
               disabled={loading}
               className="w-full h-12 rounded-xl text-white font-bold text-sm transition-all flex items-center justify-center gap-2 mt-2 hover:opacity-90 active:scale-[0.98] disabled:opacity-60 shadow-lg hover:shadow-xl"
-              style={{ background: "linear-gradient(135deg, #0E4AA1 0%, #2B6FCC 100%)" }}
-            >
-              {loading ? (
-                <>
+              style={{ background: "linear-gradient(135deg, #0E4AA1 0%, #2B6FCC 100%)" }}>
+              
+              {loading ?
+              <>
                   <Loader2 className="w-4 h-4 animate-spin" />
                   Entrando...
-                </>
-              ) : (
-                <>
+                </> :
+
+              <>
                   <LogIn className="w-4 h-4" />
                   Entrar na plataforma
                 </>
-              )}
+              }
             </button>
           </form>
 
@@ -254,6 +254,6 @@ export default function Login() {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
