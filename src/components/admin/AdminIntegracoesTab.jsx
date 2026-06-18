@@ -46,6 +46,8 @@ function SecretInput({ value, onChange, placeholder, id }) {
   );
 }
 
+const PROD_REDIRECT_URI = 'https://ugp.one/auth/microsoft/callback';
+
 const SERVICE_CONFIGS = [
   {
     key: 'teams',
@@ -92,8 +94,10 @@ export default function AdminIntegracoesTab() {
   useEffect(() => {
     base44.entities.MicrosoftConfig.list().then(list => {
       if (list.length > 0) {
-        setConfig(list[0]);
+        setConfig({ redirect_uri: PROD_REDIRECT_URI, ...list[0] });
         setConfigId(list[0].id);
+      } else {
+        setConfig({ redirect_uri: PROD_REDIRECT_URI });
       }
       setLoading(false);
     }).catch(() => setLoading(false));
@@ -147,9 +151,17 @@ export default function AdminIntegracoesTab() {
               id="redirect_uri"
               value={config.redirect_uri || ''}
               onChange={e => handleChange('redirect_uri', e.target.value)}
-              placeholder={`${window.location.origin}/auth/microsoft/callback`}
+              placeholder={PROD_REDIRECT_URI}
               className="rounded-xl font-mono text-xs"
             />
+            <div className="flex items-center gap-2 pt-1">
+              <Button type="button" variant="outline" size="sm" className="text-xs rounded-lg" onClick={() => handleChange('redirect_uri', PROD_REDIRECT_URI)}>
+                Usar endereço de produção (ugp.one)
+              </Button>
+              <button type="button" className="text-xs text-primary hover:underline" onClick={() => { navigator.clipboard.writeText(config.redirect_uri || PROD_REDIRECT_URI); toast.success('URI copiada!'); }}>
+                Copiar
+              </button>
+            </div>
           </div>
         </CardContent>
       </Card>
