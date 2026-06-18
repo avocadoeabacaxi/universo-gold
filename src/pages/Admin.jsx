@@ -140,6 +140,23 @@ export default function Admin() {
   const roleLabels = { admin: 'Admin', department_leader: 'Líder', moderator: 'Moderador', user: 'Colaborador' };
   const roleBadgeColor = { admin: 'bg-red-100 text-red-700', department_leader: 'bg-orange-100 text-orange-700', moderator: 'bg-blue-100 text-blue-700', user: 'bg-gray-100 text-gray-600' };
 
+  // Agrupa perfis por setor (departamento)
+  const groupedProfiles = (() => {
+    const map = {};
+    profiles.forEach(p => {
+      const key = p.department?.trim() || 'Sem setor';
+      if (!map[key]) map[key] = [];
+      map[key].push(p);
+    });
+    return Object.entries(map)
+      .map(([setor, items]) => ({ setor, items }))
+      .sort((a, b) => {
+        if (a.setor === 'Sem setor') return 1;
+        if (b.setor === 'Sem setor') return -1;
+        return a.setor.localeCompare(b.setor);
+      });
+  })();
+
   return (
     <div className="max-w-screen-xl mx-auto px-4 py-6">
       <div className="flex items-center justify-between mb-6">
@@ -248,34 +265,45 @@ export default function Admin() {
             </DialogContent>
           </Dialog>
 
-          <div className="space-y-2">
-            {profiles.map(profile => (
-              <Card key={profile.id} className="rounded-xl border-border/60">
-                <CardContent className="p-4 flex items-center gap-3">
-                  <Avatar className="w-9 h-9 shrink-0">
-                    <AvatarFallback className="bg-primary/20 text-primary text-xs font-bold">
-                      {profile.full_name?.slice(0, 2).toUpperCase() || 'U'}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-sm truncate">{profile.full_name}</p>
-                    <p className="text-xs text-muted-foreground">{profile.email} · {profile.department}</p>
-                    {profile.gestor && <p className="text-xs text-muted-foreground">Gestor: {profile.gestor}</p>}
-                  </div>
-                  <Badge className={`text-[10px] border-0 ${roleBadgeColor[profile.role] || roleBadgeColor.user}`}>
-                    {roleLabels[profile.role] || 'Colaborador'}
-                  </Badge>
-                  <Button variant="ghost" size="icon" onClick={() => openEditProfile(profile)} className="w-8 h-8 text-primary hover:bg-primary/10 shrink-0">
-                    <Pencil className="w-4 h-4" />
-                  </Button>
-                  {profile.status === 'active' && (
-                    <Button variant="ghost" size="icon" onClick={() => deactivateProfile(profile.id)} className="w-8 h-8 text-red-500 hover:bg-red-50 shrink-0">
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  )}
-                  {profile.status === 'inactive' && <Badge variant="outline" className="text-[10px] text-muted-foreground">Inativo</Badge>}
-                </CardContent>
-              </Card>
+          <div className="space-y-5">
+            {groupedProfiles.map(({ setor, items }) => (
+              <div key={setor}>
+                <div className="flex items-center gap-2 mb-2 px-1">
+                  <Building2 className="w-4 h-4 text-primary" />
+                  <h3 className="font-bold text-sm text-foreground">{setor}</h3>
+                  <Badge variant="outline" className="text-[10px] text-muted-foreground">{items.length}</Badge>
+                </div>
+                <div className="space-y-2">
+                  {items.map(profile => (
+                    <Card key={profile.id} className="rounded-xl border-border/60">
+                      <CardContent className="p-4 flex items-center gap-3">
+                        <Avatar className="w-9 h-9 shrink-0">
+                          <AvatarFallback className="bg-primary/20 text-primary text-xs font-bold">
+                            {profile.full_name?.slice(0, 2).toUpperCase() || 'U'}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-sm truncate">{profile.full_name}</p>
+                          <p className="text-xs text-muted-foreground">{profile.email} · {profile.department}</p>
+                          {profile.gestor && <p className="text-xs text-muted-foreground">Gestor: {profile.gestor}</p>}
+                        </div>
+                        <Badge className={`text-[10px] border-0 ${roleBadgeColor[profile.role] || roleBadgeColor.user}`}>
+                          {roleLabels[profile.role] || 'Colaborador'}
+                        </Badge>
+                        <Button variant="ghost" size="icon" onClick={() => openEditProfile(profile)} className="w-8 h-8 text-primary hover:bg-primary/10 shrink-0">
+                          <Pencil className="w-4 h-4" />
+                        </Button>
+                        {profile.status === 'active' && (
+                          <Button variant="ghost" size="icon" onClick={() => deactivateProfile(profile.id)} className="w-8 h-8 text-red-500 hover:bg-red-50 shrink-0">
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        )}
+                        {profile.status === 'inactive' && <Badge variant="outline" className="text-[10px] text-muted-foreground">Inativo</Badge>}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </TabsContent>
