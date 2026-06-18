@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { Users, FileText, Globe, Shield, Trash2, Loader2, UserPlus, Building2, MapPin, Briefcase, UserCircle, Lock, Pencil, Plug, Search } from 'lucide-react';
+import { Users, FileText, Globe, Shield, Trash2, Loader2, UserPlus, Building2, MapPin, Briefcase, UserCircle, Lock, Pencil, Plug, Search, UserCheck } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -20,6 +20,7 @@ import AdminComunidadesTab from '@/components/admin/AdminComunidadesTab';
 import AdminDocumentosTab from '@/components/admin/AdminDocumentosTab';
 import AdminComunicadosTab from '@/components/admin/AdminComunicadosTab';
 import AdminIntegracoesTab from '@/components/admin/AdminIntegracoesTab';
+import AdminAprovacoesTab from '@/components/admin/AdminAprovacoesTab';
 
 // Tab aliases: map URL params to internal tab values
 const TAB_ALIAS = {
@@ -31,11 +32,13 @@ const TAB_ALIAS = {
   unidades: 'unidades',
   fichas: 'fichas',
   comunidades: 'communities',
+  aprovacoes: 'aprovacoes',
 };
 
 export default function Admin() {
   const location = useLocation();
   const [currentUser, setCurrentUser] = useState(null);
+  const [myRole, setMyRole] = useState('user');
   const [profiles, setProfiles] = useState([]);
   const [communities, setCommunities] = useState([]);
   const [documents, setDocuments] = useState([]);
@@ -61,7 +64,15 @@ export default function Admin() {
     const init = async () => {
       const user = await base44.auth.me();
       setCurrentUser(user);
-      if (user.role !== 'admin') { setLoading(false); return; }
+      // Descobre o papel efetivo (admin da plataforma OU role do UserProfile)
+      let effectiveRole = user.role === 'admin' ? 'admin' : 'user';
+      if (user.role !== 'admin') {
+        const myProfiles = await base44.entities.UserProfile.filter({ user_id: user.id }, '-created_date', 1);
+        effectiveRole = myProfiles?.[0]?.role || 'user';
+      }
+      setMyRole(effectiveRole);
+      // Líderes/moderadores só acessam a aba de aprovações; demais dados são só para admin
+      if (effectiveRole !== 'admin') { setLoading(false); return; }
       const [p, c, d, s, f] = await Promise.all([
         base44.entities.UserProfile.list('-created_date', 50),
         base44.entities.Community.list('name', 50),
@@ -128,10 +139,27 @@ export default function Admin() {
   };
 
   if (loading) return <div className="flex items-center justify-center min-h-[60vh]"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
-  if (currentUser?.role !== 'admin') return (
+
+  const isAdmin = myRole === 'admin';
+  const canModerate = ['admin', 'department_leader', 'moderator'].includes(myRole);
+
+  if (!canModerate) return (
     <div className="text-center py-16 text-muted-foreground">
       <Shield className="w-12 h-12 mx-auto mb-3 opacity-30" />
-      <p className="font-medium">Acesso restrito a administradores</p>
+      <p className="font-medium">Acesso restrito</p>
+    </div>
+  );
+
+  // Líder/Moderador (não-admin) vê apenas a central de aprovações
+  if (!isAdmin) return (
+    <div className="max-w-screen-xl mx-auto px-4 py-6">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold font-heading flex items-center gap-2">
+          <Shield className="w-6 h-6 text-primary" /> Aprovações
+        </h1>
+        <p className="text-sm text-muted-foreground mt-0.5">Autorize cadastros pela matrícula e trate pedidos de reset</p>
+      </div>
+      <AdminAprovacoesTab />
     </div>
   );
 
@@ -226,6 +254,7 @@ export default function Admin() {
 
       <Tabs defaultValue={defaultTab} key={defaultTab}>
         <TabsList className="mb-4 flex flex-wrap gap-1 h-auto">
+          <TabsTrigger value="aprovacoes"><UserCheck className="w-3.5 h-3.5 mr-1.5 text-green-600" /> Aprovações</TabsTrigger>
           <TabsTrigger value="comunicados"><Globe className="w-3.5 h-3.5 mr-1.5 text-orange-500" /> Comunicados</TabsTrigger>
           <TabsTrigger value="users"><Users className="w-3.5 h-3.5 mr-1.5" /> Usuários</TabsTrigger>
           <TabsTrigger value="permissions"><Lock className="w-3.5 h-3.5 mr-1.5" /> Permissões</TabsTrigger>
@@ -237,6 +266,9 @@ export default function Admin() {
           <TabsTrigger value="documents"><FileText className="w-3.5 h-3.5 mr-1.5" /> Documentos</TabsTrigger>
           <TabsTrigger value="integracoes"><Plug className="w-3.5 h-3.5 mr-1.5 text-blue-500" /> Integrações</TabsTrigger>
         </TabsList>
+
+        {/* Aprovações */}
+        <TabsContent value="aprovacoes"><AdminAprovacoesTab /></TabsContent>
 
         {/* Comunicados */}
         <TabsContent value="comunicados"><AdminComunicadosTab /></TabsContent>

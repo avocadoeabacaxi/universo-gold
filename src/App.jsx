@@ -17,10 +17,12 @@ import Lives from './pages/Lives';
 import Profile from './pages/Profile';
 import Admin from './pages/Admin';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 // Layout
 import Layout from './components/Layout';
+import ApprovalGate from './components/ApprovalGate';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin, isAuthenticated } = useAuth();
@@ -56,9 +58,10 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
-      <Route element={<Layout />}>
+      <Route element={<ApprovalGate><Layout /></ApprovalGate>}>
         <Route path="/" element={<Feed />} />
         <Route path="/communities" element={<Communities />} />
         <Route path="/communities/create" element={<CreateCommunity />} />

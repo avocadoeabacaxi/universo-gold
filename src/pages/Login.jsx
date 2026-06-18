@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,15 +21,9 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [msLoading, setMsLoading] = useState(false);
 
-  const validateDomain = (email) => email.toLowerCase().endsWith(`@${ALLOWED_DOMAIN}`);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    if (!validateDomain(email)) {
-      setError(`Acesso restrito. Use seu e-mail corporativo @${ALLOWED_DOMAIN}`);
-      return;
-    }
     setLoading(true);
     try {
       await base44.auth.loginViaEmailPassword(email, password);
@@ -139,7 +134,7 @@ export default function Login() {
           <div className="mb-8">
             <h2 className="text-2xl font-black text-foreground">Bem-vindo(a) de volta!</h2>
             <p className="text-muted-foreground text-sm mt-1">
-              Entre com seu e-mail corporativo <span className="font-semibold text-foreground">@goldpao.com</span>
+              Entre com seu e-mail e senha para acessar a plataforma
             </p>
           </div>
 
@@ -243,12 +238,17 @@ export default function Login() {
             </button>
           </form>
 
+          {/* Cadastro */}
+          <p className="mt-6 text-center text-sm text-muted-foreground">
+            Não tem conta?{" "}
+            <Link to="/register" className="text-primary font-semibold hover:underline">Criar conta</Link>
+          </p>
+
           {/* Info */}
-          <div className="mt-8 p-4 rounded-xl bg-muted/50 border border-border/60 flex items-start gap-3">
+          <div className="mt-6 p-4 rounded-xl bg-muted/50 border border-border/60 flex items-start gap-3">
             <ShieldCheck className="w-5 h-5 text-primary shrink-0 mt-0.5" />
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Acesso exclusivo para colaboradores Gold Pão com e-mail <strong className="text-foreground">@goldpao.com</strong>. 
-              Para solicitar acesso, entre em contato com o RH ou TI.
+              Plataforma exclusiva para colaboradores Gold Pão. Cadastros são autorizados por um moderador através da matrícula.
             </p>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Home, Users, FileText, Video, Radio, Bell, Search, Menu, X, Settings, LogOut, ChevronDown, Megaphone, UserCog, Building2, Briefcase, MapPin, ClipboardList, UsersRound } from 'lucide-react';
+import { Home, Users, FileText, Video, Radio, Bell, Search, Menu, X, Settings, LogOut, ChevronDown, Megaphone, UserCog, Building2, Briefcase, MapPin, ClipboardList, UsersRound, UserCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -26,7 +26,8 @@ export default function Layout() {
       const u = await base44.auth.me();
       const profiles = await base44.entities.UserProfile.filter({ user_id: u.id });
       const profile = profiles[0];
-      setUser({ ...u, avatar_url: profile?.avatar_url || u.avatar_url });
+      const effectiveRole = u.role === 'admin' ? 'admin' : (profile?.role || u.role);
+      setUser({ ...u, role: effectiveRole, avatar_url: profile?.avatar_url || u.avatar_url });
     };
     init().catch(() => {});
   }, []);
@@ -115,6 +116,11 @@ export default function Layout() {
                     <DropdownMenuLabel className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
                       <Building2 className="w-3 h-3" /> RH &amp; Administração
                     </DropdownMenuLabel>
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin?tab=aprovacoes" className="cursor-pointer">
+                        <UserCheck className="w-4 h-4 mr-2 text-green-600" /> Aprovações
+                      </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link to="/admin?tab=comunicados" className="cursor-pointer">
                         <Megaphone className="w-4 h-4 mr-2 text-orange-500" /> Comunicados
