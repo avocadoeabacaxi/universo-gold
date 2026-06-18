@@ -96,9 +96,10 @@ export default function LeftSidebar({ currentUser }) {
       </div>
 
       {/* Footer */}
-      <p className="px-2 pt-2 text-[10px] text-muted-foreground leading-relaxed">
-        © 2026 Gold Pão · Desenvolvido por LAB485/Avocado
-      </p>
+      <div className="px-2 pt-2 text-[10px] text-muted-foreground leading-relaxed">
+        <p>© 2026 Gold Pão</p>
+        <p>Desenvolvido por LAB485/Avocado</p>
+      </div>
     </aside>
   );
 }
