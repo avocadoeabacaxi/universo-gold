@@ -37,6 +37,8 @@ export default function Profile() {
         bio: p?.bio || '',
         phone: p?.phone || '',
         data_nascimento: p?.data_nascimento || '',
+        cpf: p?.cpf || '',
+        matricula: p?.matricula || '',
       });
       setLoading(false);
     };
@@ -199,6 +201,14 @@ export default function Profile() {
                     <div className="space-y-1">
                      <Label className="text-xs">Data de Nascimento 🎂</Label>
                      <Input type="date" value={form.data_nascimento} onChange={e => setForm(f => ({ ...f, data_nascimento: e.target.value }))} className="rounded-xl h-9 text-sm" />
+                    </div>
+                    <div className="space-y-1">
+                     <Label className="text-xs">CPF</Label>
+                     <Input value={form.cpf} onChange={e => setForm(f => ({ ...f, cpf: e.target.value }))} placeholder="000.000.000-00" className="rounded-xl h-9 text-sm" />
+                    </div>
+                    <div className="space-y-1">
+                     <Label className="text-xs">Matrícula</Label>
+                     <Input value={form.matricula} onChange={e => setForm(f => ({ ...f, matricula: e.target.value }))} placeholder="Nº de matrícula" className="rounded-xl h-9 text-sm" />
                     </div>
                     </div>
                   <div className="space-y-1">
