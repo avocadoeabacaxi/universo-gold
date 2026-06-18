@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { Users, FileText, Globe, Shield, Trash2, Loader2, UserPlus, Building2, MapPin, Briefcase, UserCircle, Lock, Pencil, Plug } from 'lucide-react';
+import { Users, FileText, Globe, Shield, Trash2, Loader2, UserPlus, Building2, MapPin, Briefcase, UserCircle, Lock, Pencil, Plug, Search } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -49,6 +49,8 @@ export default function Admin() {
   const [editingProfile, setEditingProfile] = useState(null);
   const [editProfileForm, setEditProfileForm] = useState({});
   const [editProfileOpen, setEditProfileOpen] = useState(false);
+  const [userSearch, setUserSearch] = useState('');
+  const [userSetorFilter, setUserSetorFilter] = useState('all');
 
   const urlTab = new URLSearchParams(location.search).get('tab');
   const defaultTab = TAB_ALIAS[urlTab] || 'users';
@@ -140,10 +142,16 @@ export default function Admin() {
   const roleLabels = { admin: 'Admin', department_leader: 'Líder', moderator: 'Moderador', user: 'Colaborador' };
   const roleBadgeColor = { admin: 'bg-red-100 text-red-700', department_leader: 'bg-orange-100 text-orange-700', moderator: 'bg-blue-100 text-blue-700', user: 'bg-gray-100 text-gray-600' };
 
-  // Agrupa perfis por setor (departamento)
+  // Agrupa perfis por setor (departamento) com busca e filtro
   const groupedProfiles = (() => {
+    const term = userSearch.trim().toLowerCase();
+    const filtered = profiles.filter(p => {
+      const matchSearch = !term || p.full_name?.toLowerCase().includes(term) || p.email?.toLowerCase().includes(term);
+      const matchSetor = userSetorFilter === 'all' || (p.department?.trim() || 'Sem setor') === userSetorFilter;
+      return matchSearch && matchSetor;
+    });
     const map = {};
-    profiles.forEach(p => {
+    filtered.forEach(p => {
       const key = p.department?.trim() || 'Sem setor';
       if (!map[key]) map[key] = [];
       map[key].push(p);
@@ -264,6 +272,24 @@ export default function Admin() {
               </form>
             </DialogContent>
           </Dialog>
+
+          <div className="flex flex-col sm:flex-row gap-2 mb-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input value={userSearch} onChange={e => setUserSearch(e.target.value)} placeholder="Buscar por nome ou e-mail..." className="pl-9 rounded-xl" />
+            </div>
+            <Select value={userSetorFilter} onValueChange={setUserSetorFilter}>
+              <SelectTrigger className="w-full sm:w-56 rounded-xl"><SelectValue placeholder="Todos os setores" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os setores</SelectItem>
+                {setores.map(s => <SelectItem key={s.id} value={s.name}>{s.name}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {groupedProfiles.length === 0 && (
+            <p className="text-center text-sm text-muted-foreground py-8">Nenhum usuário encontrado.</p>
+          )}
 
           <div className="space-y-5">
             {groupedProfiles.map(({ setor, items }) => (
