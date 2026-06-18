@@ -218,7 +218,6 @@ export default function AdminDocumentosTab() {
           <SelectTrigger className="w-full sm:w-52 rounded-xl"><SelectValue placeholder="Direcionamento" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todos os direcionamentos</SelectItem>
-            <SelectItem value="all">Geral</SelectItem>
             <SelectItem value="department">Departamento</SelectItem>
             <SelectItem value="admin">Apenas Admin</SelectItem>
           </SelectContent>

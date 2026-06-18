@@ -51,6 +51,8 @@ export default function Admin() {
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [userSearch, setUserSearch] = useState('');
   const [userSetorFilter, setUserSetorFilter] = useState('all');
+  const [permSearch, setPermSearch] = useState('');
+  const [permRoleFilter, setPermRoleFilter] = useState('all');
 
   const urlTab = new URLSearchParams(location.search).get('tab');
   const defaultTab = TAB_ALIAS[urlTab] || 'users';
@@ -336,8 +338,31 @@ export default function Admin() {
 
         {/* Permissões */}
         <TabsContent value="permissions">
+          <div className="flex flex-col sm:flex-row gap-2 mb-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input value={permSearch} onChange={e => setPermSearch(e.target.value)} placeholder="Buscar por nome ou e-mail..." className="pl-9 rounded-xl" />
+            </div>
+            <Select value={permRoleFilter} onValueChange={setPermRoleFilter}>
+              <SelectTrigger className="w-full sm:w-56 rounded-xl"><SelectValue placeholder="Todos os perfis" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os perfis</SelectItem>
+                <SelectItem value="user">Colaborador</SelectItem>
+                <SelectItem value="moderator">Moderador</SelectItem>
+                <SelectItem value="department_leader">Líder de Dep.</SelectItem>
+                <SelectItem value="admin">Administrador</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <div className="space-y-2">
-            {profiles.map(profile => (
+            {profiles
+              .filter(profile => {
+                const term = permSearch.trim().toLowerCase();
+                const matchSearch = !term || profile.full_name?.toLowerCase().includes(term) || profile.email?.toLowerCase().includes(term);
+                const matchRole = permRoleFilter === 'all' || (profile.role || 'user') === permRoleFilter;
+                return matchSearch && matchRole;
+              })
+              .map(profile => (
               <Card key={profile.id} className="rounded-xl border-border/60">
                 <CardContent className="p-4 flex items-center gap-3">
                   <Avatar className="w-9 h-9 shrink-0">
@@ -360,7 +385,13 @@ export default function Admin() {
                   </Select>
                 </CardContent>
               </Card>
-            ))}
+              ))}
+            {profiles.filter(profile => {
+              const term = permSearch.trim().toLowerCase();
+              const matchSearch = !term || profile.full_name?.toLowerCase().includes(term) || profile.email?.toLowerCase().includes(term);
+              const matchRole = permRoleFilter === 'all' || (profile.role || 'user') === permRoleFilter;
+              return matchSearch && matchRole;
+            }).length === 0 && <p className="text-center text-sm text-muted-foreground py-8">Nenhum usuário encontrado.</p>}
           </div>
         </TabsContent>
 
