@@ -46,7 +46,13 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex relative overflow-hidden">
+      {/* Tony mascote original (pão) - acima de tudo, na divisa azul/branco */}
+      <img
+        src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/18b98ea2a_Pao.png"
+        alt="Tony Gold Pão"
+        className="hidden lg:block absolute bottom-0 h-72 xl:h-80 w-auto drop-shadow-2xl z-50 pointer-events-none left-1/2 xl:left-[60%] -translate-x-1/2" />
+
       {/* ── Lado esquerdo – Branding ── */}
       <div
         className="hidden lg:flex lg:w-1/2 xl:w-3/5 relative flex-col justify-between p-12 overflow-hidden"
@@ -65,13 +71,6 @@ export default function Login() {
             className="h-20 w-auto brightness-0 invert" />
           
         </div>
-
-        {/* Tony mascote original (pão) */}
-        <img
-          src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/18b98ea2a_Pao.png"
-          alt="Tony Gold Pão"
-          className="absolute -bottom-4 -right-48 h-64 xl:h-72 w-auto drop-shadow-2xl z-30 pointer-events-none" />
-        
 
         {/* Tony astronauta flutuando perto da seta da logo */}
         <img
