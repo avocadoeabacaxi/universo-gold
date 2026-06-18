@@ -111,7 +111,7 @@ export default function Layout() {
                     <Users className="w-4 h-4 mr-2" /> Meu Perfil
                   </Link>
                 </DropdownMenuItem>
-                {(user?.role === 'admin' || user?.role === 'department_leader') && (
+                {(user?.role === 'admin' || user?.role === 'department_leader' || user?.role === 'moderator') && (
                   <>
                     <DropdownMenuSeparator />
                     <DropdownMenuLabel className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
