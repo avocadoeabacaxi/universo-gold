@@ -51,7 +51,7 @@ export default function Login() {
       <img
         src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/18b98ea2a_Pao.png"
         alt="Tony Gold Pão"
-        className="hidden lg:block absolute bottom-0 h-72 xl:h-80 w-auto drop-shadow-2xl z-50 pointer-events-none left-1/2 xl:left-[60%] -translate-x-1/2" />
+        className="hidden lg:block absolute -bottom-14 h-72 xl:h-80 w-auto drop-shadow-2xl z-50 pointer-events-none left-1/2 xl:left-[60%] -translate-x-1/2" />
 
       {/* ── Lado esquerdo – Branding ── */}
       <div
