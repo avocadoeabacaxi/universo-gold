@@ -39,6 +39,8 @@ export default function Admin() {
   const [profiles, setProfiles] = useState([]);
   const [communities, setCommunities] = useState([]);
   const [documents, setDocuments] = useState([]);
+  const [setores, setSetores] = useState([]);
+  const [funcoes, setFuncoes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRole, setInviteRole] = useState('user');
@@ -56,14 +58,18 @@ export default function Admin() {
       const user = await base44.auth.me();
       setCurrentUser(user);
       if (user.role !== 'admin') { setLoading(false); return; }
-      const [p, c, d] = await Promise.all([
+      const [p, c, d, s, f] = await Promise.all([
         base44.entities.UserProfile.list('-created_date', 50),
         base44.entities.Community.list('name', 50),
         base44.entities.Document.list('-created_date', 50),
+        base44.entities.Setor.filter({ status: 'active' }, 'name', 200),
+        base44.entities.Funcao.filter({ status: 'active' }, 'name', 200),
       ]);
       setProfiles(p);
       setCommunities(c);
       setDocuments(d);
+      setSetores(s);
+      setFuncoes(f);
       setLoading(false);
     };
     init().catch(() => setLoading(false));
@@ -216,8 +222,24 @@ export default function Admin() {
               <DialogHeader><DialogTitle>Editar Perfil</DialogTitle></DialogHeader>
               <form onSubmit={handleSaveProfile} className="space-y-3">
                 <div className="space-y-1"><Label>Nome completo</Label><Input value={editProfileForm.full_name || ''} onChange={e => setEditProfileForm(f => ({ ...f, full_name: e.target.value }))} className="rounded-xl" /></div>
-                <div className="space-y-1"><Label>Departamento</Label><Input value={editProfileForm.department || ''} onChange={e => setEditProfileForm(f => ({ ...f, department: e.target.value }))} className="rounded-xl" /></div>
-                <div className="space-y-1"><Label>Cargo</Label><Input value={editProfileForm.job_title || ''} onChange={e => setEditProfileForm(f => ({ ...f, job_title: e.target.value }))} className="rounded-xl" /></div>
+                <div className="space-y-1">
+                  <Label>Departamento</Label>
+                  <Select value={editProfileForm.department || ''} onValueChange={v => setEditProfileForm(f => ({ ...f, department: v }))}>
+                    <SelectTrigger className="rounded-xl"><SelectValue placeholder="Selecione o setor" /></SelectTrigger>
+                    <SelectContent>
+                      {setores.map(s => <SelectItem key={s.id} value={s.name}>{s.name}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1">
+                  <Label>Cargo</Label>
+                  <Select value={editProfileForm.job_title || ''} onValueChange={v => setEditProfileForm(f => ({ ...f, job_title: v }))}>
+                    <SelectTrigger className="rounded-xl"><SelectValue placeholder="Selecione a função" /></SelectTrigger>
+                    <SelectContent>
+                      {funcoes.map(fn => <SelectItem key={fn.id} value={fn.name}>{fn.name}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
                 <div className="space-y-1"><Label>Gestor</Label><Input value={editProfileForm.gestor || ''} onChange={e => setEditProfileForm(f => ({ ...f, gestor: e.target.value }))} className="rounded-xl" /></div>
                 <div className="space-y-1"><Label>Telefone</Label><Input value={editProfileForm.phone || ''} onChange={e => setEditProfileForm(f => ({ ...f, phone: e.target.value }))} className="rounded-xl" /></div>
                 <div className="space-y-1"><Label>Bio</Label><textarea value={editProfileForm.bio || ''} onChange={e => setEditProfileForm(f => ({ ...f, bio: e.target.value }))} rows={2} className="w-full rounded-xl border border-input bg-background px-3 py-2 text-sm" /></div>
