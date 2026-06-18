@@ -76,7 +76,7 @@ export default function ForgotPassword() {
       {/* Seletor de modo */}
       <div className="grid grid-cols-2 gap-2 mb-6 p-1 bg-muted rounded-xl">
         <button onClick={() => setMode("email")} className={`h-9 rounded-lg text-xs font-semibold transition-colors ${mode === "email" ? "bg-card shadow text-primary" : "text-muted-foreground"}`}>
-          Tenho e-mail @{ALLOWED_DOMAIN}
+          Tenho e-mail @goldpao.com / .com.br
         </button>
         <button onClick={() => setMode("matricula")} className={`h-9 rounded-lg text-xs font-semibold transition-colors ${mode === "matricula" ? "bg-card shadow text-primary" : "text-muted-foreground"}`}>
           Não tenho e-mail
