@@ -120,7 +120,7 @@ export default function Admin() {
 
   const openEditProfile = (profile) => {
     setEditingProfile(profile);
-    setEditProfileForm({ full_name: profile.full_name || '', department: profile.department || '', job_title: profile.job_title || '', gestor: profile.gestor || '', phone: profile.phone || '', bio: profile.bio || '' });
+    setEditProfileForm({ full_name: profile.full_name || '', matricula: profile.matricula || '', cpf: profile.cpf || '', email: profile.email || '', data_nascimento: profile.data_nascimento || '', department: profile.department || '', job_title: profile.job_title || '', gestor: profile.gestor || '', phone: profile.phone || '', bio: profile.bio || '' });
     setEditProfileOpen(true);
   };
 
@@ -281,6 +281,14 @@ export default function Admin() {
               <DialogHeader><DialogTitle>Editar Perfil</DialogTitle></DialogHeader>
               <form onSubmit={handleSaveProfile} className="space-y-3">
                 <div className="space-y-1"><Label>Nome completo</Label><Input value={editProfileForm.full_name || ''} onChange={e => setEditProfileForm(f => ({ ...f, full_name: e.target.value }))} className="rounded-xl" /></div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1"><Label>Matrícula</Label><Input value={editProfileForm.matricula || ''} onChange={e => setEditProfileForm(f => ({ ...f, matricula: e.target.value }))} className="rounded-xl" /></div>
+                  <div className="space-y-1"><Label>CPF</Label><Input value={editProfileForm.cpf || ''} onChange={e => setEditProfileForm(f => ({ ...f, cpf: e.target.value }))} className="rounded-xl" /></div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1"><Label>E-mail</Label><Input type="email" value={editProfileForm.email || ''} onChange={e => setEditProfileForm(f => ({ ...f, email: e.target.value }))} className="rounded-xl" /></div>
+                  <div className="space-y-1"><Label>Data de nascimento</Label><Input type="date" value={editProfileForm.data_nascimento || ''} onChange={e => setEditProfileForm(f => ({ ...f, data_nascimento: e.target.value }))} className="rounded-xl" /></div>
+                </div>
                 <div className="space-y-1">
                   <Label>Departamento</Label>
                   <Select value={editProfileForm.department || ''} onValueChange={v => setEditProfileForm(f => ({ ...f, department: v }))}>
@@ -343,7 +351,7 @@ export default function Admin() {
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-sm truncate">{profile.full_name}</p>
+                          <p className="font-semibold text-sm truncate">{profile.full_name} {profile.matricula && <span className="text-muted-foreground font-normal">· Mat. {profile.matricula}</span>}</p>
                           <p className="text-xs text-muted-foreground">{profile.email} · {profile.department}</p>
                           {profile.gestor && <p className="text-xs text-muted-foreground">Gestor: {profile.gestor}</p>}
                         </div>
