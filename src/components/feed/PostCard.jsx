@@ -10,6 +10,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import CommentsList from './CommentsList';
+import { createNotification, notifyMentions } from '@/lib/notifications';
 
 export default function PostCard({ post, currentUser, onDelete }) {
   const [liked, setLiked] = useState(post.liked_by?.includes(currentUser?.id) || false);
@@ -47,6 +48,22 @@ export default function PostCard({ post, currentUser, onDelete }) {
       content: commentText,
     });
     await base44.entities.Post.update(post.id, { comments_count: commentsCount + 1 });
+
+    const postLink = post.community_id ? `/communities/${post.community_id}` : '/';
+    // Notifica o autor do post sobre o comentário
+    await createNotification({
+      recipientId: post.author_id,
+      actorId: currentUser?.id,
+      type: 'comment',
+      title: 'Novo comentário',
+      message: `${currentUser?.full_name} comentou na sua publicação`,
+      actorName: currentUser?.full_name,
+      actorAvatar: currentUser?.avatar_url,
+      link: postLink,
+    });
+    // Notifica usuários mencionados (@)
+    await notifyMentions({ text: commentText, actor: currentUser, link: postLink, contextLabel: 'um comentário' });
+
     setCommentsCount(prev => prev + 1);
     setCommentText('');
     setShowComments(true);

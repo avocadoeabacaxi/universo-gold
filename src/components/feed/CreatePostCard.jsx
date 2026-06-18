@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
+import { createNotification, notifyMentions } from '@/lib/notifications';
 
 export default function CreatePostCard({ currentUser, communityId, communityName, onPostCreated }) {
   const [expanded, setExpanded] = useState(false);
@@ -40,6 +41,26 @@ export default function CreatePostCard({ currentUser, communityId, communityName
       liked_by: [],
       status: 'active',
     });
+
+    const postLink = communityId ? `/communities/${communityId}` : '/';
+    // Notifica membros da comunidade sobre a novidade
+    if (communityId) {
+      const members = await base44.entities.CommunityMember.filter({ community_id: communityId });
+      await Promise.all(members.map(m =>
+        createNotification({
+          recipientId: m.user_id,
+          actorId: currentUser?.id,
+          type: 'community',
+          title: `Novidade em ${communityName}`,
+          message: `${currentUser?.full_name} publicou em ${communityName}`,
+          actorName: currentUser?.full_name,
+          actorAvatar: currentUser?.avatar_url,
+          link: postLink,
+        })
+      ));
+    }
+    // Notifica usuários mencionados (@)
+    await notifyMentions({ text: content, actor: currentUser, link: postLink, contextLabel: 'uma publicação' });
 
     setContent('');
     setMediaFile(null);

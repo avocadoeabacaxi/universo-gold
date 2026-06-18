@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
+import NotificationBell from '@/components/notifications/NotificationBell';
 
 export default function Layout() {
   const location = useLocation();
@@ -86,10 +87,7 @@ export default function Layout() {
 
           {/* Right section */}
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="text-white/80 hover:text-white hover:bg-white/20 rounded-full relative">
-              <Bell className="w-5 h-5" />
-              <Badge className="absolute -top-1 -right-1 w-4 h-4 p-0 text-[10px] bg-red-500 flex items-center justify-center">3</Badge>
-            </Button>
+            <NotificationBell userId={user?.id} />
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

@@ -1,0 +1,51 @@
+{
+  "name": "Notification",
+  "type": "object",
+  "properties": {
+    "recipient_id": {
+      "type": "string",
+      "description": "ID do usu\u00e1rio que recebe a notifica\u00e7\u00e3o"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "comment",
+        "mention",
+        "community",
+        "like",
+        "system"
+      ],
+      "default": "system",
+      "description": "Tipo da notifica\u00e7\u00e3o"
+    },
+    "title": {
+      "type": "string",
+      "description": "T\u00edtulo curto da notifica\u00e7\u00e3o"
+    },
+    "message": {
+      "type": "string",
+      "description": "Texto da notifica\u00e7\u00e3o"
+    },
+    "actor_name": {
+      "type": "string",
+      "description": "Nome de quem gerou a notifica\u00e7\u00e3o"
+    },
+    "actor_avatar": {
+      "type": "string",
+      "description": "Avatar de quem gerou"
+    },
+    "link": {
+      "type": "string",
+      "description": "Rota para onde a notifica\u00e7\u00e3o leva"
+    },
+    "read": {
+      "type": "boolean",
+      "default": false,
+      "description": "Se j\u00e1 foi lida"
+    }
+  },
+  "required": [
+    "recipient_id",
+    "type"
+  ]
+}
