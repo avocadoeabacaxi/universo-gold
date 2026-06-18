@@ -252,19 +252,19 @@ export default function Admin() {
         ))}
       </div>
 
-      <Tabs defaultValue={defaultTab} key={defaultTab}>
-        <TabsList className="mb-4 flex flex-wrap gap-1 h-auto">
-          <TabsTrigger value="aprovacoes"><UserCheck className="w-3.5 h-3.5 mr-1.5 text-green-600" /> Aprovações</TabsTrigger>
-          <TabsTrigger value="comunicados"><Globe className="w-3.5 h-3.5 mr-1.5 text-orange-500" /> Comunicados</TabsTrigger>
-          <TabsTrigger value="users"><Users className="w-3.5 h-3.5 mr-1.5" /> Usuários</TabsTrigger>
-          <TabsTrigger value="permissions"><Lock className="w-3.5 h-3.5 mr-1.5" /> Permissões</TabsTrigger>
-          <TabsTrigger value="setores"><Building2 className="w-3.5 h-3.5 mr-1.5" /> Setores</TabsTrigger>
-          <TabsTrigger value="funcoes"><Briefcase className="w-3.5 h-3.5 mr-1.5" /> Funções</TabsTrigger>
-          <TabsTrigger value="unidades"><MapPin className="w-3.5 h-3.5 mr-1.5" /> Unidades</TabsTrigger>
-          <TabsTrigger value="fichas"><UserCircle className="w-3.5 h-3.5 mr-1.5" /> Fichas</TabsTrigger>
-          <TabsTrigger value="communities"><Globe className="w-3.5 h-3.5 mr-1.5" /> Comunidades</TabsTrigger>
-          <TabsTrigger value="documents"><FileText className="w-3.5 h-3.5 mr-1.5" /> Documentos</TabsTrigger>
-          <TabsTrigger value="integracoes"><Plug className="w-3.5 h-3.5 mr-1.5 text-blue-500" /> Integrações</TabsTrigger>
+      <Tabs defaultValue={defaultTab} key={defaultTab} orientation="vertical" className="flex flex-col md:flex-row gap-5 items-start [&>[role=tabpanel]]:flex-1 [&>[role=tabpanel]]:min-w-0 [&>[role=tabpanel]]:w-full">
+        <TabsList className="flex md:flex-col md:w-56 md:shrink-0 flex-wrap gap-1 h-auto bg-card border border-border/60 rounded-2xl p-2 md:sticky md:top-20 [&>button]:justify-start [&>button]:w-full">
+          <TabsTrigger value="aprovacoes"><UserCheck className="w-4 h-4 mr-2 text-green-600" /> Aprovações</TabsTrigger>
+          <TabsTrigger value="comunicados"><Globe className="w-4 h-4 mr-2 text-orange-500" /> Comunicados</TabsTrigger>
+          <TabsTrigger value="users"><Users className="w-4 h-4 mr-2" /> Usuários</TabsTrigger>
+          <TabsTrigger value="permissions"><Lock className="w-4 h-4 mr-2" /> Permissões</TabsTrigger>
+          <TabsTrigger value="setores"><Building2 className="w-4 h-4 mr-2" /> Setores</TabsTrigger>
+          <TabsTrigger value="funcoes"><Briefcase className="w-4 h-4 mr-2" /> Funções</TabsTrigger>
+          <TabsTrigger value="unidades"><MapPin className="w-4 h-4 mr-2" /> Unidades</TabsTrigger>
+          <TabsTrigger value="fichas"><UserCircle className="w-4 h-4 mr-2" /> Fichas</TabsTrigger>
+          <TabsTrigger value="communities"><Globe className="w-4 h-4 mr-2" /> Comunidades</TabsTrigger>
+          <TabsTrigger value="documents"><FileText className="w-4 h-4 mr-2" /> Documentos</TabsTrigger>
+          <TabsTrigger value="integracoes"><Plug className="w-4 h-4 mr-2 text-blue-500" /> Integrações</TabsTrigger>
         </TabsList>
 
         {/* Aprovações */}
