@@ -119,7 +119,7 @@ export default function Login() {
 
         {/* Rodapé */}
         <div className="relative z-10">
-          <p className="text-white/40 text-xs">© 2026 Gold Pão · Todos os direitos reservados</p>
+          <p className="text-white/40 text-xs">© 2026 Gold Pão · Desenvolvido por LAB485/Avocado</p>
         </div>
       </div>
 
