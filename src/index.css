@@ -89,6 +89,16 @@
 }
 
 @layer utilities {
+  @keyframes bell-shake {
+    0%, 100% { transform: rotate(0); }
+    10%, 30%, 50%, 70% { transform: rotate(-12deg); }
+    20%, 40%, 60%, 80% { transform: rotate(12deg); }
+    90% { transform: rotate(0); }
+  }
+  .animate-bell-shake {
+    animation: bell-shake 1s ease-in-out infinite;
+    transform-origin: top center;
+  }
   .gold-gradient {
     background: linear-gradient(135deg, #2B4FA0 0%, #1a3478 100%);
   }
