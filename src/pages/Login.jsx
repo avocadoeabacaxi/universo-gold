@@ -70,7 +70,7 @@ export default function Login() {
         <img
           src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/18b98ea2a_Pao.png"
           alt="Tony Gold Pão"
-          className="absolute -bottom-4 -right-40 h-72 xl:h-80 w-auto drop-shadow-2xl z-20 pointer-events-none" />
+          className="absolute -bottom-4 -right-24 h-64 xl:h-72 w-auto drop-shadow-2xl z-20 pointer-events-none" />
         
 
         {/* Tony astronauta flutuando perto da seta da logo */}
