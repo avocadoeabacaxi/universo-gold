@@ -97,11 +97,6 @@ export default function RightSidebar({ currentUser }) {
         </Link>
       </div>
 
-      {/* Footer */}
-      <div className="px-2 text-[10px] text-muted-foreground leading-relaxed">
-        <p>Universo Gold © 2024 · Gold Pão</p>
-        <p>Plataforma interna corporativa</p>
-      </div>
     </aside>
   );
 }
