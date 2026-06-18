@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Plus, Trash2, Building2, Loader2, Pencil } from 'lucide-react';
+import { Plus, Trash2, Building2, Loader2, Pencil, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,6 +18,8 @@ export default function SetoresTab() {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(null); // null = novo, object = editar
   const [form, setForm] = useState(EMPTY);
+  const [search, setSearch] = useState('');
+  const [unidadeFilter, setUnidadeFilter] = useState('all');
 
   useEffect(() => {
     Promise.all([
@@ -49,6 +51,12 @@ export default function SetoresTab() {
     toast.success('Setor removido.');
   };
 
+  const term = search.trim().toLowerCase();
+  const filteredSetores = setores.filter(s =>
+    (!term || s.name?.toLowerCase().includes(term) || s.responsavel?.toLowerCase().includes(term)) &&
+    (unidadeFilter === 'all' || s.unidade === unidadeFilter)
+  );
+
   if (loading) return <div className="flex justify-center py-8"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>;
 
   return (
@@ -78,8 +86,19 @@ export default function SetoresTab() {
         </DialogContent>
       </Dialog>
 
+      <div className="flex flex-col sm:flex-row gap-2 mb-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Buscar setor ou responsável..." className="pl-9 rounded-xl" />
+        </div>
+        <select value={unidadeFilter} onChange={e => setUnidadeFilter(e.target.value)} className="w-full sm:w-56 h-9 rounded-xl border border-input bg-background px-3 text-sm">
+          <option value="all">Todas as unidades</option>
+          {unidades.map(u => <option key={u.id} value={u.name}>{u.name}</option>)}
+        </select>
+      </div>
+
       <div className="space-y-2">
-        {setores.map(s => (
+        {filteredSetores.map(s => (
           <Card key={s.id} className="rounded-xl border-border/60">
             <CardContent className="p-4 flex items-center gap-3">
               <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center shrink-0">
@@ -100,7 +119,7 @@ export default function SetoresTab() {
             </CardContent>
           </Card>
         ))}
-        {setores.length === 0 && <p className="text-center py-8 text-muted-foreground text-sm">Nenhum setor cadastrado</p>}
+        {filteredSetores.length === 0 && <p className="text-center py-8 text-muted-foreground text-sm">Nenhum setor encontrado</p>}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Plus, Trash2, Briefcase, Loader2, Pencil } from 'lucide-react';
+import { Plus, Trash2, Briefcase, Loader2, Pencil, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -20,6 +20,8 @@ export default function FuncoesTab() {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(EMPTY);
+  const [search, setSearch] = useState('');
+  const [setorFilter, setSetorFilter] = useState('all');
 
   useEffect(() => {
     Promise.all([
@@ -50,6 +52,12 @@ export default function FuncoesTab() {
     setFuncoes(prev => prev.filter(f => f.id !== id));
     toast.success('Função removida.');
   };
+
+  const term = search.trim().toLowerCase();
+  const filteredFuncoes = funcoes.filter(f =>
+    (!term || f.name?.toLowerCase().includes(term)) &&
+    (setorFilter === 'all' || f.setor_name === setorFilter)
+  );
 
   if (loading) return <div className="flex justify-center py-8"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>;
 
@@ -87,8 +95,19 @@ export default function FuncoesTab() {
         </DialogContent>
       </Dialog>
 
+      <div className="flex flex-col sm:flex-row gap-2 mb-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Buscar função..." className="pl-9 rounded-xl" />
+        </div>
+        <select value={setorFilter} onChange={e => setSetorFilter(e.target.value)} className="w-full sm:w-56 h-9 rounded-xl border border-input bg-background px-3 text-sm">
+          <option value="all">Todos os setores</option>
+          {setores.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
+        </select>
+      </div>
+
       <div className="space-y-2">
-        {funcoes.map(f => (
+        {filteredFuncoes.map(f => (
           <Card key={f.id} className="rounded-xl border-border/60">
             <CardContent className="p-4 flex items-center gap-3">
               <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center shrink-0">
@@ -109,7 +128,7 @@ export default function FuncoesTab() {
             </CardContent>
           </Card>
         ))}
-        {funcoes.length === 0 && <p className="text-center py-8 text-muted-foreground text-sm">Nenhuma função cadastrada</p>}
+        {filteredFuncoes.length === 0 && <p className="text-center py-8 text-muted-foreground text-sm">Nenhuma função encontrada</p>}
       </div>
     </div>
   );

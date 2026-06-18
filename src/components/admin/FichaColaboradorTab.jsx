@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Plus, Trash2, UserCircle, Loader2, ChevronDown, ChevronUp, Pencil } from 'lucide-react';
+import { Plus, Trash2, UserCircle, Loader2, ChevronDown, ChevronUp, Pencil, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -80,6 +80,8 @@ export default function FichaColaboradorTab() {
   const [editing, setEditing] = useState(null);
   const [expanded, setExpanded] = useState(null);
   const [form, setForm] = useState(EMPTY_FORM);
+  const [search, setSearch] = useState('');
+  const [setorFilter, setSetorFilter] = useState('all');
 
   useEffect(() => {
     Promise.all([
@@ -125,6 +127,12 @@ export default function FichaColaboradorTab() {
     toast.success('Ficha removida.');
   };
 
+  const term = search.trim().toLowerCase();
+  const filteredFichas = fichas.filter(fc =>
+    (!term || fc.full_name?.toLowerCase().includes(term) || fc.cpf?.toLowerCase().includes(term) || fc.matricula?.toLowerCase().includes(term)) &&
+    (setorFilter === 'all' || fc.setor_name === setorFilter)
+  );
+
   if (loading) return <div className="flex justify-center py-8"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>;
 
   return (
@@ -143,8 +151,19 @@ export default function FichaColaboradorTab() {
         </DialogContent>
       </Dialog>
 
+      <div className="flex flex-col sm:flex-row gap-2 mb-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Buscar por nome, CPF ou matrícula..." className="pl-9 rounded-xl" />
+        </div>
+        <select value={setorFilter} onChange={e => setSetorFilter(e.target.value)} className="w-full sm:w-56 h-9 rounded-xl border border-input bg-background px-3 text-sm">
+          <option value="all">Todos os setores</option>
+          {setores.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
+        </select>
+      </div>
+
       <div className="space-y-2">
-        {fichas.map(fc => (
+        {filteredFichas.map(fc => (
           <Card key={fc.id} className="rounded-xl border-border/60">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
@@ -180,7 +199,7 @@ export default function FichaColaboradorTab() {
             </CardContent>
           </Card>
         ))}
-        {fichas.length === 0 && <p className="text-center py-8 text-muted-foreground text-sm">Nenhuma ficha cadastrada</p>}
+        {filteredFichas.length === 0 && <p className="text-center py-8 text-muted-foreground text-sm">Nenhuma ficha encontrada</p>}
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { FileText, Image, Upload, Trash2, Plus, ExternalLink } from 'lucide-react';
+import { FileText, Image, Upload, Trash2, Plus, ExternalLink, Search } from 'lucide-react';
 import { toast } from 'sonner';
 
 const DEPARTAMENTOS = [
@@ -29,6 +29,8 @@ export default function AdminDocumentosTab() {
   });
   const [uploading, setUploading] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [search, setSearch] = useState('');
+  const [accessFilter, setAccessFilter] = useState('all');
 
   useEffect(() => {
     loadDocs();
@@ -110,6 +112,12 @@ export default function AdminDocumentosTab() {
     if (['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(type)) return 'bg-green-50';
     return 'bg-red-50';
   };
+
+  const term = search.trim().toLowerCase();
+  const filteredDocs = documents.filter(d =>
+    (!term || d.title?.toLowerCase().includes(term) || d.category?.toLowerCase().includes(term)) &&
+    (accessFilter === 'all' || d.access_level === accessFilter)
+  );
 
   return (
     <div className="space-y-4">
@@ -200,10 +208,27 @@ export default function AdminDocumentosTab() {
         </Dialog>
       </div>
 
+      {/* Busca e filtro */}
+      <div className="flex flex-col sm:flex-row gap-2">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Buscar documento ou categoria..." className="pl-9 rounded-xl" />
+        </div>
+        <Select value={accessFilter} onValueChange={setAccessFilter}>
+          <SelectTrigger className="w-full sm:w-52 rounded-xl"><SelectValue placeholder="Direcionamento" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos os direcionamentos</SelectItem>
+            <SelectItem value="all">Geral</SelectItem>
+            <SelectItem value="department">Departamento</SelectItem>
+            <SelectItem value="admin">Apenas Admin</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* Lista de documentos */}
       <div className="space-y-2">
-        {documents.length === 0 && <p className="text-sm text-muted-foreground text-center py-8">Nenhum documento cadastrado.</p>}
-        {documents.map(doc => (
+        {filteredDocs.length === 0 && <p className="text-sm text-muted-foreground text-center py-8">Nenhum documento encontrado.</p>}
+        {filteredDocs.map(doc => (
           <Card key={doc.id} className="rounded-xl border-border/60">
             <CardContent className="p-4 flex items-center gap-3">
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${bgColor(doc.file_type)}`}>

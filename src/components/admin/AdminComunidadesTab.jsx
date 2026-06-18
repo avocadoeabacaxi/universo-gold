@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Trash2, Pencil, Users, FileText, Image, X, UserPlus, Globe, Lock } from 'lucide-react';
+import { Trash2, Pencil, Users, FileText, Image, X, UserPlus, Globe, Lock, Search } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function AdminComunidadesTab() {
@@ -23,6 +23,8 @@ export default function AdminComunidadesTab() {
   const [editForm, setEditForm] = useState({});
   const [addMemberSearch, setAddMemberSearch] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [search, setSearch] = useState('');
+  const [tipoFilter, setTipoFilter] = useState('all');
 
   useEffect(() => {
     load();
@@ -124,9 +126,28 @@ export default function AdminComunidadesTab() {
     !(selectedCommunity?.members || []).includes(p.user_id)
   );
 
+  const term = search.trim().toLowerCase();
+  const filteredCommunities = communities.filter(c =>
+    (!term || c.name?.toLowerCase().includes(term)) &&
+    (tipoFilter === 'all' || c.type === tipoFilter)
+  );
+
   return (
     <div className="space-y-3">
-      {communities.map(community => (
+      <div className="flex flex-col sm:flex-row gap-2">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Buscar comunidade..." className="pl-9 rounded-xl" />
+        </div>
+        <select value={tipoFilter} onChange={e => setTipoFilter(e.target.value)} className="w-full sm:w-48 h-9 rounded-xl border border-input bg-background px-3 text-sm">
+          <option value="all">Todos os tipos</option>
+          <option value="free_group">Grupo livre</option>
+          <option value="department">Departamento</option>
+        </select>
+      </div>
+
+      {filteredCommunities.length === 0 && <p className="text-center py-8 text-muted-foreground text-sm">Nenhuma comunidade encontrada</p>}
+      {filteredCommunities.map(community => (
         <Card key={community.id} className="rounded-xl border-border/60">
           <CardContent className="p-4 flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl gold-gradient flex items-center justify-center shrink-0 overflow-hidden">
