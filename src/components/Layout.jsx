@@ -194,11 +194,6 @@ export default function Layout() {
       <main className="pt-14">
         <Outlet />
       </main>
-
-      {/* Footer */}
-      <footer className="py-4 text-center">
-        <p className="text-xs text-muted-foreground">© 2026 Gold Pão · Desenvolvido por LAB485/Avocado</p>
-      </footer>
     </div>
   );
 }
