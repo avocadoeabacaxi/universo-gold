@@ -195,7 +195,7 @@ export default function Repository() {
 
               return (
                 <Card key={doc.id} className="rounded-xl border-border/60 hover:shadow-md transition-shadow">
-                  <CardContent className="p-4 flex items-center gap-4">
+                  <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
                     {/* Icon */}
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 relative ${extColor}`}>
                       <FileText className="w-5 h-5" />
@@ -207,9 +207,9 @@ export default function Repository() {
                     </div>
 
                     {/* Info */}
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-0 w-full">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <p className="font-semibold text-sm truncate">{doc.title}</p>
+                        <p className="font-semibold text-sm break-words">{doc.title}</p>
                         {doc.version > 1 && (
                           <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-full font-semibold">v{doc.version}</span>
                         )}
@@ -235,10 +235,10 @@ export default function Repository() {
                     </div>
 
                     {/* Actions */}
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto border-t sm:border-t-0 border-border/50 pt-3 sm:pt-0">
                       <button
                         onClick={() => handleDocClick(doc)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold border border-primary/30 text-primary rounded-xl hover:bg-primary/10 transition"
+                        className="flex-1 sm:flex-none justify-center flex items-center gap-1.5 px-3 py-2 sm:py-1.5 text-xs font-semibold border border-primary/30 text-primary rounded-xl hover:bg-primary/10 transition"
                       >
                         {isLocked ? <Lock className="w-3.5 h-3.5" /> : <Download className="w-3.5 h-3.5" />}
                         {isLocked ? 'Acessar' : 'Baixar'}
