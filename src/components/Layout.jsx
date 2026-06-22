@@ -56,7 +56,8 @@ export default function Layout() {
           src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/700f00b66_barra.png"
           alt=""
           aria-hidden="true"
-          className="absolute top-0 left-0 h-full w-auto pointer-events-none select-none"
+          className="absolute top-0 h-full w-auto pointer-events-none select-none"
+          style={{ left: '-1%' }}
         />
         <div className="relative max-w-screen-xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
           {/* Logo */}
