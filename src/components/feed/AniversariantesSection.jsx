@@ -181,12 +181,16 @@ function TodosAniversariantesModal({ onClose, currentUser }) {
                     <p className="font-semibold text-sm truncate">{p.full_name} {isToday && '🎂'}</p>
                     <p className="text-xs text-muted-foreground">{getBirthdayDate(p.data_nascimento)}{p.department ? ` • ${p.department}` : ''}</p>
                   </div>
-                  <button
-                    onClick={() => setSelected(p)}
-                    className="shrink-0 flex items-center gap-1 px-3 py-1.5 bg-primary text-white rounded-full text-xs font-semibold hover:bg-primary/90 transition"
-                  >
-                    <Cake className="w-3 h-3" /> Parabenizar
-                  </button>
+                  {isToday ? (
+                    <button
+                      onClick={() => setSelected(p)}
+                      className="shrink-0 flex items-center gap-1 px-3 py-1.5 bg-primary text-white rounded-full text-xs font-semibold hover:bg-primary/90 transition"
+                    >
+                      <Cake className="w-3 h-3" /> Parabenizar
+                    </button>
+                  ) : (
+                    <span className="shrink-0 text-[10px] text-muted-foreground italic">No dia 🎂</span>
+                  )}
                 </div>
               );
             })
@@ -231,8 +235,9 @@ export default function AniversariantesSection({ currentUser }) {
             return (
               <button
                 key={p.id}
-                onClick={() => setSelectedPerson(p)}
-                className="flex flex-col items-center gap-1.5 shrink-0 group cursor-pointer"
+                onClick={() => isToday && setSelectedPerson(p)}
+                title={isToday ? 'Clique para parabenizar 🎂' : 'Você poderá parabenizar no dia do aniversário'}
+                className={`flex flex-col items-center gap-1.5 shrink-0 group ${isToday ? 'cursor-pointer' : 'cursor-default'}`}
               >
                 <div className={`relative rounded-full p-0.5 ${isToday ? 'bg-gradient-to-r from-yellow-400 to-orange-400' : 'bg-gradient-to-r from-blue-400 to-purple-400'}`}>
                   <Avatar className="w-12 h-12 border-2 border-white">
@@ -250,6 +255,13 @@ export default function AniversariantesSection({ currentUser }) {
               </button>
             );
           })}
+        </div>
+
+        {/* Aviso */}
+        <div className="px-4 py-2 bg-blue-50/60 border-t border-yellow-100">
+          <p className="text-[11px] text-center text-blue-700 leading-snug">
+            💡 Acesse no dia do aniversário para dar os parabéns!
+          </p>
         </div>
 
         {/* Ver todos - rodapé */}
