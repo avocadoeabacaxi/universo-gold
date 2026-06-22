@@ -97,7 +97,7 @@ export default function CreatePostCard({ currentUser, communityId, communityName
               <span className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center shrink-0">
                 <Image className="w-4 h-4 text-green-600" />
               </span>
-              <span className="text-[13px] sm:text-sm font-medium text-foreground">Foto/Vídeo</span>
+              <span className="text-[13px] sm:text-sm font-medium text-foreground">Foto</span>
             </button>
             <button onClick={() => setExpanded(true)} className="flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-2 py-2 rounded-lg hover:bg-muted/60 transition-colors border-x border-border/50">
               <span className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center shrink-0">
@@ -162,12 +162,12 @@ export default function CreatePostCard({ currentUser, communityId, communityName
                     <FileText className="w-4 h-4" /> Arquivo
                   </span>
                 </label>
-                <button
-                  onClick={() => { setPostType('video'); setExpanded(true); }}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm font-medium text-blue-500 hover:bg-blue-50 transition-colors"
-                >
-                  <Video className="w-4 h-4" /> Vídeo
-                </button>
+                <label className="cursor-pointer">
+                  <input type="file" accept="video/*" className="hidden" onChange={e => { setMediaFile(e.target.files[0]); setPostType('video'); }} />
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm font-medium text-orange-500 hover:bg-orange-50 transition-colors cursor-pointer">
+                    <Video className="w-4 h-4" /> Vídeo
+                  </span>
+                </label>
               </div>
               <div className="flex gap-2 justify-end">
                 <Button variant="ghost" size="sm" onClick={() => { setExpanded(false); setContent(''); setMediaFile(null); }}>
