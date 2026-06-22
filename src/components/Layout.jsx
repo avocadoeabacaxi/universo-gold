@@ -50,15 +50,15 @@ export default function Layout() {
   return (
     <div className="min-h-screen bg-background">
       {/* Top Navigation */}
-      <header className="fixed top-0 left-0 right-0 z-50 gold-gradient shadow-lg">
-        <div className="relative max-w-screen-xl mx-auto px-4 h-14 flex items-center justify-between gap-4 overflow-hidden">
-          {/* Detalhe curvado amarelo na ponta esquerda */}
-          <img
-            src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/700f00b66_barra.png"
-            alt=""
-            aria-hidden="true"
-            className="absolute top-0 h-full w-auto pointer-events-none select-none left-[-1%] md:left-0"
-          />
+      <header className="fixed top-0 left-0 right-0 z-50 gold-gradient shadow-lg overflow-hidden">
+        {/* Detalhe curvado amarelo na ponta esquerda da tela */}
+        <img
+          src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/700f00b66_barra.png"
+          alt=""
+          aria-hidden="true"
+          className="absolute top-0 left-0 h-14 w-auto pointer-events-none select-none z-0"
+        />
+        <div className="relative max-w-screen-xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
           {/* Logo */}
           <Link to="/" className="flex items-center shrink-0 relative z-10">
             <img
