@@ -67,13 +67,13 @@ export default function StoriesBar({ currentUser }) {
 
   return (
     <>
-      <div className="bg-card rounded-xl border border-border/60 p-3 mb-3 shadow-sm">
-        <div className="flex gap-3 overflow-x-auto scrollbar-hide">
+      <div className="bg-card rounded-xl border border-border/60 p-2.5 mb-3 shadow-sm">
+        <div className="flex gap-2 overflow-x-auto scrollbar-hide">
           {/* Criar story */}
           <button
             onClick={() => fileRef.current?.click()}
             disabled={uploading}
-            className="shrink-0 w-[88px] h-[140px] rounded-xl overflow-hidden relative border border-border/60 bg-muted/40 flex flex-col group"
+            className="shrink-0 w-[72px] h-[112px] rounded-xl overflow-hidden relative border border-border/60 bg-muted/40 flex flex-col group"
           >
             <div className="flex-1 w-full overflow-hidden">
               {currentUser?.avatar_url ? (
@@ -82,11 +82,11 @@ export default function StoriesBar({ currentUser }) {
                 <div className="w-full h-full gold-gradient" />
               )}
             </div>
-            <div className="h-10 bg-card flex items-end justify-center pb-1.5 relative">
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-primary border-4 border-card flex items-center justify-center">
-                {uploading ? <Loader2 className="w-4 h-4 text-white animate-spin" /> : <Plus className="w-4 h-4 text-white" />}
+            <div className="h-8 bg-card flex items-end justify-center pb-1 relative">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-primary border-[3px] border-card flex items-center justify-center">
+                {uploading ? <Loader2 className="w-3 h-3 text-white animate-spin" /> : <Plus className="w-3 h-3 text-white" />}
               </div>
-              <span className="text-[11px] font-semibold text-foreground">Criar story</span>
+              <span className="text-[9px] font-semibold text-foreground">Criar story</span>
             </div>
           </button>
           <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleUpload} />
@@ -96,17 +96,17 @@ export default function StoriesBar({ currentUser }) {
             <button
               key={g.author_id}
               onClick={() => openAuthor(g.items)}
-              className="shrink-0 w-[88px] h-[140px] rounded-xl overflow-hidden relative group"
+              className="shrink-0 w-[72px] h-[112px] rounded-xl overflow-hidden relative group"
             >
               <img src={g.items[0].image_url} alt="" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-              <div className="absolute top-2 left-2 w-9 h-9 rounded-full ring-2 ring-primary ring-offset-2 ring-offset-black/0">
+              <div className="absolute top-1.5 left-1.5 w-7 h-7 rounded-full ring-2 ring-primary ring-offset-2 ring-offset-black/0">
                 <Avatar className="w-full h-full border-2 border-card">
                   <AvatarImage src={g.author_avatar} />
-                  <AvatarFallback className="bg-blue-600 text-white text-[10px]">{initials(g.author_name)}</AvatarFallback>
+                  <AvatarFallback className="bg-blue-600 text-white text-[9px]">{initials(g.author_name)}</AvatarFallback>
                 </Avatar>
               </div>
-              <span className="absolute bottom-1.5 left-1.5 right-1.5 text-[11px] font-semibold text-white truncate text-left">
+              <span className="absolute bottom-1 left-1 right-1 text-[9px] font-semibold text-white truncate text-left">
                 {g.author_name?.split(' ')[0]}
               </span>
             </button>
