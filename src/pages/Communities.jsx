@@ -97,7 +97,7 @@ export default function Communities() {
               />
             </div>
             <Tabs value={filter} onValueChange={setFilter} className="w-full sm:w-auto">
-              <div className="overflow-x-auto scrollbar-thin -mx-4 px-4 sm:mx-0 sm:px-0">
+              <div className="overflow-x-auto scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
                 <TabsList className="bg-muted/60 w-max">
                   <TabsTrigger value="all">Todas</TabsTrigger>
                   <TabsTrigger value="mine">Minhas</TabsTrigger>

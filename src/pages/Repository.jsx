@@ -155,7 +155,7 @@ export default function Repository() {
                 className="pl-9 rounded-xl bg-muted/40 border-border/60 focus:bg-white"
               />
             </div>
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
               <button
                 onClick={() => setSelectedCategory('all')}
                 className={`shrink-0 text-xs px-4 py-1.5 rounded-full font-semibold border transition-all ${

@@ -199,7 +199,7 @@ export default function CommunityDetail() {
         </div>
       ) : (
         <Tabs defaultValue="feed">
-          <div className="overflow-x-auto scrollbar-thin -mx-4 px-4 mb-4">
+          <div className="overflow-x-auto scrollbar-hide -mx-4 px-4 mb-4">
           <TabsList className="w-max gap-1">
             <TabsTrigger value="feed">Feed</TabsTrigger>
             <TabsTrigger value="documents">
