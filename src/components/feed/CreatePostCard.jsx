@@ -70,24 +70,64 @@ export default function CreatePostCard({ currentUser, communityId, communityName
     onPostCreated && onPostCreated(newPost);
   };
 
+  if (!expanded) {
+    return (
+      <Card className="rounded-xl shadow-sm border-border/60 overflow-hidden p-0">
+        <div className="h-2 gold-gradient" />
+        <div className="p-4">
+          <button
+            onClick={() => setExpanded(true)}
+            className="w-full flex items-center gap-3 text-left mb-3"
+          >
+            <Avatar className="w-11 h-11 ring-2 ring-primary ring-offset-2 ring-offset-card shrink-0">
+              <AvatarImage src={currentUser?.avatar_url} />
+              <AvatarFallback className="bg-primary text-primary-foreground font-bold text-sm">{initials}</AvatarFallback>
+            </Avatar>
+            <span className="text-muted-foreground text-[15px] truncate">
+              No que você está pensando, {currentUser?.full_name?.split(' ')[0] || 'colega'}?
+            </span>
+          </button>
+          <button
+            onClick={() => setExpanded(true)}
+            className="w-full h-10 rounded-full bg-muted/60 hover:bg-muted transition-colors mb-3"
+            aria-label="Criar publicação"
+          />
+          <div className="grid grid-cols-3 border-t border-border/50 pt-2 -mb-1">
+            <button onClick={() => setExpanded(true)} className="flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-muted/60 transition-colors">
+              <span className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+                <Image className="w-4 h-4 text-green-600" />
+              </span>
+              <span className="text-sm font-medium text-foreground">Foto/Vídeo</span>
+            </button>
+            <button onClick={() => setExpanded(true)} className="flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-muted/60 transition-colors border-x border-border/50">
+              <span className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+                <FileText className="w-4 h-4 text-red-500" />
+              </span>
+              <span className="text-sm font-medium text-foreground">Arquivo</span>
+            </button>
+            <button onClick={() => setExpanded(true)} className="flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-muted/60 transition-colors">
+              <span className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center shrink-0">
+                <Video className="w-4 h-4 text-orange-500" />
+              </span>
+              <span className="text-sm font-medium text-foreground">Vídeo</span>
+            </button>
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
   return (
-    <Card className="rounded-xl shadow-sm border-border/60">
+    <Card className="rounded-xl shadow-sm border-border/60 overflow-hidden p-0">
+      <div className="h-2 gold-gradient" />
       <CardContent className="p-4">
         <div className="flex gap-3">
-          <Avatar className="w-10 h-10 border-2 border-primary/20 shrink-0">
+          <Avatar className="w-11 h-11 ring-2 ring-primary ring-offset-2 ring-offset-card shrink-0">
             <AvatarImage src={currentUser?.avatar_url} />
             <AvatarFallback className="bg-primary text-primary-foreground font-bold text-sm">{initials}</AvatarFallback>
           </Avatar>
           <div className="flex-1">
-            {!expanded ? (
-              <button
-                onClick={() => setExpanded(true)}
-                className="w-full text-left px-4 py-2.5 rounded-full bg-muted hover:bg-muted/80 text-muted-foreground text-sm transition-colors"
-              >
-                No que você está pensando, {currentUser?.full_name?.split(' ')[0] || 'colega'}?
-              </button>
-            ) : (
-              <div className="space-y-3">
+            <div className="space-y-3">
                 <Textarea
                   value={content}
                   onChange={e => setContent(e.target.value)}
@@ -104,12 +144,10 @@ export default function CreatePostCard({ currentUser, communityId, communityName
                   </div>
                 )}
               </div>
-            )}
           </div>
         </div>
 
-        {expanded && (
-          <div className="mt-3 pt-3 border-t border-border/50">
+        <div className="mt-3 pt-3 border-t border-border/50">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex gap-1">
                 <label className="cursor-pointer">
@@ -146,21 +184,6 @@ export default function CreatePostCard({ currentUser, communityId, communityName
               </div>
             </div>
           </div>
-        )}
-
-        {!expanded && (
-          <div className="mt-3 flex gap-1">
-            <button onClick={() => setExpanded(true)} className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-green-600 hover:bg-green-50 transition-colors">
-              <Image className="w-4 h-4" /> Foto/Vídeo
-            </button>
-            <button onClick={() => setExpanded(true)} className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-red-500 hover:bg-red-50 transition-colors">
-              <FileText className="w-4 h-4" /> Arquivo
-            </button>
-            <button onClick={() => setExpanded(true)} className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-orange-500 hover:bg-orange-50 transition-colors">
-              <Video className="w-4 h-4" /> Vídeo
-            </button>
-          </div>
-        )}
       </CardContent>
     </Card>
   );
