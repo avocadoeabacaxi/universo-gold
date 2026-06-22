@@ -83,8 +83,8 @@ export default function CreatePostCard({ currentUser, communityId, communityName
               <AvatarImage src={currentUser?.avatar_url} />
               <AvatarFallback className="bg-primary text-primary-foreground font-bold text-sm">{initials}</AvatarFallback>
             </Avatar>
-            <span className="text-muted-foreground text-[15px] truncate">
-              No que você está pensando, {currentUser?.full_name?.split(' ')[0] || 'colega'}?
+            <span className="text-muted-foreground text-sm sm:text-[15px] truncate">
+              No que você está pensando<span className="hidden xs:inline">, {currentUser?.full_name?.split(' ')[0] || 'colega'}</span>?
             </span>
           </button>
           <button
