@@ -199,7 +199,8 @@ export default function CommunityDetail() {
         </div>
       ) : (
         <Tabs defaultValue="feed">
-          <TabsList className="mb-4 flex-wrap h-auto gap-1">
+          <div className="overflow-x-auto scrollbar-thin -mx-4 px-4 mb-4">
+          <TabsList className="w-max gap-1">
             <TabsTrigger value="feed">Feed</TabsTrigger>
             <TabsTrigger value="documents">
               <FileText className="w-3.5 h-3.5 mr-1" /> Documentos
@@ -222,6 +223,7 @@ export default function CommunityDetail() {
               </TabsTrigger>
             )}
           </TabsList>
+          </div>
 
           {/* FEED */}
           <TabsContent value="feed" className="space-y-3">
