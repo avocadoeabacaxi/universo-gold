@@ -50,7 +50,12 @@ export default function Layout() {
   return (
     <div className="min-h-screen bg-background">
       {/* Top Navigation */}
-      <header className="fixed top-0 left-0 right-0 z-50 gold-gradient shadow-lg">
+      <header className="fixed top-0 left-0 right-0 z-50 gold-gradient shadow-lg overflow-hidden">
+        {/* Detalhe curvado amarelo na ponta esquerda */}
+        <div
+          className="absolute top-0 left-0 h-full w-16 md:w-20 pointer-events-none"
+          style={{ background: '#e4b101', clipPath: 'path("M0,0 L72,0 C40,18 18,38 0,56 Z")' }}
+        />
         <div className="relative max-w-screen-xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
           {/* Logo */}
           <Link to="/" className="flex items-center shrink-0 relative z-10">
