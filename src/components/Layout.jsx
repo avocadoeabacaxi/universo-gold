@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import NotificationBell from '@/components/notifications/NotificationBell';
+import MobileNavMenu from '@/components/MobileNavMenu';
 
 export default function Layout() {
   const location = useLocation();
@@ -50,15 +51,15 @@ export default function Layout() {
   return (
     <div className="min-h-screen bg-background">
       {/* Top Navigation */}
-      <header className="fixed top-0 left-0 right-0 z-50 gold-gradient shadow-lg overflow-hidden">
-        {/* Detalhe curvado amarelo na ponta esquerda */}
-        <img
-          src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/700f00b66_barra.png"
-          alt=""
-          aria-hidden="true"
-          className="absolute top-0 h-full w-auto pointer-events-none select-none left-[-1%] md:left-0"
-        />
-        <div className="relative max-w-screen-xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
+      <header className="fixed top-0 left-0 right-0 z-50 gold-gradient shadow-lg">
+        <div className="relative max-w-screen-xl mx-auto px-4 h-14 flex items-center justify-between gap-4 overflow-hidden">
+          {/* Detalhe curvado amarelo na ponta esquerda */}
+          <img
+            src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/700f00b66_barra.png"
+            alt=""
+            aria-hidden="true"
+            className="absolute top-0 h-full w-auto pointer-events-none select-none left-[-1%] md:left-0"
+          />
           {/* Logo */}
           <Link to="/" className="flex items-center shrink-0 relative z-10">
             <img
@@ -186,18 +187,11 @@ export default function Layout() {
 
         {/* Mobile Nav */}
         {mobileMenuOpen && (
-          <div className="md:hidden bg-[#1a3a7a] border-t border-white/20 px-3 py-3">
-            <div className="grid grid-cols-3 gap-1">
-              {navItems.map(({ icon: Icon, label, path }) => (
-                <Link key={path} to={path} onClick={() => setMobileMenuOpen(false)}>
-                  <div className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/20 hover:text-white transition-colors ${isActive(path) ? 'bg-white/25 text-white' : ''}`}>
-                    <Icon className="w-4 h-4 shrink-0" />
-                    <span className="text-sm font-medium">{label}</span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
+          <MobileNavMenu
+            navItems={navItems}
+            isActive={isActive}
+            onNavigate={() => setMobileMenuOpen(false)}
+          />
         )}
       </header>
 
