@@ -1,7 +1,7 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Home, Users, FileText, Video, Radio, Bell, Search, Menu, X, Settings, LogOut, ChevronDown, Megaphone, UserCog, Building2, Briefcase, MapPin, ClipboardList, UsersRound, UserCheck } from 'lucide-react';
+import { Home, Users, FileText, Video, Radio, Search, X, LogOut, ChevronDown, Megaphone, UserCog, Building2, Briefcase, MapPin, ClipboardList, UsersRound, UserCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -13,14 +13,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
 import NotificationBell from '@/components/notifications/NotificationBell';
-import MobileNavMenu from '@/components/MobileNavMenu';
+import BottomNav from '@/components/BottomNav';
 
 export default function Layout() {
   const location = useLocation();
   const [user, setUser] = useState(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   useEffect(() => {
     const init = async () => {
@@ -96,6 +95,16 @@ export default function Layout() {
 
           {/* Right section */}
           <div className="flex items-center gap-2">
+            {/* Busca (mobile) */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden text-white hover:bg-white/20"
+              onClick={() => setMobileSearchOpen(v => !v)}
+            >
+              {mobileSearchOpen ? <X className="w-5 h-5" /> : <Search className="w-5 h-5" />}
+            </Button>
+
             <NotificationBell userId={user?.id} />
 
             <DropdownMenu>
@@ -172,33 +181,31 @@ export default function Layout() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-
-            {/* Mobile menu toggle */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden text-white hover:bg-white/20"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </Button>
           </div>
         </div>
 
-        {/* Mobile Nav */}
-        {mobileMenuOpen && (
-          <MobileNavMenu
-            navItems={navItems}
-            isActive={isActive}
-            onNavigate={() => setMobileMenuOpen(false)}
-          />
+        {/* Busca expansível (mobile) */}
+        {mobileSearchOpen && (
+          <div className="md:hidden px-4 pb-3 relative z-10">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/60" />
+              <Input
+                autoFocus
+                placeholder="Pesquisar na plataforma..."
+                className="pl-9 bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:bg-white/30 rounded-full h-9"
+              />
+            </div>
+          </div>
         )}
       </header>
 
       {/* Main Content */}
-      <main className="pt-14">
+      <main className="pt-14 pb-20 md:pb-0">
         <Outlet />
       </main>
+
+      {/* Navegação inferior (mobile / PWA) */}
+      <BottomNav />
     </div>
   );
 }

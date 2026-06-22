@@ -1,0 +1,32 @@
+{
+  "name": "Universo Gold",
+  "short_name": "Universo Gold",
+  "description": "Portal de intranet social dos colaboradores da Gold Pão.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0E4AA1",
+  "theme_color": "#0E4AA1",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/4ec81cd2c_generated_image.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/4ec81cd2c_generated_image.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/4ec81cd2c_generated_image.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

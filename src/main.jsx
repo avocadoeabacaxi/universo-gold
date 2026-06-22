@@ -6,3 +6,10 @@ import '@/index.css'
 ReactDOM.createRoot(document.getElementById('root')).render(
   <App />
 )
+
+// Registra o service worker para habilitar o PWA (instalável + offline básico)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {})
+  })
+}
