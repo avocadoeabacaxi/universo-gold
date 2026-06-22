@@ -110,28 +110,28 @@ export default function CreatePostCard({ currentUser, communityId, communityName
 
         {expanded && (
           <div className="mt-3 pt-3 border-t border-border/50">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex gap-1">
                 <label className="cursor-pointer">
                   <input type="file" accept="image/*" className="hidden" onChange={e => { setMediaFile(e.target.files[0]); setPostType('image'); }} />
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-green-600 hover:bg-green-50 transition-colors cursor-pointer">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm font-medium text-green-600 hover:bg-green-50 transition-colors cursor-pointer">
                     <Image className="w-4 h-4" /> Foto
                   </span>
                 </label>
                 <label className="cursor-pointer">
                   <input type="file" accept=".pdf,.docx,.xlsx,.pptx" className="hidden" onChange={e => { setMediaFile(e.target.files[0]); setPostType('document'); }} />
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-red-500 hover:bg-red-50 transition-colors cursor-pointer">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm font-medium text-red-500 hover:bg-red-50 transition-colors cursor-pointer">
                     <FileText className="w-4 h-4" /> Arquivo
                   </span>
                 </label>
                 <button
                   onClick={() => { setPostType('video'); setExpanded(true); }}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-blue-500 hover:bg-blue-50 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm font-medium text-blue-500 hover:bg-blue-50 transition-colors"
                 >
                   <Video className="w-4 h-4" /> Vídeo
                 </button>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 justify-end">
                 <Button variant="ghost" size="sm" onClick={() => { setExpanded(false); setContent(''); setMediaFile(null); }}>
                   Cancelar
                 </Button>
