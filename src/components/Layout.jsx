@@ -53,12 +53,12 @@ export default function Layout() {
       <header className="fixed top-0 left-0 right-0 z-50 gold-gradient shadow-lg overflow-hidden">
         {/* Detalhe curvado amarelo na ponta esquerda */}
         <div
-          className="absolute top-0 left-0 h-full w-56 pointer-events-none"
-          style={{ background: '#e4b101', clipPath: 'path("M0,0 L224,0 C150,10 70,30 0,56 Z")' }}
+          className="absolute top-0 left-0 h-full w-24 pointer-events-none"
+          style={{ background: '#e4b101', clipPath: 'path("M0,0 L96,0 C60,12 28,32 0,56 Z")' }}
         />
         <div className="relative max-w-screen-xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
           {/* Logo */}
-          <Link to="/" className="flex items-center shrink-0">
+          <Link to="/" className="flex items-center shrink-0 relative z-10">
             <img
               src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/b87b7fd13_logo.png"
               alt="Universo Gold Pão"
