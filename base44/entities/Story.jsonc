@@ -1,0 +1,32 @@
+{
+  "name": "Story",
+  "type": "object",
+  "properties": {
+    "author_id": {
+      "type": "string",
+      "description": "ID do autor"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Nome do autor"
+    },
+    "author_avatar": {
+      "type": "string",
+      "description": "Avatar do autor"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "URL da imagem do story"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data/hora em que o story expira (24h ap\u00f3s cria\u00e7\u00e3o)"
+    }
+  },
+  "required": [
+    "author_id",
+    "image_url",
+    "expires_at"
+  ]
+}

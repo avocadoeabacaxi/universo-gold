@@ -4,6 +4,7 @@ import { Loader2 } from 'lucide-react';
 import PostCard from '@/components/feed/PostCard';
 import CreatePostCard from '@/components/feed/CreatePostCard';
 import ComunicadosSection from '@/components/feed/ComunicadosSection';
+import StoriesBar from '@/components/stories/StoriesBar';
 import LeftSidebar from '@/components/sidebar/LeftSidebar';
 import RightSidebar from '@/components/sidebar/RightSidebar';
 
@@ -60,6 +61,7 @@ export default function Feed() {
 
         {/* Feed */}
         <div className="flex-1 min-w-0 space-y-3 max-w-2xl mx-auto lg:mx-0">
+          <StoriesBar currentUser={enrichedUser} />
           <ComunicadosSection currentUser={enrichedUser} />
           <CreatePostCard
             currentUser={enrichedUser}
