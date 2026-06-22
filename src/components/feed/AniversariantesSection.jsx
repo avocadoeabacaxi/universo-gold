@@ -220,14 +220,11 @@ export default function AniversariantesSection({ currentUser }) {
       {showAll && <TodosAniversariantesModal onClose={() => setShowAll(false)} currentUser={currentUser} />}
       {selectedPerson && <MensagemModal person={selectedPerson} onClose={() => setSelectedPerson(null)} currentUser={currentUser} />}
 
-      <div className="bg-white rounded-[1.75rem] border border-yellow-200 shadow-sm overflow-hidden">
-        {/* Header com arcos coloridos nas pontas */}
-        <div
-          className="relative flex items-center gap-1.5 px-4 py-2.5 border-b border-yellow-100 overflow-hidden"
-          style={{ background: 'linear-gradient(90deg, #e4b101 0%, #fff8e6 18%, #fff8e6 82%, #e4b101 100%)' }}
-        >
-          <span className="text-sm shrink-0 relative z-10">🎂</span>
-          <span className="font-bold text-xs text-gray-800 relative z-10">Aniversariantes da Semana</span>
+      <div className="bg-white rounded-xl border border-yellow-200 shadow-sm overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center gap-1.5 px-3 py-2.5 bg-gradient-to-r from-yellow-50 to-orange-50 border-b border-yellow-100">
+          <span className="text-sm shrink-0">🎂</span>
+          <span className="font-bold text-xs text-gray-800">Aniversariantes da Semana</span>
         </div>
 
         {/* Avatares */}
