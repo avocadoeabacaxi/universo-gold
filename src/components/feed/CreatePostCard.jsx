@@ -93,23 +93,23 @@ export default function CreatePostCard({ currentUser, communityId, communityName
             aria-label="Criar publicação"
           />
           <div className="grid grid-cols-3 border-t border-border/50 pt-2 -mb-1">
-            <button onClick={() => setExpanded(true)} className="flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-muted/60 transition-colors">
+            <button onClick={() => setExpanded(true)} className="flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-2 py-2 rounded-lg hover:bg-muted/60 transition-colors">
               <span className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center shrink-0">
                 <Image className="w-4 h-4 text-green-600" />
               </span>
-              <span className="text-sm font-medium text-foreground">Foto/Vídeo</span>
+              <span className="text-[13px] sm:text-sm font-medium text-foreground">Foto/Vídeo</span>
             </button>
-            <button onClick={() => setExpanded(true)} className="flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-muted/60 transition-colors border-x border-border/50">
+            <button onClick={() => setExpanded(true)} className="flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-2 py-2 rounded-lg hover:bg-muted/60 transition-colors border-x border-border/50">
               <span className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center shrink-0">
                 <FileText className="w-4 h-4 text-red-500" />
               </span>
-              <span className="text-sm font-medium text-foreground">Arquivo</span>
+              <span className="text-[13px] sm:text-sm font-medium text-foreground">Arquivo</span>
             </button>
-            <button onClick={() => setExpanded(true)} className="flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-muted/60 transition-colors">
+            <button onClick={() => setExpanded(true)} className="flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-2 py-2 rounded-lg hover:bg-muted/60 transition-colors">
               <span className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center shrink-0">
                 <Video className="w-4 h-4 text-orange-500" />
               </span>
-              <span className="text-sm font-medium text-foreground">Vídeo</span>
+              <span className="text-[13px] sm:text-sm font-medium text-foreground">Vídeo</span>
             </button>
           </div>
         </div>
