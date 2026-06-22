@@ -7,6 +7,7 @@ import ComunicadosSection from '@/components/feed/ComunicadosSection';
 import StoriesBar from '@/components/stories/StoriesBar';
 import LeftSidebar from '@/components/sidebar/LeftSidebar';
 import RightSidebar from '@/components/sidebar/RightSidebar';
+import BirthdayDailyModal from '@/components/feed/BirthdayDailyModal';
 
 export default function Feed() {
   const [posts, setPosts] = useState([]);
@@ -53,6 +54,7 @@ export default function Feed() {
 
   return (
     <div className="max-w-screen-xl mx-auto px-4 py-4">
+      <BirthdayDailyModal />
       <div className="flex gap-4">
         {/* Left Sidebar */}
         <div className="hidden lg:block">
