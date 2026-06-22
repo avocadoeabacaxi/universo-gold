@@ -51,10 +51,10 @@ export default function Layout() {
     <div className="min-h-screen bg-background">
       {/* Top Navigation */}
       <header className="fixed top-0 left-0 right-0 z-50 gold-gradient shadow-lg overflow-hidden">
-        {/* Detalhe diagonal amarelo na ponta esquerda */}
+        {/* Detalhe curvado amarelo na ponta esquerda */}
         <div
-          className="absolute top-0 left-0 h-full w-32 pointer-events-none"
-          style={{ background: '#e4b101', clipPath: 'polygon(0 0, 100% 0, 0 100%)' }}
+          className="absolute top-0 left-0 h-full w-40 pointer-events-none"
+          style={{ background: '#e4b101', clipPath: 'path("M0,0 L160,0 Q60,28 0,56 Z")' }}
         />
         <div className="relative max-w-screen-xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
           {/* Logo */}
