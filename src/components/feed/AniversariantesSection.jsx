@@ -248,20 +248,19 @@ export default function AniversariantesSection({ currentUser }) {
                     <span className="absolute -bottom-1 -right-1 text-sm">🎂</span>
                   )}
                 </div>
-                <span className="text-xs font-medium text-gray-700 max-w-[60px] truncate group-hover:text-primary transition">
+                <span className="text-xs font-medium text-gray-700 max-w-[64px] truncate group-hover:text-primary transition">
                   {p.full_name.split(' ')[0]}
                 </span>
-                <span className="text-[10px] text-muted-foreground">{getBirthdayDate(p.data_nascimento)}</span>
+                {isToday ? (
+                  <span className="px-2 py-0.5 rounded-full bg-orange-500 text-white text-[10px] font-bold">
+                    🎂 Parabenizar
+                  </span>
+                ) : (
+                  <span className="text-[10px] text-muted-foreground">{getBirthdayDate(p.data_nascimento)}</span>
+                )}
               </button>
             );
           })}
-        </div>
-
-        {/* Aviso */}
-        <div className="px-4 py-2 bg-blue-50/60 border-t border-yellow-100">
-          <p className="text-[11px] text-center text-blue-700 leading-snug">
-            💡 Acesse no dia do aniversário para dar os parabéns!
-          </p>
         </div>
 
         {/* Ver todos - rodapé */}
