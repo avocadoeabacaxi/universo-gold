@@ -61,12 +61,12 @@ export default function Feed() {
 
         {/* Feed */}
         <div className="flex-1 min-w-0 space-y-3 max-w-2xl mx-auto lg:mx-0">
-          <StoriesBar currentUser={enrichedUser} />
           <ComunicadosSection currentUser={enrichedUser} />
           <CreatePostCard
             currentUser={enrichedUser}
             onPostCreated={handlePostCreated}
           />
+          <StoriesBar currentUser={enrichedUser} />
           {posts.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <p className="text-lg font-medium">Nenhuma publicação ainda</p>
