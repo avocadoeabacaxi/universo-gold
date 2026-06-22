@@ -70,7 +70,7 @@ export default function Lives() {
 
         {/* Main Content */}
         <div className="flex-1 min-w-0 py-2">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
             <div>
               <h1 className="text-2xl font-bold font-heading flex items-center gap-2">
                 <Radio className="w-6 h-6 text-red-500" /> Lives e Transmissões
@@ -80,7 +80,7 @@ export default function Lives() {
             {canAdd && (
               <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button className="gold-gradient text-white gap-2 rounded-xl shadow-md">
+                  <Button className="w-full sm:w-auto gold-gradient text-white gap-2 rounded-xl shadow-md">
                     <Plus className="w-4 h-4" /> Agendar Live
                   </Button>
                 </DialogTrigger>

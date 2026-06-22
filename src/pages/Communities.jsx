@@ -73,13 +73,13 @@ export default function Communities() {
         {/* Main Content */}
         <div className="flex-1 min-w-0 py-2">
           {/* Header */}
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
             <div>
               <h1 className="text-2xl font-bold font-heading">Comunidades</h1>
               <p className="text-muted-foreground text-sm mt-0.5">Conecte-se com colegas de toda a empresa</p>
             </div>
-            <Link to="/communities/create">
-              <Button className="gold-gradient text-white gap-2 rounded-xl shadow-md hover:shadow-lg">
+            <Link to="/communities/create" className="w-full sm:w-auto">
+              <Button className="w-full sm:w-auto gold-gradient text-white gap-2 rounded-xl shadow-md hover:shadow-lg">
                 <Plus className="w-4 h-4" /> Criar Grupo
               </Button>
             </Link>

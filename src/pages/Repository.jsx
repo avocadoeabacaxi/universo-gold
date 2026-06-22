@@ -129,7 +129,7 @@ export default function Repository() {
 
         <div className="flex-1 min-w-0 py-2">
           {/* Header */}
-          <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
             <div>
               <h1 className="text-2xl font-bold font-heading">Repositório de Documentos</h1>
               <p className="text-muted-foreground text-sm mt-0.5">Acesse todos os documentos da empresa</p>
@@ -137,7 +137,7 @@ export default function Repository() {
             {canUpload && (
               <button
                 onClick={() => { setEditDoc(null); setUploadOpen(true); }}
-                className="flex items-center gap-2 px-4 py-2 bg-primary text-white font-semibold text-sm rounded-xl hover:bg-primary/90 transition shadow-md"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white font-semibold text-sm rounded-xl hover:bg-primary/90 transition shadow-md"
               >
                 <Upload className="w-4 h-4" /> Enviar Documento
               </button>
