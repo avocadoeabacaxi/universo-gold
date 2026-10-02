@@ -43,11 +43,12 @@ export default function DiscInviteDialog({ open, onOpenChange, currentUser, onCr
           </div>
         ) : (
           <div className="space-y-3">
-            <div><Label>Nome *</Label><Input value={form.candidate_name} onChange={e => set('candidate_name', e.target.value)} /></div>
-            <div><Label>E-mail</Label><Input type="email" value={form.candidate_email} onChange={e => set('candidate_email', e.target.value)} /></div>
+            <p className="text-sm text-muted-foreground">Preencha os dados da pessoa que vai receber o link e responder o teste.</p>
+            <div><Label>Nome da pessoa que vai responder *</Label><Input placeholder="Ex: Maria Silva" value={form.candidate_name} onChange={e => set('candidate_name', e.target.value)} /></div>
+            <div><Label>E-mail da pessoa</Label><Input type="email" placeholder="Ex: maria@email.com" value={form.candidate_email} onChange={e => set('candidate_email', e.target.value)} /></div>
             <div className="grid grid-cols-2 gap-2">
-              <div><Label>Setor</Label><Input value={form.department} onChange={e => set('department', e.target.value)} /></div>
-              <div><Label>Cargo</Label><Input value={form.job_title} onChange={e => set('job_title', e.target.value)} /></div>
+              <div><Label>Setor da pessoa</Label><Input placeholder="Ex: Produção" value={form.department} onChange={e => set('department', e.target.value)} /></div>
+              <div><Label>Cargo da pessoa</Label><Input placeholder="Ex: Padeiro" value={form.job_title} onChange={e => set('job_title', e.target.value)} /></div>
             </div>
             <div><Label>Finalidade</Label>
               <Select value={form.purpose} onValueChange={v => set('purpose', v)}>
