@@ -9,6 +9,7 @@ import DiscResultHeader from '@/components/disc/DiscResultHeader';
 import DiscCharts from '@/components/disc/DiscCharts';
 import DiscReportSection from '@/components/disc/DiscReportSection';
 import DiscHRNotes from '@/components/disc/DiscHRNotes';
+import DiscAIAnalysis from '@/components/disc/DiscAIAnalysis';
 
 export default function DiscResult() {
   const { id } = useParams();
@@ -42,6 +43,7 @@ export default function DiscResult() {
         {isHR && <DiscReportSection icon={Briefcase} title="Áreas e funções com maior aderência" items={[...p.roles, ...s.roles.slice(0, 2)]} tone="text-purple-600" />}
         {isHR && <DiscReportSection icon={Compass} title="Recomendações para o gestor" text={`${p.leadership} ${s.leadership}`} tone="text-teal-600" />}
       </div>
+      {isHR && <DiscAIAnalysis assessment={a} />}
       {isHR && <DiscHRNotes assessment={a} />}
       <p className="text-[11px] text-muted-foreground text-center">O PCG descreve tendências comportamentais e não mede inteligência, competência ou caráter. Use como apoio à decisão, junto de entrevistas e outras avaliações.</p>
     </div>

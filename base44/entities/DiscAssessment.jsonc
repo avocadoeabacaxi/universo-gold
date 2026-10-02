@@ -106,6 +106,10 @@
     "hr_notes": {
       "type": "string",
       "description": "Observa\u00e7\u00f5es do RH"
+    },
+    "ai_analysis": {
+      "type": "object",
+      "description": "An\u00e1lise direcionada gerada por IA conforme a finalidade"
     }
   },
   "required": [
