@@ -19,6 +19,7 @@ import Admin from './pages/Admin';
 import Disc from './pages/Disc';
 import DiscTest from './pages/DiscTest';
 import DiscResult from './pages/DiscResult';
+import PcgPublic from './pages/PcgPublic';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
@@ -29,6 +30,11 @@ import ApprovalGate from './components/ApprovalGate';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin, isAuthenticated } = useAuth();
+
+  // Link público do teste PCG (sem login)
+  if (window.location.pathname.startsWith('/pcg/')) {
+    return <Routes><Route path="/pcg/:id" element={<PcgPublic />} /></Routes>;
+  }
 
   if (isLoadingPublicSettings || isLoadingAuth) {
     return (

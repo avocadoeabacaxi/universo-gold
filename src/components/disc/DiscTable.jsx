@@ -26,7 +26,7 @@ export default function DiscTable({ refreshKey, onChange }) {
     return () => clearTimeout(t);
   }, [search, status, profile, refreshKey]);
 
-  const copy = (id) => { navigator.clipboard.writeText(`${window.location.origin}/disc/teste/${id}`); toast({ title: 'Link copiado!' }); };
+  const copy = (id) => { navigator.clipboard.writeText(`${window.location.origin}/pcg/${id}`); toast({ title: 'Link copiado!' }); };
   const remove = async (id) => { if (!confirm('Excluir este teste?')) return; await base44.entities.DiscAssessment.delete(id); onChange(); };
   const chip = (active) => `shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${active ? 'bg-primary text-primary-foreground border-primary' : 'bg-card hover:bg-muted border-border'}`;
 

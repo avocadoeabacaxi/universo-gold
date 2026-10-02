@@ -22,7 +22,7 @@ export default function DiscInviteDialog({ open, onOpenChange, currentUser, onCr
     const rec = await base44.entities.DiscAssessment.create({
       ...form, status: 'pending', invited_by_id: currentUser?.id, invited_by_name: currentUser?.full_name,
     });
-    setLink(`${window.location.origin}/disc/teste/${rec.id}`);
+    setLink(`${window.location.origin}/pcg/${rec.id}`);
     setLoading(false);
     onCreated();
   };
@@ -36,7 +36,7 @@ export default function DiscInviteDialog({ open, onOpenChange, currentUser, onCr
         <DialogHeader><DialogTitle>{link ? 'Link gerado!' : 'Novo teste PCG'}</DialogTitle></DialogHeader>
         {link ? (
           <div className="space-y-3">
-            <p className="text-sm text-muted-foreground">Envie este link para <b>{form.candidate_name}</b> preencher o teste:</p>
+            <p className="text-sm text-muted-foreground">Envie este link público para <b>{form.candidate_name}</b> preencher o teste (não precisa de login). O resultado aparece aqui no painel:</p>
             <div className="flex gap-2"><Input readOnly value={link} className="text-xs" />
               <Button onClick={copy} size="icon">{copied ? <Check /> : <Copy />}</Button></div>
             <Button className="w-full" variant="outline" onClick={() => close(false)}>Concluir</Button>
