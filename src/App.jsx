@@ -16,6 +16,9 @@ import Videos from './pages/Videos';
 import Lives from './pages/Lives';
 import Profile from './pages/Profile';
 import Admin from './pages/Admin';
+import Disc from './pages/Disc';
+import DiscTest from './pages/DiscTest';
+import DiscResult from './pages/DiscResult';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
@@ -71,6 +74,9 @@ const AuthenticatedApp = () => {
         <Route path="/lives" element={<Lives />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/disc" element={<Disc />} />
+        <Route path="/disc/teste/:id" element={<DiscTest />} />
+        <Route path="/disc/resultado/:id" element={<DiscResult />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

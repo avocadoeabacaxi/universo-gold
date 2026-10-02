@@ -1,7 +1,7 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Home, Users, FileText, Video, Radio, Search, X, LogOut, ChevronDown, Megaphone, UserCog, Building2, Briefcase, MapPin, ClipboardList, UsersRound, UserCheck } from 'lucide-react';
+import { Home, Users, FileText, Video, Radio, Search, X, LogOut, ChevronDown, Megaphone, UserCog, Building2, Briefcase, MapPin, ClipboardList, UsersRound, UserCheck, Brain } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -136,6 +136,11 @@ export default function Layout() {
                     <DropdownMenuItem asChild>
                       <Link to="/admin?tab=aprovacoes" className="cursor-pointer">
                         <UserCheck className="w-4 h-4 mr-2 text-green-600" /> Aprovações
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/disc" className="cursor-pointer">
+                        <Brain className="w-4 h-4 mr-2 text-yellow-600" /> Painel DISC
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>

@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Home, Users, FileText, Video, Radio, ChevronRight, Plus } from 'lucide-react';
+import { Home, Users, FileText, Video, Radio, ChevronRight, Plus, Brain } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -22,6 +22,7 @@ export default function LeftSidebar({ currentUser }) {
     { icon: FileText, label: 'Repositório', path: '/repository', color: 'text-red-500' },
     { icon: Video, label: 'Vídeos', path: '/videos', color: 'text-blue-500' },
     { icon: Radio, label: 'Lives', path: '/lives', color: 'text-red-600' },
+    { icon: Brain, label: 'DISC', path: '/disc', color: 'text-yellow-600' },
   ];
 
   const isActive = (path) => path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);
