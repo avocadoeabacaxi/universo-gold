@@ -4,11 +4,14 @@ import { Plus, PlayCircle } from 'lucide-react';
 export default function DiscHero({ isHR, onInvite, onSelfTest, starting }) {
   return (
     <div className="gold-gradient rounded-2xl p-6 text-white relative overflow-hidden">
-      <img
-        src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/36879ccf5_generated_image.png"
-        alt="Logo PCG"
-        className="hidden sm:block absolute right-6 top-1/2 -translate-y-1/2 w-36 h-36 rounded-3xl shadow-2xl ring-4 ring-white/20 object-cover"
-      />
+      <div className="hidden sm:flex absolute right-8 top-1/2 -translate-y-1/2 flex-col items-center gap-2">
+        <div className="grid grid-cols-2 gap-1.5 rotate-12">
+          {['bg-red-500', 'bg-yellow-400', 'bg-green-500', 'bg-blue-500'].map((c, i) => (
+            <div key={c} className={`w-12 h-12 rounded-xl ${c} shadow-lg flex items-center justify-center text-lg font-extrabold`}>{'PCG✦'[i]}</div>
+          ))}
+        </div>
+        <span className="text-[10px] font-bold uppercase tracking-widest text-white/80 mt-2">Perfil Comportamental Gold</span>
+      </div>
       <div className="relative max-w-xl">
         <p className="text-xs uppercase tracking-widest font-bold text-white/70">Perfil Comportamental Gold</p>
         <h1 className="text-2xl sm:text-3xl font-extrabold mt-1">PCG</h1>
