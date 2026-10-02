@@ -1,13 +1,14 @@
 import { Button } from '@/components/ui/button';
 import { Plus, PlayCircle } from 'lucide-react';
-import { DISC_PROFILES, DISC_ORDER } from '@/lib/discProfiles';
 
 export default function DiscHero({ isHR, onInvite, onSelfTest, starting }) {
   return (
     <div className="gold-gradient rounded-2xl p-6 text-white relative overflow-hidden">
-      <div className="absolute -right-6 -top-6 grid grid-cols-2 gap-2 opacity-25 rotate-12">
-        {DISC_ORDER.map(k => <div key={k} className={`w-16 h-16 rounded-2xl ${DISC_PROFILES[k].bg} flex items-center justify-center text-2xl font-extrabold`}>{k}</div>)}
-      </div>
+      <img
+        src="https://media.base44.com/images/public/6a31b47db4d51fa5778edaf8/36879ccf5_generated_image.png"
+        alt="Logo PCG"
+        className="hidden sm:block absolute right-6 top-1/2 -translate-y-1/2 w-36 h-36 rounded-3xl shadow-2xl ring-4 ring-white/20 object-cover"
+      />
       <div className="relative max-w-xl">
         <p className="text-xs uppercase tracking-widest font-bold text-white/70">Perfil Comportamental Gold</p>
         <h1 className="text-2xl sm:text-3xl font-extrabold mt-1">PCG</h1>
