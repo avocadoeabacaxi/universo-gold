@@ -9,8 +9,8 @@ export default function DiscHero({ isHR, onInvite, onSelfTest, starting }) {
         {DISC_ORDER.map(k => <div key={k} className={`w-16 h-16 rounded-2xl ${DISC_PROFILES[k].bg} flex items-center justify-center text-2xl font-extrabold`}>{k}</div>)}
       </div>
       <div className="relative max-w-xl">
-        <p className="text-xs uppercase tracking-widest font-bold text-white/70">Módulo de Perfil Comportamental</p>
-        <h1 className="text-2xl sm:text-3xl font-extrabold mt-1">DISC</h1>
+        <p className="text-xs uppercase tracking-widest font-bold text-white/70">Perfil Comportamental Gold</p>
+        <h1 className="text-2xl sm:text-3xl font-extrabold mt-1">PCG</h1>
         <p className="text-sm text-white/80 mt-2">Descubra como cada pessoa age, se comunica e toma decisões. Dominância, Influência, Estabilidade e Conformidade.</p>
         <div className="flex flex-col sm:flex-row gap-2 mt-4">
           <Button onClick={onSelfTest} disabled={starting} className="bg-white text-primary hover:bg-white/90 gap-2"><PlayCircle /> Fazer meu teste</Button>

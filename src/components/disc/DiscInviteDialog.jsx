@@ -33,7 +33,7 @@ export default function DiscInviteDialog({ open, onOpenChange, currentUser, onCr
   return (
     <Dialog open={open} onOpenChange={close}>
       <DialogContent className="max-w-md">
-        <DialogHeader><DialogTitle>{link ? 'Link gerado!' : 'Novo teste DISC'}</DialogTitle></DialogHeader>
+        <DialogHeader><DialogTitle>{link ? 'Link gerado!' : 'Novo teste PCG'}</DialogTitle></DialogHeader>
         {link ? (
           <div className="space-y-3">
             <p className="text-sm text-muted-foreground">Envie este link para <b>{form.candidate_name}</b> preencher o teste:</p>

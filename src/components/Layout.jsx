@@ -140,7 +140,7 @@ export default function Layout() {
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link to="/disc" className="cursor-pointer">
-                        <Brain className="w-4 h-4 mr-2 text-yellow-600" /> Painel DISC
+                        <Brain className="w-4 h-4 mr-2 text-yellow-600" /> Painel PCG
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>

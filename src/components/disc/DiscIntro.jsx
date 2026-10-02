@@ -10,7 +10,7 @@ export default function DiscIntro({ name, total, onStart, loading }) {
           {DISC_ORDER.map(k => <div key={k} className={`w-11 h-11 rounded-xl ${DISC_PROFILES[k].bg} flex items-center justify-center text-xl font-extrabold`}>{k}</div>)}
         </div>
         <h1 className="text-2xl font-extrabold">Olá, {name?.split(' ')[0]}!</h1>
-        <p className="text-sm text-white/80 mt-1">Bem-vindo(a) à sua avaliação de perfil comportamental DISC.</p>
+        <p className="text-sm text-white/80 mt-1">Bem-vindo(a) à sua avaliação do Perfil Comportamental Gold (PCG).</p>
       </div>
       <div className="p-6 space-y-4">
         <div className="grid grid-cols-3 gap-3 text-center">

@@ -9,7 +9,7 @@ export default function DiscResultHeader({ a }) {
       <div className="gold-gradient p-5 text-white flex flex-col sm:flex-row sm:items-center gap-4">
         <div className={`w-20 h-20 rounded-2xl ${p.bg} flex items-center justify-center text-4xl font-extrabold shadow-lg shrink-0`}>{a.primary_profile}{a.secondary_profile}</div>
         <div className="flex-1">
-          <p className="text-xs uppercase tracking-widest text-white/70 font-bold">Relatório de Perfil DISC</p>
+          <p className="text-xs uppercase tracking-widest text-white/70 font-bold">Relatório PCG · Perfil Comportamental Gold</p>
           <h1 className="text-2xl font-extrabold">{a.candidate_name}</h1>
           <p className="text-sm text-white/80">{[a.job_title, a.department].filter(Boolean).join(' · ')}</p>
         </div>

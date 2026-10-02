@@ -43,7 +43,7 @@ export default function DiscResult() {
         {isHR && <DiscReportSection icon={Compass} title="Recomendações para o gestor" text={`${p.leadership} ${s.leadership}`} tone="text-teal-600" />}
       </div>
       {isHR && <DiscHRNotes assessment={a} />}
-      <p className="text-[11px] text-muted-foreground text-center">O DISC descreve tendências comportamentais e não mede inteligência, competência ou caráter. Use como apoio à decisão, junto de entrevistas e outras avaliações.</p>
+      <p className="text-[11px] text-muted-foreground text-center">O PCG descreve tendências comportamentais e não mede inteligência, competência ou caráter. Use como apoio à decisão, junto de entrevistas e outras avaliações.</p>
     </div>
   );
 }
