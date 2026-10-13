@@ -60,11 +60,12 @@ export default function CommunityDetail() {
 
   const isMember = community.members?.includes(currentUser?.id);
   const isGlobalAdmin = currentUser?.role === 'admin' || userProfile?.role === 'admin';
-  const isLeader = community.leader_id === currentUser?.id || isGlobalAdmin;
+  const linked = userProfile?.managed_communities?.includes(id);
+  const isLeader = community.leader_id === currentUser?.id || isGlobalAdmin || (userProfile?.role === 'gestor' && linked);
   // Papel na comunidade: admin da comunidade ou editor
   const communityRole = memberRecord?.role || 'member';
   const isCommunityAdmin = isLeader || communityRole === 'admin';
-  const canEdit = isCommunityAdmin || communityRole === 'editor';
+  const canEdit = isCommunityAdmin || communityRole === 'editor' || (userProfile?.role === 'multiplicador' && linked);
   const enrichedUser = currentUser ? { ...currentUser, avatar_url: userProfile?.avatar_url || currentUser?.avatar_url, job_title: userProfile?.job_title } : null;
 
   const ICON_COLORS = [
@@ -227,7 +228,7 @@ export default function CommunityDetail() {
 
           {/* FEED */}
           <TabsContent value="feed" className="space-y-3">
-            {isMember && (
+            {canEdit && (
               <CreatePostCard
                 currentUser={enrichedUser}
                 communityId={id}

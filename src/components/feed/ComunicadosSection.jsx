@@ -27,7 +27,7 @@ export default function ComunicadosSection({ currentUser }) {
     pinned: true,
   });
 
-  const isManager = ['admin', 'department_leader'].includes(currentUser?.role);
+  const isManager = ['admin', 'gestor'].includes(currentUser?.role);
 
   useEffect(() => {
     base44.entities.Comunicado.filter({ status: 'active' }, '-created_date', 10).then(setComunicados);

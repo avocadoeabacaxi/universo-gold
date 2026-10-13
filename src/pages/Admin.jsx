@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
+import { ROLE_LABELS, ROLE_BADGE, MANAGER_ROLES, NEEDS_COMMUNITY } from '@/lib/roles';
+import RoleCommunityPicker from '@/components/admin/RoleCommunityPicker';
 import { Users, FileText, Globe, Shield, Trash2, Loader2, UserPlus, Building2, MapPin, Briefcase, UserCircle, Lock, Pencil, Plug, Search, UserCheck } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -100,6 +102,11 @@ export default function Admin() {
     setInviting(false);
   };
 
+  const updateProfileField = async (profileId, data) => {
+    await base44.entities.UserProfile.update(profileId, data);
+    setProfiles(prev => prev.map(p => p.id === profileId ? { ...p, ...data } : p));
+  };
+
   const updateProfileRole = async (profileId, role) => {
     await base44.entities.UserProfile.update(profileId, { role });
     setProfiles(prev => prev.map(p => p.id === profileId ? { ...p, role } : p));
@@ -141,7 +148,7 @@ export default function Admin() {
   if (loading) return <div className="flex items-center justify-center min-h-[60vh]"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
 
   const isAdmin = myRole === 'admin';
-  const canModerate = ['admin', 'department_leader', 'moderator'].includes(myRole);
+  const canModerate = MANAGER_ROLES.includes(myRole);
 
   if (!canModerate) return (
     <div className="text-center py-16 text-muted-foreground">
@@ -169,8 +176,8 @@ export default function Admin() {
     { icon: FileText, label: 'Documentos', value: documents.filter(d => d.status === 'active').length, color: 'text-red-500 bg-red-50' },
   ];
 
-  const roleLabels = { admin: 'Admin', department_leader: 'Líder', moderator: 'Moderador', user: 'Colaborador' };
-  const roleBadgeColor = { admin: 'bg-red-100 text-red-700', department_leader: 'bg-orange-100 text-orange-700', moderator: 'bg-blue-100 text-blue-700', user: 'bg-gray-100 text-gray-600' };
+  const roleLabels = ROLE_LABELS;
+  const roleBadgeColor = ROLE_BADGE;
 
   // Agrupa perfis por setor (departamento) com busca e filtro
   const groupedProfiles = (() => {
@@ -387,10 +394,7 @@ export default function Admin() {
               <SelectTrigger className="w-full sm:w-56 rounded-xl"><SelectValue placeholder="Todos os perfis" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos os perfis</SelectItem>
-                <SelectItem value="user">Colaborador</SelectItem>
-                <SelectItem value="moderator">Moderador</SelectItem>
-                <SelectItem value="department_leader">Líder de Dep.</SelectItem>
-                <SelectItem value="admin">Administrador</SelectItem>
+                {Object.entries(ROLE_LABELS).map(([k, l]) => <SelectItem key={k} value={k}>{l}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
@@ -414,13 +418,13 @@ export default function Admin() {
                     <p className="font-semibold text-sm truncate">{profile.full_name}</p>
                     <p className="text-xs text-muted-foreground">{profile.email}</p>
                   </div>
+                  {NEEDS_COMMUNITY.includes(profile.role) && (
+                    <RoleCommunityPicker communities={communities} value={profile.managed_communities || []} onChange={ids => updateProfileField(profile.id, { managed_communities: ids })} />
+                  )}
                   <Select value={profile.role || 'user'} onValueChange={v => updateProfileRole(profile.id, v)}>
-                    <SelectTrigger className="w-36 h-8 text-xs rounded-lg"><SelectValue /></SelectTrigger>
+                    <SelectTrigger className="w-48 h-8 text-xs rounded-lg"><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="user">Colaborador</SelectItem>
-                      <SelectItem value="moderator">Moderador</SelectItem>
-                      <SelectItem value="department_leader">Líder de Dep.</SelectItem>
-                      <SelectItem value="admin">Administrador</SelectItem>
+                      {Object.entries(ROLE_LABELS).map(([k, l]) => <SelectItem key={k} value={k}>{l}</SelectItem>)}
                     </SelectContent>
                   </Select>
                 </CardContent>

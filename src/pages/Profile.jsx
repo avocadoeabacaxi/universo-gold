@@ -99,7 +99,7 @@ export default function Profile() {
   if (loading) return <div className="flex items-center justify-center min-h-[60vh]"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
 
   const initials = (form.full_name || currentUser?.full_name || 'U').split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
-  const roleLabels = { admin: 'Administrador', department_leader: 'Líder de Departamento', moderator: 'Moderador', user: 'Colaborador' };
+  const roleLabels = { admin: 'Administrador', gestor: 'Gestor', multiplicador: 'Colaborador Multiplicador', user: 'Colaborador' };
   const enrichedUser = currentUser ? { ...currentUser, job_title: profile?.job_title, department: profile?.department, avatar_url: profile?.avatar_url || currentUser?.avatar_url } : null;
 
   return (

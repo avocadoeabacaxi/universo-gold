@@ -54,7 +54,7 @@ export default function Repository() {
   }, []);
 
   const isGlobalAdmin = currentUser?.role === 'admin' || userProfile?.role === 'admin';
-  const isLeader = userProfile?.role === 'department_leader';
+  const isLeader = userProfile?.role === 'gestor';
   const canUpload = isGlobalAdmin || isLeader;
 
   const canEditDoc = (doc) => {

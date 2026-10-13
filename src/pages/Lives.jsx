@@ -49,7 +49,7 @@ export default function Lives() {
     setSaving(false);
   };
 
-  const canAdd = userProfile?.role === 'admin' || userProfile?.role === 'department_leader';
+  const canAdd = userProfile?.role === 'admin' || userProfile?.role === 'gestor';
   const enrichedUser = currentUser ? { ...currentUser, job_title: userProfile?.job_title, department: userProfile?.department } : null;
 
   const statusConfig = {

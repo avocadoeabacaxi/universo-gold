@@ -19,7 +19,7 @@ export default function ApprovalGate({ children }) {
         const profiles = await base44.entities.UserProfile.filter({ user_id: me.id }, "-created_date", 1);
         const profile = profiles?.[0];
         // Sem perfil ou já aprovado => libera. Líderes/moderadores também liberam.
-        if (!profile || !profile.approval_status || profile.approval_status === "approved" || ["admin", "department_leader"].includes(profile.role)) {
+        if (!profile || !profile.approval_status || profile.approval_status === "approved" || ["admin", "gestor"].includes(profile.role)) {
           setState({ loading: false, status: "approved" });
         } else {
           setState({ loading: false, status: profile.approval_status });

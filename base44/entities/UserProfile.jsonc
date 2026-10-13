@@ -36,11 +36,19 @@
       "type": "string",
       "enum": [
         "admin",
-        "department_leader",
-        "moderator",
+        "gestor",
+        "multiplicador",
         "user"
       ],
-      "default": "user"
+      "default": "user",
+      "description": "Tipo de usu\u00e1rio"
+    },
+    "managed_communities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs das comunidades/grupos vinculados (Gestor gerencia, Multiplicador posta e insere documentos)"
     },
     "department": {
       "type": "string",

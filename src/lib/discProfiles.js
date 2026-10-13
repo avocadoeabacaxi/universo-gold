@@ -62,6 +62,6 @@ export const PURPOSES = {
   autoconhecimento: 'Autoconhecimento',
 };
 
-export const HR_ROLES = ['admin', 'department_leader', 'moderator'];
+export const HR_ROLES = ['admin', 'gestor'];
 
 export const getScores = (a) => ({ D: a.score_d || 0, I: a.score_i || 0, S: a.score_s || 0, C: a.score_c || 0 });
