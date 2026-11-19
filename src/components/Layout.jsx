@@ -27,7 +27,7 @@ export default function Layout() {
       const profiles = await base44.entities.UserProfile.filter({ user_id: u.id });
       const profile = profiles[0];
       const effectiveRole = u.role === 'admin' ? 'admin' : (profile?.role || u.role);
-      setUser({ ...u, role: effectiveRole, avatar_url: profile?.avatar_url || u.avatar_url });
+      setUser({ ...u, full_name: profile?.full_name || u.full_name, role: effectiveRole, avatar_url: profile?.avatar_url || u.avatar_url });
     };
     init().catch(() => {});
   }, []);

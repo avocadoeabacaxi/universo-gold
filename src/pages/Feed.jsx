@@ -4,6 +4,8 @@ import { Loader2 } from 'lucide-react';
 import PostCard from '@/components/feed/PostCard';
 import CreatePostCard from '@/components/feed/CreatePostCard';
 import ComunicadosSection from '@/components/feed/ComunicadosSection';
+import ComunicadoCard from '@/components/feed/ComunicadoCard';
+import { isPinned } from '@/lib/comunicados';
 import StoriesBar from '@/components/stories/StoriesBar';
 import LeftSidebar from '@/components/sidebar/LeftSidebar';
 import RightSidebar from '@/components/sidebar/RightSidebar';
@@ -11,6 +13,7 @@ import BirthdayDailyModal from '@/components/feed/BirthdayDailyModal';
 
 export default function Feed() {
   const [posts, setPosts] = useState([]);
+  const [comunicados, setComunicados] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -21,8 +24,12 @@ export default function Feed() {
       setCurrentUser(user);
       const profiles = await base44.entities.UserProfile.filter({ user_id: user.id });
       setUserProfile(profiles[0] || null);
-      const p = await base44.entities.Post.filter({ status: 'active' }, '-created_date', 20);
+      const [p, c] = await Promise.all([
+        base44.entities.Post.filter({ status: 'active' }, '-created_date', 20),
+        base44.entities.Comunicado.filter({ status: 'active' }, '-created_date', 20),
+      ]);
       setPosts(p);
+      setComunicados(c);
       setLoading(false);
     };
     init().catch(() => setLoading(false));
@@ -30,6 +37,7 @@ export default function Feed() {
 
   const enrichedUser = currentUser ? {
     ...currentUser,
+    full_name: userProfile?.full_name || currentUser.full_name,
     job_title: userProfile?.job_title,
     department: userProfile?.department,
     avatar_url: userProfile?.avatar_url || currentUser?.avatar_url,
@@ -43,6 +51,20 @@ export default function Feed() {
     await base44.entities.Post.update(postId, { status: 'deleted' });
     setPosts(prev => prev.filter(p => p.id !== postId));
   };
+
+  const canAnnounce = currentUser?.role === 'admin' || ['admin', 'gestor', 'multiplicador'].includes(userProfile?.role);
+
+  const archiveComunicado = async (id) => {
+    await base44.entities.Comunicado.update(id, { status: 'archived' });
+    setComunicados(prev => prev.filter(c => c.id !== id));
+  };
+
+  // Comunicados fixados ficam no topo; os demais entram na timeline pela data
+  const oldest = posts.length >= 20 ? posts[posts.length - 1].created_date : '';
+  const timeline = [
+    ...posts.map(item => ({ item, isPost: true })),
+    ...comunicados.filter(c => !isPinned(c) && c.created_date >= oldest).map(item => ({ item })),
+  ].sort((a, b) => b.item.created_date.localeCompare(a.item.created_date));
 
   if (loading) {
     return (
@@ -63,25 +85,33 @@ export default function Feed() {
 
         {/* Feed */}
         <div className="flex-1 min-w-0 space-y-3 max-w-2xl mx-auto lg:mx-0">
-          <ComunicadosSection currentUser={enrichedUser} />
+          <ComunicadosSection
+            currentUser={enrichedUser}
+            comunicados={comunicados.filter(isPinned)}
+            canCreate={canAnnounce}
+            onCreated={c => setComunicados(prev => [c, ...prev])}
+            onArchive={archiveComunicado}
+          />
           <CreatePostCard
             currentUser={enrichedUser}
             onPostCreated={handlePostCreated}
           />
           <StoriesBar currentUser={enrichedUser} />
-          {posts.length === 0 ? (
+          {timeline.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <p className="text-lg font-medium">Nenhuma publicação ainda</p>
               <p className="text-sm mt-1">Seja o primeiro a publicar algo!</p>
             </div>
           ) : (
-            posts.map(post => (
+            timeline.map(({ item, isPost }) => isPost ? (
               <PostCard
-                key={post.id}
-                post={post}
+                key={item.id}
+                post={item}
                 currentUser={enrichedUser}
                 onDelete={handleDelete}
               />
+            ) : (
+              <ComunicadoCard key={item.id} comunicado={item} canManage={canAnnounce} onArchive={archiveComunicado} />
             ))
           )}
         </div>

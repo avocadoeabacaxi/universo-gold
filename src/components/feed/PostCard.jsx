@@ -10,12 +10,16 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import CommentsList from './CommentsList';
+import LikesDialog from './LikesDialog';
+import RichText from '@/components/RichText';
 import { createNotification, notifyMentions } from '@/lib/notifications';
 
 export default function PostCard({ post, currentUser, onDelete }) {
   const [liked, setLiked] = useState(post.liked_by?.includes(currentUser?.id) || false);
   const [likesCount, setLikesCount] = useState(post.likes_count || 0);
   const [showComments, setShowComments] = useState(false);
+  const [showLikes, setShowLikes] = useState(false);
+  const likerIds = [...(post.liked_by || []).filter(i => i !== currentUser?.id), ...(liked ? [currentUser?.id] : [])];
   const [commenting, setCommenting] = useState(false);
   const [commentText, setCommentText] = useState('');
   const [commentsCount, setCommentsCount] = useState(post.comments_count || 0);
@@ -132,9 +136,9 @@ export default function PostCard({ post, currentUser, onDelete }) {
               <span className="capitalize">{post.post_type}</span>
             </div>
           )}
-          <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">{post.content}</p>
+          <RichText text={post.content} className="text-foreground" />
           {post.media_url && post.post_type === 'image' && (
-            <img src={post.media_url} alt="Post" className="w-full rounded-lg mt-3 max-h-80 object-cover" />
+            <img src={post.media_url} alt="Post" className="w-full h-auto max-h-[32rem] rounded-lg mt-3 object-contain bg-muted" />
           )}
           {post.media_url && post.post_type === 'video' && (
             <div className="mt-3 rounded-lg overflow-hidden aspect-video bg-black">
@@ -154,12 +158,12 @@ export default function PostCard({ post, currentUser, onDelete }) {
         {(likesCount > 0 || commentsCount > 0) && (
           <div className="px-4 py-1 flex items-center justify-between text-xs text-muted-foreground border-t border-border/50">
             {likesCount > 0 && (
-              <span className="flex items-center gap-1">
+              <button onClick={() => setShowLikes(true)} className="flex items-center gap-1 hover:underline" title="Ver quem curtiu">
                 <span className="inline-flex items-center justify-center w-4 h-4 bg-primary rounded-full">
-                  <Heart className="w-2.5 h-2.5 text-white fill-white" />
+                  <Heart className="w-2.5 h-2.5 text-primary-foreground fill-primary-foreground" />
                 </span>
                 {likesCount}
-              </span>
+              </button>
             )}
             {commentsCount > 0 && (
               <button onClick={() => setShowComments(!showComments)} className="hover:underline ml-auto">
@@ -222,6 +226,7 @@ export default function PostCard({ post, currentUser, onDelete }) {
             {showComments && <CommentsList postId={post.id} currentUserId={currentUser?.id} />}
           </div>
         )}
+        <LikesDialog open={showLikes} onOpenChange={setShowLikes} userIds={likerIds} />
       </CardContent>
     </Card>
   );

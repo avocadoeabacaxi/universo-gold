@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import RichText from '@/components/RichText';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -105,7 +106,7 @@ export default function CommentsList({ postId, currentUserId }) {
                   </div>
                 </div>
               ) : (
-                <p className="text-xs text-foreground mt-0.5">{comment.content}</p>
+                <RichText text={comment.content} className="text-xs text-foreground mt-0.5" />
               )}
             </div>
           </div>

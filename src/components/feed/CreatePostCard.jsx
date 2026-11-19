@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import FormatToolbar from './FormatToolbar';
 import { base44 } from '@/api/base44Client';
 import { Image, Video, FileText, X, Loader2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -8,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { createNotification, notifyMentions } from '@/lib/notifications';
 
 export default function CreatePostCard({ currentUser, communityId, communityName, onPostCreated }) {
+  const textRef = useRef(null);
   const [expanded, setExpanded] = useState(false);
   const [content, setContent] = useState('');
   const [postType, setPostType] = useState('text');
@@ -132,9 +134,11 @@ export default function CreatePostCard({ currentUser, communityId, communityName
                   value={content}
                   onChange={e => setContent(e.target.value)}
                   placeholder={`No que você está pensando${communityName ? ` em ${communityName}` : ''}?`}
+                  ref={textRef}
                   className="resize-none min-h-[100px] border-0 bg-transparent text-sm p-0 focus-visible:ring-0 text-foreground placeholder:text-muted-foreground"
                   autoFocus
                 />
+                <FormatToolbar textareaRef={textRef} value={content} onChange={setContent} />
                 {mediaFile && (
                   <div className="flex items-center gap-2 p-2 bg-secondary rounded-lg">
                     <span className="text-xs text-secondary-foreground truncate flex-1">{mediaFile.name}</span>

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
+import BirthdayPicker from '@/components/BirthdayPicker';
 import { Camera, Loader2, Save, Users, FileText, Radio, ImagePlus } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -199,8 +200,8 @@ export default function Profile() {
                      <Input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="(11) 99999-9999" className="rounded-xl h-9 text-sm" />
                     </div>
                     <div className="space-y-1">
-                     <Label className="text-xs">Data de Nascimento 🎂</Label>
-                     <Input type="date" value={form.data_nascimento} onChange={e => setForm(f => ({ ...f, data_nascimento: e.target.value }))} className="rounded-xl h-9 text-sm" />
+                     <Label className="text-xs">Data de aniversário 🎂</Label>
+                     <BirthdayPicker value={form.data_nascimento} onChange={v => setForm(f => ({ ...f, data_nascimento: v }))} />
                     </div>
                     <div className="space-y-1">
                      <Label className="text-xs">CPF</Label>

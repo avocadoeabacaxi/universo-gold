@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { ROLE_LABELS, ROLE_BADGE, MANAGER_ROLES, NEEDS_COMMUNITY } from '@/lib/roles';
 import RoleCommunityPicker from '@/components/admin/RoleCommunityPicker';
+import BirthdayPicker from '@/components/BirthdayPicker';
 import { Users, FileText, Globe, Shield, Trash2, Loader2, UserPlus, Building2, MapPin, Briefcase, UserCircle, Lock, Pencil, Plug, Search, UserCheck } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -76,7 +77,7 @@ export default function Admin() {
       // Líderes/moderadores só acessam a aba de aprovações; demais dados são só para admin
       if (effectiveRole !== 'admin') { setLoading(false); return; }
       const [p, c, d, s, f] = await Promise.all([
-        base44.entities.UserProfile.list('-created_date', 50),
+        base44.entities.UserProfile.list('-created_date', 1000),
         base44.entities.Community.list('name', 50),
         base44.entities.Document.list('-created_date', 50),
         base44.entities.Setor.filter({ status: 'active' }, 'name', 200),
@@ -294,7 +295,7 @@ export default function Admin() {
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1"><Label>E-mail</Label><Input type="email" value={editProfileForm.email || ''} onChange={e => setEditProfileForm(f => ({ ...f, email: e.target.value }))} className="rounded-xl" /></div>
-                  <div className="space-y-1"><Label>Data de nascimento</Label><Input type="date" value={editProfileForm.data_nascimento || ''} onChange={e => setEditProfileForm(f => ({ ...f, data_nascimento: e.target.value }))} className="rounded-xl" /></div>
+                  <div className="space-y-1"><Label>Data de aniversário</Label><BirthdayPicker value={editProfileForm.data_nascimento || ''} onChange={v => setEditProfileForm(f => ({ ...f, data_nascimento: v }))} /></div>
                 </div>
                 <div className="space-y-1">
                   <Label>Departamento</Label>

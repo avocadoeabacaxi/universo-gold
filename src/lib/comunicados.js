@@ -1,0 +1,1 @@
+export const isPinned = (c) => !!c.pinned_until && new Date(c.pinned_until) > new Date();

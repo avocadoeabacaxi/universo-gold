@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import useCurrentUser from '@/hooks/useCurrentUser';
+import { MANAGER_ROLES } from '@/lib/roles';
 import { base44 } from '@/api/base44Client';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Loader2 } from 'lucide-react';
@@ -11,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 
 export default function CreateCommunity() {
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState(null);
+  const currentUser = useCurrentUser();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     name: '',
@@ -21,9 +23,6 @@ export default function CreateCommunity() {
     department: '',
   });
 
-  useEffect(() => {
-    base44.auth.me().then(setCurrentUser);
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,6 +37,9 @@ export default function CreateCommunity() {
     });
     navigate(`/communities/${community.id}`);
   };
+
+  if (!currentUser) return <div className="py-20 flex justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
+  if (!MANAGER_ROLES.includes(currentUser.role)) return <p className="text-center py-20 text-muted-foreground">Apenas Gestores e Administradores podem criar comunidades.</p>;
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6">

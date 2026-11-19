@@ -106,7 +106,7 @@ export default function Repository() {
     }
   };
 
-  const enrichedUser = currentUser ? { ...currentUser, avatar_url: userProfile?.avatar_url, job_title: userProfile?.job_title, department: userProfile?.department } : null;
+  const enrichedUser = currentUser ? { ...currentUser, full_name: userProfile?.full_name || currentUser.full_name, avatar_url: userProfile?.avatar_url, job_title: userProfile?.job_title, department: userProfile?.department } : null;
 
   const filtered = documents
     .filter(canViewDoc)

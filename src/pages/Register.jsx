@@ -5,10 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UserPlus, Mail, Lock, Loader2, User, Hash, ArrowLeft, KeyRound, CheckCircle2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
+import BirthdayPicker from "@/components/BirthdayPicker";
 
 export default function Register() {
   const [step, setStep] = useState("form"); // form | otp | done
-  const [form, setForm] = useState({ full_name: "", email: "", matricula: "", password: "", confirm: "" });
+  const [form, setForm] = useState({ full_name: "", email: "", matricula: "", birthday: "", password: "", confirm: "" });
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -50,6 +51,7 @@ export default function Register() {
         full_name: form.full_name.trim(),
         email: form.email.trim().toLowerCase(),
         matricula: form.matricula.trim(),
+        data_nascimento: form.birthday || undefined,
         approval_status: "pending",
         role: "user",
         status: "active",
@@ -134,6 +136,11 @@ export default function Register() {
             <Hash className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input placeholder="Sua matrícula" value={form.matricula} onChange={set("matricula")} className="pl-10 h-12 rounded-xl text-sm" required />
           </div>
+        </div>
+
+        <div className="space-y-1.5">
+          <Label className="text-sm font-semibold">Data de aniversário (dia e mês)</Label>
+          <BirthdayPicker value={form.birthday} onChange={v => setForm(p => ({ ...p, birthday: v }))} triggerClassName="h-12 rounded-xl text-sm" />
         </div>
 
         <div className="space-y-1.5">

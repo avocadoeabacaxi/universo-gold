@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import LeftSidebar from '@/components/sidebar/LeftSidebar';
+import { MANAGER_ROLES } from '@/lib/roles';
 
 export default function Communities() {
   const [communities, setCommunities] = useState([]);
@@ -78,11 +79,13 @@ export default function Communities() {
               <h1 className="text-2xl font-bold font-heading">Comunidades</h1>
               <p className="text-muted-foreground text-sm mt-0.5">Conecte-se com colegas de toda a empresa</p>
             </div>
-            <Link to="/communities/create" className="w-full sm:w-auto">
-              <Button className="w-full sm:w-auto gold-gradient text-white gap-2 rounded-xl shadow-md hover:shadow-lg">
-                <Plus className="w-4 h-4" /> Criar Grupo
-              </Button>
-            </Link>
+            {(currentUser?.role === 'admin' || MANAGER_ROLES.includes(userProfile?.role)) && (
+              <Link to="/communities/create" className="w-full sm:w-auto">
+                <Button className="w-full sm:w-auto gold-gradient text-white gap-2 rounded-xl shadow-md hover:shadow-lg">
+                  <Plus className="w-4 h-4" /> Criar Grupo
+                </Button>
+              </Link>
+            )}
           </div>
 
           {/* Filters */}

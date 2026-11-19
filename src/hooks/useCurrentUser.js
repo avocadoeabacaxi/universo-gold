@@ -9,7 +9,7 @@ export default function useCurrentUser() {
       const u = await base44.auth.me();
       const profiles = await base44.entities.UserProfile.filter({ user_id: u.id });
       const p = profiles[0];
-      setUser({ ...u, role: u.role === 'admin' ? 'admin' : (p?.role || u.role), department: p?.department, job_title: p?.job_title });
+      setUser({ ...u, full_name: p?.full_name || u.full_name, role: u.role === 'admin' ? 'admin' : (p?.role || u.role), department: p?.department, job_title: p?.job_title });
     };
     init();
   }, []);

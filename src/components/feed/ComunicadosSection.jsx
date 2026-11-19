@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Megaphone, Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,26 +12,14 @@ const DEPARTMENTS = [
   'RH', 'TI', 'Financeiro', 'Operações', 'Comercial', 'Marketing', 'Logística', 'Produção', 'Qualidade', 'Administrativo'
 ];
 
-export default function ComunicadosSection({ currentUser }) {
-  const [comunicados, setComunicados] = useState([]);
+const EMPTY = { title: '', content: '', type: 'message', target_audience: 'all', target_department: '', target_level: '', image_url: '', pin_hours: '24' };
+
+export default function ComunicadosSection({ currentUser, comunicados, canCreate, onCreated, onArchive }) {
   const [open, setOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [form, setForm] = useState({
-    title: '',
-    content: '',
-    type: 'message',
-    target_audience: 'all',
-    target_department: '',
-    target_level: '',
-    image_url: '',
-    pinned: true,
-  });
-
-  const isManager = ['admin', 'gestor'].includes(currentUser?.role);
-
-  useEffect(() => {
-    base44.entities.Comunicado.filter({ status: 'active' }, '-created_date', 10).then(setComunicados);
-  }, []);
+  const [form, setForm] = useState(EMPTY);
+  const isManager = canCreate;
+  const handleArchive = onArchive;
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -44,21 +32,19 @@ export default function ComunicadosSection({ currentUser }) {
 
   const handleSubmit = async () => {
     if (!form.title || !form.content) return;
-    const data = {
-      ...form,
+    const { pin_hours, ...rest } = form;
+    const hours = Number(pin_hours) || 0;
+    const created = await base44.entities.Comunicado.create({
+      ...rest,
+      pinned: hours > 0,
+      pinned_until: hours > 0 ? new Date(Date.now() + hours * 3600000).toISOString() : null,
       author_id: currentUser.id,
       author_name: currentUser.full_name,
       status: 'active',
-    };
-    const created = await base44.entities.Comunicado.create(data);
-    setComunicados(prev => [created, ...prev]);
+    });
+    onCreated(created);
     setOpen(false);
-    setForm({ title: '', content: '', type: 'message', target_audience: 'all', target_department: '', target_level: '', image_url: '', pinned: true });
-  };
-
-  const handleArchive = async (id) => {
-    await base44.entities.Comunicado.update(id, { status: 'archived' });
-    setComunicados(prev => prev.filter(c => c.id !== id));
+    setForm(EMPTY);
   };
 
   if (comunicados.length === 0 && !isManager) return null;
@@ -189,6 +175,12 @@ export default function ComunicadosSection({ currentUser }) {
                 {form.image_url && <img src={form.image_url} className="mt-2 rounded-lg max-h-32 object-cover w-full" />}
               </div>
             )}
+
+            <div>
+              <label className="text-xs font-medium text-muted-foreground mb-1 block">Fixar no topo do Feed por (horas)</label>
+              <Input type="number" min="0" value={form.pin_hours} onChange={e => setForm(f => ({ ...f, pin_hours: e.target.value }))} />
+              <p className="text-[11px] text-muted-foreground mt-1">Depois desse tempo o comunicado desce para a timeline normal. Use 0 para não fixar.</p>
+            </div>
 
             <div className="flex justify-end gap-2 pt-1">
               <button

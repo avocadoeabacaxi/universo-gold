@@ -6,8 +6,12 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 
+import useCurrentUser from '@/hooks/useCurrentUser';
+import { MANAGER_ROLES } from '@/lib/roles';
+
 export default function LeftSidebar({ currentUser }) {
   const location = useLocation();
+  const me = useCurrentUser();
   const [communities, setCommunities] = useState([]);
 
   useEffect(() => {
@@ -89,11 +93,13 @@ export default function LeftSidebar({ currentUser }) {
             </Link>
           ))}
         </div>
-        <Link to="/communities/create">
-          <Button variant="ghost" size="sm" className="w-full mt-2 gap-2 text-xs text-primary hover:bg-primary/10">
-            <Plus className="w-3.5 h-3.5" /> Criar grupo
-          </Button>
-        </Link>
+        {MANAGER_ROLES.includes(me?.role) && (
+          <Link to="/communities/create">
+            <Button variant="ghost" size="sm" className="w-full mt-2 gap-2 text-xs text-primary hover:bg-primary/10">
+              <Plus className="w-3.5 h-3.5" /> Criar grupo
+            </Button>
+          </Link>
+        )}
       </div>
 
       {/* Footer */}

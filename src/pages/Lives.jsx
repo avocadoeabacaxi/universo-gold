@@ -50,7 +50,7 @@ export default function Lives() {
   };
 
   const canAdd = userProfile?.role === 'admin' || userProfile?.role === 'gestor';
-  const enrichedUser = currentUser ? { ...currentUser, job_title: userProfile?.job_title, department: userProfile?.department } : null;
+  const enrichedUser = currentUser ? { ...currentUser, full_name: userProfile?.full_name || currentUser.full_name, job_title: userProfile?.job_title, department: userProfile?.department } : null;
 
   const statusConfig = {
     live: { label: 'AO VIVO', color: 'bg-red-500 text-white', dot: 'bg-red-500 animate-pulse' },

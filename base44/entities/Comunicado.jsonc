@@ -61,6 +61,11 @@
       "default": true,
       "description": "Fixado no topo"
     },
+    "pinned_until": {
+      "type": "string",
+      "format": "date-time",
+      "description": "At\u00e9 quando fica fixado no topo do Feed; depois entra na timeline normal"
+    },
     "status": {
       "type": "string",
       "enum": [

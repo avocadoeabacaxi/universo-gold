@@ -1,6 +1,7 @@
 import { Megaphone, X, Pin } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { base44 } from '@/api/base44Client';
+import RichText from '@/components/RichText';
+import { isPinned } from '@/lib/comunicados';
 
 export default function ComunicadoCard({ comunicado, canManage, onArchive }) {
   const audienceLabel = {
@@ -10,7 +11,7 @@ export default function ComunicadoCard({ comunicado, canManage, onArchive }) {
   }[comunicado.target_audience] || 'Todos';
 
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl overflow-hidden">
+    <div className="bg-secondary border-2 border-primary rounded-xl overflow-hidden shadow-sm">
       {/* Banner image */}
       {comunicado.type === 'banner' && comunicado.image_url && (
         <div className="w-full max-h-48 overflow-hidden">
@@ -25,7 +26,7 @@ export default function ComunicadoCard({ comunicado, canManage, onArchive }) {
               <Megaphone className="w-4 h-4" />
               <span className="font-bold text-sm">Comunicado Oficial</span>
             </div>
-            {comunicado.pinned && (
+            {isPinned(comunicado) && (
               <Badge variant="secondary" className="text-[10px] gap-1 py-0 h-5">
                 <Pin className="w-2.5 h-2.5" /> Fixado
               </Badge>
@@ -45,8 +46,8 @@ export default function ComunicadoCard({ comunicado, canManage, onArchive }) {
           )}
         </div>
 
-        <h3 className="font-bold text-foreground mt-2 text-base">{comunicado.title}</h3>
-        <p className="text-sm text-foreground/80 mt-1 whitespace-pre-wrap">{comunicado.content}</p>
+        <h3 className="font-extrabold text-primary mt-2 text-lg leading-snug">{comunicado.title}</h3>
+        <RichText text={comunicado.content} className="text-foreground font-medium mt-1" />
 
         <p className="text-[11px] text-muted-foreground mt-3">
           Por {comunicado.author_name}

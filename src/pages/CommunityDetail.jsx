@@ -66,7 +66,13 @@ export default function CommunityDetail() {
   const communityRole = memberRecord?.role || 'member';
   const isCommunityAdmin = isLeader || communityRole === 'admin';
   const canEdit = isCommunityAdmin || communityRole === 'editor' || (userProfile?.role === 'multiplicador' && linked);
-  const enrichedUser = currentUser ? { ...currentUser, avatar_url: userProfile?.avatar_url || currentUser?.avatar_url, job_title: userProfile?.job_title } : null;
+  const canEditLook = isLeader || (userProfile?.role === 'multiplicador' && linked);
+  const removeMember = async (userId) => {
+    const members = (community.members || []).filter(m => m !== userId);
+    await base44.entities.Community.update(community.id, { members, members_count: members.length });
+    setCommunity(prev => ({ ...prev, members, members_count: members.length }));
+  };
+  const enrichedUser = currentUser ? { ...currentUser, full_name: userProfile?.full_name || currentUser.full_name, avatar_url: userProfile?.avatar_url || currentUser?.avatar_url, job_title: userProfile?.job_title } : null;
 
   const ICON_COLORS = [
     { bg: 'from-blue-600 to-blue-800', label: 'Azul' },
@@ -119,7 +125,7 @@ export default function CommunityDetail() {
             ? <img src={community.cover_url} alt="capa" className="w-full h-full object-cover" />
             : <div className="w-full h-full gold-gradient" />
           }
-          {isLeader && (
+          {canEditLook && (
             <>
               <input ref={coverInputRef} type="file" accept="image/*" className="hidden" onChange={handleCoverUpload} />
               <button
@@ -142,7 +148,7 @@ export default function CommunityDetail() {
                   : <span className="text-white font-bold text-lg">{community.name?.slice(0, 2).toUpperCase()}</span>
                 }
               </div>
-              {isLeader && (
+              {canEditLook && (
                 <div className="absolute -bottom-1 -right-1 flex gap-0.5 opacity-0 group-hover/icon:opacity-100 transition-opacity">
                   <input ref={iconInputRef} type="file" accept="image/*" className="hidden" onChange={handleIconUpload} />
                   <button onClick={() => iconInputRef.current?.click()} title="Trocar imagem"
@@ -185,6 +191,7 @@ export default function CommunityDetail() {
               <p className="text-sm text-muted-foreground flex items-center gap-1 mt-0.5">
                 <Users className="w-3.5 h-3.5" /> {community.members_count || 0} membros
               </p>
+              {community.leader_name && <p className="text-xs text-muted-foreground mt-0.5">Criada por {community.leader_name}</p>}
             </div>
           </div>
           {community.description && <p className="text-sm text-muted-foreground">{community.description}</p>}
@@ -218,11 +225,9 @@ export default function CommunityDetail() {
             <TabsTrigger value="classifieds">
               <ShoppingBag className="w-3.5 h-3.5 mr-1" /> Mural de Vendas
             </TabsTrigger>
-            {isCommunityAdmin && (
-              <TabsTrigger value="members">
-                <Users className="w-3.5 h-3.5 mr-1" /> Membros
-              </TabsTrigger>
-            )}
+            <TabsTrigger value="members">
+              <Users className="w-3.5 h-3.5 mr-1" /> Membros
+            </TabsTrigger>
           </TabsList>
           </div>
 
@@ -310,12 +315,10 @@ export default function CommunityDetail() {
             <CommunityClassifiedsTab communityId={id} currentUser={enrichedUser} isMember={isMember} />
           </TabsContent>
 
-          {/* MEMBROS (somente admin) */}
-          {isCommunityAdmin && (
-            <TabsContent value="members">
-              <CommunityMembersTab communityId={id} isLeader={isCommunityAdmin} currentUserId={currentUser?.id} />
-            </TabsContent>
-          )}
+          {/* MEMBROS */}
+          <TabsContent value="members">
+            <CommunityMembersTab communityId={id} memberIds={community.members || []} isLeader={isCommunityAdmin} currentUserId={currentUser?.id} onRemoveMember={removeMember} />
+          </TabsContent>
         </Tabs>
       )}
     </div>
