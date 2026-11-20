@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import VideoPlayer from '@/components/VideoPlayer';
 import { Video, Plus, Search, Loader2, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -109,7 +110,7 @@ export default function Videos() {
             {filtered.map(video => (
               <div key={video.id} className="bg-card rounded-xl border border-border/60 overflow-hidden hover:shadow-md transition-shadow group">
                 <div className="aspect-video bg-black">
-                  <iframe src={video.embed_url} className="w-full h-full" allowFullScreen title={video.title} />
+                  <VideoPlayer src={video.embed_url} title={video.title} />
                 </div>
                 <div className="p-3">
                   <p className="font-semibold text-sm line-clamp-2">{video.title}</p>

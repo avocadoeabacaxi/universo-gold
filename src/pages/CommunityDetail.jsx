@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import PostCard from '@/components/feed/PostCard';
+import VideoPlayer from '@/components/VideoPlayer';
 import CreatePostCard from '@/components/feed/CreatePostCard';
 import CommunityMembersTab from '@/components/community/CommunityMembersTab';
 import CommunityFAQTab from '@/components/community/CommunityFAQTab';
@@ -288,7 +289,7 @@ export default function CommunityDetail() {
               {videos.map(video => (
                 <div key={video.id} className="bg-card rounded-xl border border-border/60 overflow-hidden">
                   <div className="aspect-video bg-black">
-                    <iframe src={video.embed_url} className="w-full h-full" allowFullScreen title={video.title} />
+                    <VideoPlayer src={video.embed_url} title={video.title} />
                   </div>
                   <div className="p-3">
                     <p className="font-semibold text-sm">{video.title}</p>

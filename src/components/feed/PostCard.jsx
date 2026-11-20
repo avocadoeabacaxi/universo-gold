@@ -11,6 +11,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import CommentsList from './CommentsList';
 import LikesDialog from './LikesDialog';
+import VideoPlayer from '@/components/VideoPlayer';
 import RichText from '@/components/RichText';
 import { createNotification, notifyMentions } from '@/lib/notifications';
 
@@ -142,7 +143,7 @@ export default function PostCard({ post, currentUser, onDelete }) {
           )}
           {post.media_url && post.post_type === 'video' && (
             <div className="mt-3 rounded-lg overflow-hidden aspect-video bg-black">
-              <iframe src={post.media_url} className="w-full h-full" allowFullScreen title={post.content} />
+              <VideoPlayer src={post.media_url} title={post.content} />
             </div>
           )}
           {post.media_url && post.post_type === 'document' && (
