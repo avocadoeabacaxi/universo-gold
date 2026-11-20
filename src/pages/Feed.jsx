@@ -5,6 +5,7 @@ import PostCard from '@/components/feed/PostCard';
 import CreatePostCard from '@/components/feed/CreatePostCard';
 import ComunicadosSection from '@/components/feed/ComunicadosSection';
 import ComunicadoCard from '@/components/feed/ComunicadoCard';
+import MonthBirthdaysCard from '@/components/feed/MonthBirthdaysCard';
 import { isPinned } from '@/lib/comunicados';
 import StoriesBar from '@/components/stories/StoriesBar';
 import LeftSidebar from '@/components/sidebar/LeftSidebar';
@@ -92,6 +93,7 @@ export default function Feed() {
             onCreated={c => setComunicados(prev => [c, ...prev])}
             onArchive={archiveComunicado}
           />
+          <MonthBirthdaysCard />
           <CreatePostCard
             currentUser={enrichedUser}
             onPostCreated={handlePostCreated}
